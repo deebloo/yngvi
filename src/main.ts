@@ -1,12 +1,15 @@
 import * as Influx from 'influx';
-import { createDbConnection } from './db';
+import { config } from 'dotenv';
 
+config();
+
+import { createDbConnection } from './db';
 import { watchFiles } from './watcher';
 
 console.log('App Starting...');
 
 const {
-  ACURITE_DATA = 'C:/Users/Danny/Documents/AcuRite Weather Station',
+  ACURITE_DATA,
   USE_HISTORICAL_DATA = false,
   INFLUXDB_HOST = 'localhost',
 } = process.env;

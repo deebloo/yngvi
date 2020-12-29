@@ -15,7 +15,7 @@ export function watchFiles({ path, useHistoricalData }: WatchOptions) {
       ignored: /(^|[\/\\])\../, // ignore dotfiles
       persistent: true,
       ignoreInitial: !useHistoricalData,
-      usePolling: true,
+      usePolling: true, // Issue with watching docker volumes
     });
 
     watcher.on('add', async (path) => {

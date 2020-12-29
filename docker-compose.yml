@@ -8,10 +8,9 @@ services:
       - influxdb
     environment:
       - ACURITE_DATA=/var/lib/weather
-      - USE_HISTORICAL_DATA=true
       - INFLUXDB_HOST=influxdb
     volumes:
-      - C:/Users/Danny/Documents/AcuRite Weather Station:/var/lib/weather
+      - ${ACURITE_DATA}:/var/lib/weather
 
   influxdb:
     container_name: influxdb

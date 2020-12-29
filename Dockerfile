@@ -1,6 +1,8 @@
 FROM node:15.5.0 as build
 
-COPY . .
+COPY package*.json ./
+COPY tsconfig.json ./
+COPY src src
 
 RUN npm ci
 RUN npm run build
