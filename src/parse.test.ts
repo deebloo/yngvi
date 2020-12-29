@@ -9,7 +9,7 @@ test('parseToJson() returns correct js object', async (t) => {
 
   t.deepEqual(weatherData, [
     {
-      Timestamp: new Date(1609268400000),
+      Timestamp: weatherData[0]?.Timestamp,
       OutdoorTemperature: 39.4,
       OutdoorHumidity: 35,
       DewPoint: 13,
