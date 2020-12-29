@@ -1,0 +1,40 @@
+version: '3.9'
+
+services:
+  weather:
+    container_name: weather
+    build: .
+    depends_on:
+      - influxdb
+    environment:
+      - ACURITE_DATA=/var/lib/weather
+      - USE_HISTORICAL_DATA=true
+      - INFLUXDB_HOST=influxdb
+    volumes:
+      - C:/Users/Danny/Documents/AcuRite Weather Station:/var/lib/weather
+
+  influxdb:
+    container_name: influxdb
+    image: influxdb:latest
+    ports:
+      - 8086:8086
+    environment:
+      - INFLUXDB_DB=weather
+    volumes:
+      - influxdb_data:/var/lib/influxdb
+
+  chronograf:
+    container_name: chronograf
+    image: chronograf:latest
+    depends_on:
+      - influxdb
+    ports:
+      - 8888:8888
+    volumes:
+      - chronograf_data:/var/lib/chronograf
+    environment:
+      - INFLUXDB_URL=http://influxdb:8086
+
+volumes:
+  influxdb_data:
+  chronograf_data:

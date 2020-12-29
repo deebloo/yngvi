@@ -1,75 +1,43 @@
-import { watch } from 'chokidar';
-import { Observable } from 'rxjs';
-import { readdirSync } from 'fs';
-import { join } from 'path';
-import csv from 'csvtojson';
+import * as Influx from 'influx';
+import { createDbConnection } from './db';
 
-const BASE_PATH = 'C:/Users/Danny/Documents/AcuRite Weather Station';
+import { watchFiles } from './watcher';
 
-interface WeatherData {
-  Timestamp: string;
-  OutdoorTemperature: number;
-  OutdoorHumidity: number;
-  DewPoint: number;
-  HeatIndex: number;
-  WindChill: number;
-  BarometricPressure: number;
-  Rain: number;
-  WindSpeed: number;
-  WindAverage: number;
-  PeakWind: number;
-  WindDirection: number;
-  IndoorTemperature: number;
-  IndoorHumidity: number;
+console.log('App Starting...');
+
+const {
+  ACURITE_DATA = 'C:/Users/Danny/Documents/AcuRite Weather Station',
+  USE_HISTORICAL_DATA = false,
+  INFLUXDB_HOST = 'localhost',
+} = process.env;
+
+if (!ACURITE_DATA) {
+  throw new Error('No path the acurite data provided to ACURITE_DATA');
 }
 
-const source = new Observable((subscriber) => {
-  const watcher = watch(BASE_PATH, {
-    ignored: /(^|[\/\\])\../, // ignore dotfiles
-    persistent: true,
-  });
-
-  watcher.on('add', async (path) => {
-    const res = await parseToJson(path);
-
-    subscriber.next(res);
-  });
+const influx = createDbConnection({
+  host: INFLUXDB_HOST,
 });
 
-source.subscribe((res) => {
-  console.log('#######################');
-
-  console.log(res);
+const source = watchFiles({
+  path: ACURITE_DATA,
+  useHistoricalData: Boolean(USE_HISTORICAL_DATA),
 });
 
-function parseToJson(path: string): PromiseLike<WeatherData[]> {
-  return csv({
-    colParser: {
-      'Outdoor Temperature': Number,
-      'Outdoor Humidity': Number,
-      'Dew Point': Number,
-      'Heat Index': Number,
-      'Wind Chill': Number,
-      'Barometric Pressure': Number,
-      Rain: Number,
-      'Wind Speed': Number,
-      'Wind Average': Number,
-      'Peak Wind': Number,
-      'Wind Direction': Number,
-      'Indoor Temperature': Number,
-      'Indoor Humidity': Number,
-    },
-  })
-    .fromFile(path)
-    .then((res) => {
-      return res.map((entry) => {
-        const final: Record<string, any> = {};
+source.subscribe(async (res) => {
+  const writePoints: Influx.IPoint[] = res.map((data) => {
+    const { Timestamp: timestamp, ...fields } = data;
 
-        Object.keys(entry).forEach((key) => {
-          final[key.split(' ').join('')] = entry[key];
-        });
+    return {
+      measurement: 'weather',
+      fields,
+      timestamp,
+    };
+  });
 
-        return final as WeatherData;
-      });
-    });
-}
+  await influx.writePoints(writePoints);
+
+  console.log(`Data added ${new Date().toString()}`);
+});
+
+console.log(`Watching data in ${ACURITE_DATA}...`);
