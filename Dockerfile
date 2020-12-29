@@ -16,4 +16,6 @@ COPY --from=build package*.json ./
 
 RUN npm ci --only=production
 
+ENV NODE_ENV=production
+
 CMD [ "node", "target/main.js" ]
