@@ -1,4 +1,4 @@
-FROM node:15.5.0 as build
+FROM node:15.5.0-alpine as build
 
 COPY package*.json ./
 COPY tsconfig.json ./
