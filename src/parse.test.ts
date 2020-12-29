@@ -5,8 +5,9 @@ import { parseToJson } from './parse';
 
 test('parseToJson() returns correct js object', async (t) => {
   const csvPath = join(__dirname, '../test-data/test-weather.csv');
+  const weatherData = await parseToJson(csvPath);
 
-  t.deepEqual(await parseToJson(csvPath), [
+  t.deepEqual(weatherData, [
     {
       Timestamp: new Date('2020-12-29T19:00:00.000Z'),
       OutdoorTemperature: 39.4,
