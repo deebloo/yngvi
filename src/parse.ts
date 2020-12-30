@@ -1,11 +1,20 @@
 import csv from 'csvtojson';
+import * as Influx from 'influx';
 
 import { WeatherDataOg, WeatherData } from './data';
 
-export function parseToJson(path: string): PromiseLike<WeatherData[]> {
+export function csvToWeatherData(path: string): PromiseLike<WeatherData[]> {
   return createCSVParser()
     .fromFile(path)
     .then((res) => res.map(normalizeWeatherData));
+}
+
+export function weatherDataToPoints(data: WeatherData[]): Influx.IPoint[] {
+  return data.map(({ Timestamp: timestamp, ...fields }) => ({
+    measurement: 'weather',
+    fields,
+    timestamp,
+  }));
 }
 
 function createCSVParser() {

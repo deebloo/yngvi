@@ -1,12 +1,11 @@
-import * as Influx from 'influx';
 import { config } from 'dotenv';
 import { concatMap, map } from 'rxjs/operators';
 
-config();
-
 import { createDbConnection } from './db';
 import { watchData } from './watcher';
-import { WeatherData } from './data';
+import { weatherDataToPoints } from './parse';
+
+config();
 
 console.log('App Starting...');
 
@@ -26,15 +25,9 @@ const influx = createDbConnection({
 
 const dbUpdates = watchData({
   path: ACURITE_DATA,
-  useHistoricalData: Boolean(USE_HISTORICAL_DATA),
+  useHistoricalData: !!USE_HISTORICAL_DATA,
 }).pipe(
-  map<WeatherData[], Influx.IPoint[]>((res) => {
-    return res.map(({ Timestamp: timestamp, ...fields }) => ({
-      measurement: 'weather',
-      fields,
-      timestamp,
-    }));
-  }),
+  map(weatherDataToPoints),
   concatMap((writePoints) => influx.writePoints(writePoints))
 );
 

@@ -1,7 +1,7 @@
 import { Observable } from 'rxjs';
 import { watch } from 'chokidar';
 
-import { parseToJson } from './parse';
+import { csvToWeatherData } from './parse';
 import { WeatherData } from './data';
 
 export interface WatchOptions {
@@ -19,7 +19,7 @@ export function watchData({ path, useHistoricalData }: WatchOptions) {
     });
 
     watcher.on('add', async (path) => {
-      const res = await parseToJson(path);
+      const res = await csvToWeatherData(path);
 
       subscriber.next(res);
     });
