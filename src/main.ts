@@ -1,10 +1,12 @@
 import * as Influx from 'influx';
 import { config } from 'dotenv';
+import { concatMap, map } from 'rxjs/operators';
 
 config();
 
 import { createDbConnection } from './db';
-import { watchFiles } from './watcher';
+import { watchData } from './watcher';
+import { WeatherData } from './data';
 
 console.log('App Starting...');
 
@@ -22,25 +24,24 @@ const influx = createDbConnection({
   host: INFLUXDB_HOST,
 });
 
-const source = watchFiles({
+const dbUpdates = watchData({
   path: ACURITE_DATA,
   useHistoricalData: Boolean(USE_HISTORICAL_DATA),
-});
-
-source.subscribe(async (res) => {
-  const writePoints: Influx.IPoint[] = res.map((data) => {
-    const { Timestamp: timestamp, ...fields } = data;
-
-    return {
+}).pipe(
+  map<WeatherData[], Influx.IPoint[]>((res) => {
+    return res.map(({ Timestamp: timestamp, ...fields }) => ({
       measurement: 'weather',
       fields,
       timestamp,
-    };
-  });
+    }));
+  }),
+  concatMap((writePoints) => influx.writePoints(writePoints))
+);
 
-  await influx.writePoints(writePoints);
-
-  console.log(`Data added ${new Date().toString()}`);
+dbUpdates.subscribe(() => {
+  console.log(`###################################`);
+  console.log(`Data added on ${new Date().toString()}`);
+  console.log(`###################################`);
 });
 
 console.log(`Watching data in ${ACURITE_DATA}...`);

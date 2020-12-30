@@ -9,7 +9,7 @@ export interface WatchOptions {
   useHistoricalData: boolean;
 }
 
-export function watchFiles({ path, useHistoricalData }: WatchOptions) {
+export function watchData({ path, useHistoricalData }: WatchOptions) {
   return new Observable<WeatherData[]>((subscriber) => {
     const watcher = watch(path, {
       ignored: /(^|[\/\\])\../, // ignore dotfiles
