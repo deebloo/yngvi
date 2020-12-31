@@ -1,0 +1,4 @@
+"Timestamp","Outdoor Temperature","Outdoor Humidity","Dew Point","Heat Index","Wind Chill","Barometric Pressure","Rain","Wind Speed","Wind Average","Peak Wind","Wind Direction","Indoor Temperature","Indoor Humidity"
+"12/28/2020 2:36:00 PM","54.1","45","32","54","54","29.70716","0","1.864114","0","4.349598","67.5","75.5","30"
+"12/28/2020 2:48:00 PM","54.5","44","33","55","55","29.70716","0","1.864114","1.864114","4.349598","22.5","76.1","31"
+"12/28/2020 3:00:00 PM","54.3","45","32","54","54","29.70716","0","0","0.6213712","4.349598","45","75.2","28"
