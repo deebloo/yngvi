@@ -1,40 +1,51 @@
-import { config } from 'dotenv';
-import { concatMap, map } from 'rxjs/operators';
+// import { config } from 'dotenv';
+// import { concatMap, map } from 'rxjs/operators';
 
-import { createDbConnection } from './db';
-import { watchData } from './watcher';
-import { weatherDataToPoints } from './parse';
+import * as usb from 'usb';
 
-config();
+// const device = new HID(
+//   '\\\\?\\hid#vid_24c0&pid_0003#6&362ca017&0&0000#{4d1e55b2-f16f-11cf-88cb-001111000030}'
+// );
 
-console.log('App Starting...');
+// USB constants for HID
+const USB_HID_GET_REPORT = 0x01;
+const USB_HID_SET_REPORT = 0x09;
+const USB_HID_INPUT_REPORT = 0x0100;
+const USB_HID_OUTPUT_REPORT = 0x0200;
 
-const {
-  ACURITE_DATA,
-  USE_HISTORICAL_DATA = false,
-  INFLUXDB_HOST = 'localhost',
-} = process.env;
+const device = usb.findByIds(0x24c0, 0x003);
 
-if (!ACURITE_DATA) {
-  throw new Error('No path the acurite data provided to ACURITE_DATA');
+device.open();
+
+readReport1().then((res) => {
+  console.log(res);
+});
+
+function readReport1() {
+  return readReport(1, 10);
 }
 
-const influx = createDbConnection({
-  host: INFLUXDB_HOST,
-});
+function readReport2() {
+  return readReport(2, 25);
+}
 
-const dbUpdates = watchData({
-  path: ACURITE_DATA,
-  useHistoricalData: !!USE_HISTORICAL_DATA,
-}).pipe(
-  map(weatherDataToPoints),
-  concatMap((writePoints) => influx.writePoints(writePoints))
-);
+function readReport3() {
+  return readReport(3, 33);
+}
 
-dbUpdates.subscribe(() => {
-  console.log(`###################################`);
-  console.log(`Data added on ${new Date().toString()}`);
-  console.log(`###################################`);
-});
-
-console.log(`Watching data in ${ACURITE_DATA}...`);
+function readReport(reportNumber: number, length: number) {
+  return new Promise<Buffer | undefined>((resolve) => {
+    device.controlTransfer(
+      usb.LIBUSB_RECIPIENT_INTERFACE +
+        usb.LIBUSB_REQUEST_TYPE_CLASS +
+        usb.LIBUSB_ENDPOINT_IN,
+      USB_HID_GET_REPORT,
+      USB_HID_INPUT_REPORT + reportNumber,
+      0x0,
+      length,
+      (_, res) => {
+        resolve(res);
+      }
+    );
+  });
+}
