@@ -1,51 +1,95 @@
-// import { config } from 'dotenv';
-// import { concatMap, map } from 'rxjs/operators';
+import { deepEqual } from 'assert';
+import { HID } from 'node-hid';
 
-import * as usb from 'usb';
+type ReportKey = [number, number];
 
-// const device = new HID(
-//   '\\\\?\\hid#vid_24c0&pid_0003#6&362ca017&0&0000#{4d1e55b2-f16f-11cf-88cb-001111000030}'
-// );
-
-// USB constants for HID
-const USB_HID_GET_REPORT = 0x01;
-const USB_HID_SET_REPORT = 0x09;
-const USB_HID_INPUT_REPORT = 0x0100;
-const USB_HID_OUTPUT_REPORT = 0x0200;
-
-const device = usb.findByIds(0x24c0, 0x003);
-
-device.open();
-
-readReport1().then((res) => {
-  console.log(res);
-});
-
-function readReport1() {
-  return readReport(1, 10);
+interface Report {
+  type: 1 | 8;
 }
 
-function readReport2() {
-  return readReport(2, 25);
-}
+interface RainReport {}
 
-function readReport3() {
-  return readReport(3, 33);
-}
+const VENDOR_ID = 0x24c0;
+const PRODUCT_ID = 0x0003;
+const REPORT_1: ReportKey = [0x0100 + 1, 10];
+const REPORT_2: ReportKey = [0x0100 + 2, 25];
 
-function readReport(reportNumber: number, length: number) {
-  return new Promise<Buffer | undefined>((resolve) => {
-    device.controlTransfer(
-      usb.LIBUSB_RECIPIENT_INTERFACE +
-        usb.LIBUSB_REQUEST_TYPE_CLASS +
-        usb.LIBUSB_ENDPOINT_IN,
-      USB_HID_GET_REPORT,
-      USB_HID_INPUT_REPORT + reportNumber,
-      0x0,
-      length,
-      (_, res) => {
-        resolve(res);
+const R1_INTERVAL = 18 * 1000;
+
+const device = new HID(VENDOR_ID, PRODUCT_ID);
+let r1NextRead = 0;
+
+pollDevice();
+
+function pollDevice() {
+  if (Date.now() >= r1NextRead) {
+    const report = device.getFeatureReport(...REPORT_1);
+    const flavor = decodeMessageFlavor(report);
+
+    let data: any = {
+      windSpeed: round(decodeWindSpeed(report), 0),
+    };
+
+    switch (flavor) {
+      case 1: {
+        data.rain = round(decodeRain(report), 2);
+
+        break;
       }
-    );
-  });
+
+      case 8: {
+        data.outTemp = round(decodeOutTemp(report), 0);
+        data.outHumid = decodeOutHumid(report);
+
+        break;
+      }
+    }
+
+    r1NextRead = Date.now() + R1_INTERVAL;
+
+    console.log('Message Flavor:', flavor);
+    console.table(data);
+  }
+
+  const delay = r1NextRead - Date.now() + 1;
+
+  console.log(`next read in ${delay / 1000} seconds`);
+
+  setTimeout(pollDevice, delay);
+}
+
+function decodeRain(data: number[]) {
+  const cm = (((data[6] & 0x3f) << 7) | (data[7] & 0x7f)) * 0.0254;
+
+  return cm / 2.54;
+}
+
+function decodeOutTemp(data: number[]) {
+  const a = (data[5] & 0x0f) << 7;
+  const b = data[6] & 0x7f;
+  const celcius = (a | b) / 18.0 - 40.0;
+
+  return (celcius * 9) / 5 + 32;
+}
+
+function decodeOutHumid(data: number[]) {
+  return data[7];
+}
+
+function decodeMessageFlavor(data: number[]) {
+  return data[3] & 0x0f;
+}
+
+function decodeWindSpeed(data: number[]) {
+  const n = ((data[4] & 0x1f) << 3) | ((data[5] & 0x70) >> 4);
+
+  if (n == 0) {
+    return 0.0;
+  }
+
+  return (0.8278 * n + 1.0) / 1.609;
+}
+
+function round(value: number, decimals: number) {
+  return Number(Math.round(Number(value + 'e' + decimals)) + 'e-' + decimals);
 }
