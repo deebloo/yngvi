@@ -31,6 +31,7 @@ export class Device extends EventEmitter {
       } else {
         fields.outTemp = this.round(this.decodeOutTemp(report), 0);
         fields.outHumid = this.decodeOutHumid(report);
+        fields.windChill = this.calculateWindChill(fields.outTemp, fields.windSpeed);
       }
 
       this.r1NextRead = Date.now() + 18 * 1000;
@@ -71,6 +72,17 @@ export class Device extends EventEmitter {
 
   private decodeOutHumid(data: number[]) {
     return data[7];
+  }
+
+  private calculateWindChill(temp: number, windsSpeed: number): number {
+    if (windsSpeed < 3) {
+      return temp;
+    }
+
+    const speed =
+      35.74 + 0.6215 * temp - ((35.75 * windsSpeed) ^ 0.16) + ((0.4275 * temp * windsSpeed) ^ 0.16);
+
+    return Math.floor(speed * 100);
   }
 
   private round(value: number, decimals: number) {

@@ -17,5 +17,6 @@ const device = new Device(VENDOR_ID, PRODUCT_ID);
 device.on('data', async (data) => {
   await influx.writePoints([data]);
 
-  console.log(data);
+  console.log(data.timestamp);
+  console.table([data.fields]);
 });

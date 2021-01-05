@@ -11,6 +11,7 @@ export function createDbConnection(options: Influx.ISingleHostConfig) {
           outHumid: Influx.FieldType.FLOAT,
           rain: Influx.FieldType.FLOAT,
           windSpeed: Influx.FieldType.FLOAT,
+          windChill: Influx.FieldType.FLOAT,
         },
         tags: [],
       },
