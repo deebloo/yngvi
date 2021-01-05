@@ -1,16 +1,16 @@
 version: '3.9'
 
 services:
-  weather:
-    container_name: weather
-    build: .
-    depends_on:
-      - influxdb
-    environment:
-      - ACURITE_DATA=/var/lib/weather
-      - INFLUXDB_HOST=influxdb
-    volumes:
-      - ${ACURITE_DATA}:/var/lib/weather
+  # weather:
+  #   container_name: weather
+  #   build: .
+  #   depends_on:
+  #     - influxdb
+  #   environment:
+  #     - ACURITE_DATA=/var/lib/weather
+  #     - INFLUXDB_HOST=influxdb
+  #   volumes:
+  #     - ${ACURITE_DATA}:/var/lib/weather
 
   influxdb:
     container_name: influxdb
