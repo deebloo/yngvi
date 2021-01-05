@@ -42,11 +42,11 @@ export class Device extends EventEmitter {
     setTimeout(() => this.startListening(), 18 * 1000);
   }
 
-  private decodeMessageFlavor(data: number[]) {
+  decodeMessageFlavor(data: number[]) {
     return data[3] & 0x0f;
   }
 
-  private decodeWindSpeed(data: number[]) {
+  decodeWindSpeed(data: number[]) {
     const n = ((data[4] & 0x1f) << 3) | ((data[5] & 0x70) >> 4);
 
     if (n == 0) {
@@ -56,13 +56,13 @@ export class Device extends EventEmitter {
     return (0.8278 * n + 1.0) / 1.609;
   }
 
-  private decodeRain(data: number[]) {
+  decodeRain(data: number[]) {
     const cm = (((data[6] & 0x3f) << 7) | (data[7] & 0x7f)) * 0.0254;
 
     return cm / 2.54;
   }
 
-  private decodeOutTemp(data: number[]) {
+  decodeOutTemp(data: number[]) {
     const a = (data[5] & 0x0f) << 7;
     const b = data[6] & 0x7f;
     const celcius = (a | b) / 18.0 - 40.0;
@@ -70,22 +70,21 @@ export class Device extends EventEmitter {
     return (celcius * 9) / 5 + 32;
   }
 
-  private decodeOutHumid(data: number[]) {
+  decodeOutHumid(data: number[]) {
     return data[7];
   }
 
-  private calculateWindChill(temp: number, windsSpeed: number): number {
+  calculateWindChill(temp: number, windsSpeed: number): number {
     if (windsSpeed < 3) {
       return temp;
     }
 
-    const speed =
-      35.74 + 0.6215 * temp - ((35.75 * windsSpeed) ^ 0.16) + ((0.4275 * temp * windsSpeed) ^ 0.16);
-
-    return Math.floor(speed * 100);
+    return Math.round(
+      35.74 + 0.6215 * temp - 35.75 * windsSpeed ** 0.16 + 0.4275 * temp * windsSpeed ** 0.16
+    );
   }
 
-  private round(value: number, decimals: number) {
+  round(value: number, decimals: number) {
     return Number(Math.round(Number(value + 'e' + decimals)) + 'e-' + decimals);
   }
 }
