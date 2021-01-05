@@ -1,5 +1,5 @@
-import { EventEmitter } from 'events';
 import { HID } from 'node-hid';
+import { Subject } from 'rxjs';
 
 import { calculateWindChill, round } from './util';
 
@@ -8,7 +8,7 @@ type ReportKey = [number, number];
 const REPORT_1: ReportKey = [0x0100 + 1, 10];
 // const REPORT_2: ReportKey = [0x0100 + 2, 25];
 
-export class Device extends EventEmitter {
+export class Device extends Subject<any> {
   private r1NextRead = 0;
   private device = new HID(this.vendorId, this.productId);
 
@@ -38,10 +38,14 @@ export class Device extends EventEmitter {
 
       this.r1NextRead = Date.now() + 18 * 1000;
 
-      this.emit('data', { measurement: 'weather', timestamp, fields });
+      super.next({ measurement: 'weather', timestamp, fields });
     }
 
     setTimeout(() => this.startListening(), 18 * 1000);
+  }
+
+  next() {
+    throw new Error('Cannot push values to Device');
   }
 
   decodeMessageFlavor(data: number[]) {

@@ -14,7 +14,7 @@ const influx = createDbConnection({
 
 const device = new Device(VENDOR_ID, PRODUCT_ID);
 
-device.on('data', async (data) => {
+device.subscribe(async (data) => {
   await influx.writePoints([data]);
 
   console.log(data.timestamp);
