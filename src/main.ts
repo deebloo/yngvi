@@ -1,40 +1,22 @@
-import { config } from 'dotenv';
-import { concatMap, map } from 'rxjs/operators';
-
 import { createDbConnection } from './db';
-import { watchData } from './watcher';
-import { weatherDataToPoints } from './parse';
+import { Device } from './device';
 
-config();
+const VENDOR_ID = 0x24c0;
+const PRODUCT_ID = 0x0003;
 
 console.log('App Starting...');
 
-const {
-  ACURITE_DATA,
-  USE_HISTORICAL_DATA = false,
-  INFLUXDB_HOST = 'localhost',
-} = process.env;
-
-if (!ACURITE_DATA) {
-  throw new Error('No path the acurite data provided to ACURITE_DATA');
-}
+const { INFLUXDB_HOST = 'localhost' } = process.env;
 
 const influx = createDbConnection({
   host: INFLUXDB_HOST,
 });
 
-const dbUpdates = watchData({
-  path: ACURITE_DATA,
-  useHistoricalData: !!USE_HISTORICAL_DATA,
-}).pipe(
-  map(weatherDataToPoints),
-  concatMap((writePoints) => influx.writePoints(writePoints))
-);
+const device = new Device(VENDOR_ID, PRODUCT_ID);
 
-dbUpdates.subscribe(() => {
-  console.log(`###################################`);
-  console.log(`Data added on ${new Date().toString()}`);
-  console.log(`###################################`);
+device.on('data', async (data) => {
+  await influx.writePoints([data]);
+
+  console.log(data.timestamp);
+  console.table([data.fields]);
 });
-
-console.log(`Watching data in ${ACURITE_DATA}...`);
