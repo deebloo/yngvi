@@ -1,6 +1,8 @@
 import { EventEmitter } from 'events';
 import { HID } from 'node-hid';
 
+import { calculateWindChill, round } from './util';
+
 type ReportKey = [number, number];
 
 const REPORT_1: ReportKey = [0x0100 + 1, 10];
@@ -23,15 +25,15 @@ export class Device extends EventEmitter {
       const timestamp = new Date();
 
       const fields: any = {
-        windSpeed: this.round(this.decodeWindSpeed(report), 0),
+        windSpeed: round(this.decodeWindSpeed(report), 0),
       };
 
       if (flavor === 1) {
-        fields.rain = this.round(this.decodeRain(report), 2);
+        fields.rain = round(this.decodeRain(report), 2);
       } else {
-        fields.outTemp = this.round(this.decodeOutTemp(report), 0);
+        fields.outTemp = round(this.decodeOutTemp(report), 0);
         fields.outHumid = this.decodeOutHumid(report);
-        fields.windChill = this.calculateWindChill(fields.outTemp, fields.windSpeed);
+        fields.windChill = calculateWindChill(fields.outTemp, fields.windSpeed);
       }
 
       this.r1NextRead = Date.now() + 18 * 1000;
@@ -72,19 +74,5 @@ export class Device extends EventEmitter {
 
   decodeOutHumid(data: number[]) {
     return data[7];
-  }
-
-  calculateWindChill(temp: number, windsSpeed: number): number {
-    if (windsSpeed < 3) {
-      return temp;
-    }
-
-    return Math.round(
-      35.74 + 0.6215 * temp - 35.75 * windsSpeed ** 0.16 + 0.4275 * temp * windsSpeed ** 0.16
-    );
-  }
-
-  round(value: number, decimals: number) {
-    return Number(Math.round(Number(value + 'e' + decimals)) + 'e-' + decimals);
   }
 }
