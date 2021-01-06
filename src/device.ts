@@ -8,9 +8,19 @@ type ReportKey = [number, number];
 const REPORT_1: ReportKey = [0x0100 + 1, 10];
 // const REPORT_2: ReportKey = [0x0100 + 2, 25];
 
-export class Device extends Subject<any> {
+export interface WeatherRecord {
+  windSpeed: number;
+  rain: number;
+  outTemp: number;
+  outHumid: number;
+  windChill: number;
+}
+
+export class Device extends Subject<WeatherRecord> {
   private r1NextRead = 0;
   private device = new HID(this.vendorId, this.productId);
+  private latestRecordR1: Partial<WeatherRecord> = {};
+  private pollInterval = 18 * 1000;
 
   constructor(private vendorId: number, private productId: number) {
     super();
@@ -18,30 +28,44 @@ export class Device extends Subject<any> {
     this.startListening();
   }
 
-  private startListening() {
+  private startListening(): NodeJS.Timer | undefined {
     if (Date.now() >= this.r1NextRead) {
-      const report = this.device.getFeatureReport(...REPORT_1);
-      const flavor = this.decodeMessageFlavor(report);
-      const timestamp = new Date();
+      let report: number[];
 
-      const fields: any = {
-        windSpeed: round(this.decodeWindSpeed(report), 0),
-      };
-
-      if (flavor === 1) {
-        fields.rain = round(this.decodeRain(report), 2);
-      } else {
-        fields.outTemp = round(this.decodeOutTemp(report), 0);
-        fields.outHumid = this.decodeOutHumid(report);
-        fields.windChill = calculateWindChill(fields.outTemp, fields.windSpeed);
+      try {
+        // attempt to read the R1 Report
+        report = this.device.getFeatureReport(...REPORT_1);
+      } catch {
+        // IF there is an error getting the report from the device wait for regular interval and try again
+        return setTimeout(() => this.startListening(), this.pollInterval);
       }
 
-      this.r1NextRead = Date.now() + 18 * 1000;
+      const flavor = this.decodeMessageFlavor(report);
 
-      super.next({ measurement: 'weather', timestamp, fields });
+      // We always get the windSpeed back
+      this.latestRecordR1.windSpeed = round(this.decodeWindSpeed(report), 0);
+
+      // Only update the properties that we get for a given report
+      if (flavor === 1) {
+        this.latestRecordR1.rain = round(this.decodeRain(report), 2);
+      } else {
+        this.latestRecordR1.outTemp = round(this.decodeOutTemp(report), 0);
+        this.latestRecordR1.outHumid = this.decodeOutHumid(report);
+        this.latestRecordR1.windChill = calculateWindChill(
+          this.latestRecordR1.outTemp,
+          this.latestRecordR1.windSpeed
+        );
+      }
+
+      this.r1NextRead = Date.now() + this.pollInterval;
+
+      // Only write record to the databse if we have a value for each field
+      if (Object.keys(this.latestRecordR1).length === 5) {
+        super.next(this.latestRecordR1 as WeatherRecord);
+      }
     }
 
-    setTimeout(() => this.startListening(), 18 * 1000);
+    return setTimeout(() => this.startListening(), this.pollInterval);
   }
 
   next() {

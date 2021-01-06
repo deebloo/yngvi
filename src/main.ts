@@ -1,3 +1,4 @@
+import { IPoint } from 'influx';
 import { createDbConnection } from './db';
 import { Device } from './device';
 
@@ -14,9 +15,15 @@ const influx = createDbConnection({
 
 const device = new Device(VENDOR_ID, PRODUCT_ID);
 
-device.subscribe(async (data) => {
-  await influx.writePoints([data]);
+device.subscribe(async (fields) => {
+  const point: IPoint = {
+    measurement: 'weather',
+    timestamp: new Date(),
+    fields,
+  };
 
-  console.log(data.timestamp);
-  console.table([data.fields]);
+  await influx.writePoints([point]);
+
+  console.log(point.timestamp);
+  console.table([point.fields]);
 });
