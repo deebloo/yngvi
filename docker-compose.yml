@@ -7,10 +7,9 @@ services:
   #   depends_on:
   #     - influxdb
   #   environment:
-  #     - ACURITE_DATA=/var/lib/weather
   #     - INFLUXDB_HOST=influxdb
-  #   volumes:
-  #     - ${ACURITE_DATA}:/var/lib/weather
+  #   devices:
+  #     - /dev/ttyUSB0:/dev/ttyUSB0
 
   influxdb:
     container_name: influxdb
