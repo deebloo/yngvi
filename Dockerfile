@@ -1,4 +1,4 @@
-FROM node:14.0.0 as build
+FROM node:14.15.4 as build
 
 COPY package*.json ./
 COPY tsconfig.json ./
@@ -7,7 +7,7 @@ COPY src src
 RUN npm ci
 RUN npm run build
 
-FROM node:14.0.0
+FROM node:14.15.4
 
 WORKDIR /var/weather
 
