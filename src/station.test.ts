@@ -50,7 +50,7 @@ test.cb('it should create a device', (t) => {
       [1, 197, 26, 113, 0, 56, 0, 108, 3, 255],
       [1, 197, 26, 120, 0, 102, 15, 65, 3, 255],
     ]),
-    { pollInterval: 0 }
+    { pollInterval: 10 }
   );
 
   station.subscribe((res) => {
