@@ -1,7 +1,6 @@
 import { EventEmitter } from 'events';
 import { HID } from 'node-hid';
 import test from 'ava';
-import { map } from 'rxjs/operators';
 
 import { Station } from './station';
 
