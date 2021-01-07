@@ -1,4 +1,5 @@
 import test from 'ava';
+
 import { calculateWindChill } from './util';
 
 test('calculateWindChill() should return correct wind chill', (t) => {
