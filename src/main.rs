@@ -41,8 +41,6 @@ async fn main() {
 
             station.start().await;
         } else {
-
-
             if retry_count < 5 {
                 // If failed to connect wait a few seconds and try again
                 set_timeout(Duration::from_secs(retry_delay)).await;
