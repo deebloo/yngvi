@@ -31,7 +31,11 @@ pub struct Station<'a> {
     pub device: &'a HidDevice,
     pub writer: &'a Writer<'a>,
 }
-impl Station<'_> {
+impl<'a> Station<'a> {
+    pub fn new(device: &'a HidDevice, writer: &'a Writer<'a>) -> Station<'a> {
+        Station { device, writer }
+    }
+
     pub async fn start(&self) {
         loop {
             let report = self.read_report_r1();
