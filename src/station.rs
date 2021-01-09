@@ -1,7 +1,7 @@
 use crate::util::calc_wind_chill;
 use crate::writer::Writer;
 
-use hidapi::HidDevice;
+use hidapi::{HidDevice, HidError};
 use settimeout::set_timeout;
 use std::time::Duration;
 
@@ -28,32 +28,35 @@ pub enum WeatherRecord {
 }
 
 pub struct Station<'a> {
-    device: &'a HidDevice,
+    pub device: &'a HidDevice,
+    pub writer: &'a Writer<'a>,
 }
-impl<'a> Station<'a> {
-    pub fn new(device: &'a HidDevice) -> Station {
-        Station { device }
-    }
-
-    pub async fn start(&self, writer: &Writer<'a>) {
+impl Station<'_> {
+    pub async fn start(&self) {
         loop {
             let report = self.read_report_r1();
-            let write_result = writer.write(&report).await;
 
-            assert!(write_result.is_ok(), "Write result was not okay");
-            println!("{:?}", report);
+            if let Ok(record) = report {
+                let write_result = self.writer.write(&record).await;
+
+                if write_result.is_ok() {
+                    println!("{:?}", record);
+                }
+            }
 
             set_timeout(Duration::from_secs(18)).await;
         }
     }
 
-    pub fn read_report_r1(&self) -> WeatherRecord {
-        // Read data from device
+    pub fn read_report_r1(&self) -> Result<WeatherRecord, HidError> {
         let mut buf: Report1 = [1u8; 10];
 
-        self.device.get_feature_report(&mut buf).unwrap();
+        let res = self.device.get_feature_report(&mut buf);
 
-        Station::decode_r1(&buf)
+        match res {
+            Ok(_) => Ok(Station::decode_r1(&buf)),
+            Err(err) => Err(err),
+        }
     }
 
     pub fn decode_r1(data: &Report1) -> WeatherRecord {

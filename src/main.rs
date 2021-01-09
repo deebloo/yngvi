@@ -18,7 +18,11 @@ async fn main() {
     let influx_addr = env::var("INFLUX_ADDR").unwrap_or(String::from("http://localhost:8086"));
     let client = Client::new(influx_addr, "weather");
     let writer = Writer::new(&client);
-    let station = Station::new(&device);
 
-    station.start(&writer).await;
+    let station = Station {
+        device: &device,
+        writer: &writer,
+    };
+
+    station.start().await;
 }
