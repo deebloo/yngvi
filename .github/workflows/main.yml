@@ -24,7 +24,7 @@ jobs:
         with:
           toolchain: stable
 
-      - run: apt-get install libusb
+      - run: sudo apt-get install libusb
 
       - uses: actions-rs/cargo@v1
         with:
