@@ -19,6 +19,7 @@ async fn main() {
 
     let mut connected = false;
     let mut retry_count = 0;
+    let mut retry_delay = 5; // in seconds
 
     while !connected {
         let device = hid.open(vid, pid);
@@ -40,11 +41,14 @@ async fn main() {
 
             station.start().await;
         } else {
-            retry_count += 1;
 
-            if retry_count <= 5 {
+
+            if retry_count < 5 {
                 // If failed to connect wait a few seconds and try again
-                set_timeout(Duration::from_secs(10)).await;
+                set_timeout(Duration::from_secs(retry_delay)).await;
+
+                retry_count += 1; // keep track of how many times we have retried
+                retry_delay += 5; // wait a bit longer each attempt to give the program a better chance
             } else {
                 panic!("Failed to connect to device.")
             }
