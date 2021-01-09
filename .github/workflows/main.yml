@@ -30,5 +30,5 @@ jobs:
       
       - uses: actions-rs/cargo@v1
         with:
-          command: build
+          command: check
           args: --release --all-features
