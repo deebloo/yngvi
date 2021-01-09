@@ -111,3 +111,37 @@ impl Station<'_> {
         cm / 2.54
     }
 }
+
+#[cfg(test)]
+mod tests {
+    // Note this useful idiom: importing names from outer (for mod tests) scope.
+    use super::*;
+
+    #[test]
+    fn decode_r1_type_1() {
+        let raw: [u8; 10] = [1, 197, 26, 113, 0, 200, 0, 108, 3, 255];
+        let r = Station::decode_r1(&raw);
+
+        if let WeatherRecord::Type1(val) = r {
+            assert_eq!(val.rain, 1.08);
+            assert_eq!(val.wind_speed, 3.0);
+        } else {
+            panic!("record is not of type 1");
+        }
+    }
+
+    #[test]
+    fn decode_r1_type_2() {
+        let raw: [u8; 10] = [1, 197, 26, 120, 0, 5, 75, 75, 3, 255];
+        let r = Station::decode_r1(&raw);
+
+        if let WeatherRecord::Type2(val) = r {
+            assert_eq!(val.wind_speed, 0.0);
+            assert_eq!(val.out_temp, 31.499998);
+            assert_eq!(val.out_humid, 75);
+            assert_eq!(val.wind_chill, 31.499998);
+        } else {
+            panic!("record is not of type 2");
+        }
+    }
+}

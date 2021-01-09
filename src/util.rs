@@ -8,3 +8,19 @@ pub fn calc_wind_chill(wind_speed: f32, out_temp: f32) -> f32 {
 
     raw
 }
+
+#[cfg(test)]
+mod tests {
+    // Note this useful idiom: importing names from outer (for mod tests) scope.
+    use super::*;
+
+    #[test]
+    fn test_calc_wind_chill_above_2() {
+        assert_eq!(calc_wind_chill(3., 38.), 36.10366);
+    }
+
+    #[test]
+    fn test_calc_wind_chill_below_3() {
+        assert_eq!(calc_wind_chill(3., 38.), 36.10366);
+    }
+}
