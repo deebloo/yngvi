@@ -20,13 +20,12 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
+      - uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
 
-      - name: Install Deps
-        run: npm ci
+      - uses: actions-rs/cargo@v1
+        run: cargo test
       
-      - name: Run tests
-        run: npm test
-      
-      - name: Run build
-        run: npm run build
-
+      - uses: actions-rs/cargo@v1
+        run: cargo build
