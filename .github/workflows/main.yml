@@ -23,6 +23,8 @@ jobs:
       - uses: actions-rs/toolchain@v1
         with:
           toolchain: stable
+          
+      - run: pkg-config --libs --cflags libusb-1.0
 
       - uses: actions-rs/cargo@v1
         with:
