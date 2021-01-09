@@ -17,10 +17,10 @@ async fn main() {
     let hid = HidApi::new().unwrap();
     let influx_addr = env::var("INFLUX_ADDR").unwrap_or(String::from("http://localhost:8086"));
 
-    let mut should_retry = true;
+    let mut connected = false;
     let mut retry_count = 0;
 
-    while should_retry {
+    while !connected {
         let device = hid.open(vid, pid);
 
         println!("Attempting to connect to device...");
@@ -28,7 +28,7 @@ async fn main() {
         if let Ok(value) = device {
             println!("Device connected!");
 
-            should_retry = false;
+            connected = true;
 
             let client = Client::new(&influx_addr, "weather");
             let writer = Writer::new(&client);
