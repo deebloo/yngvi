@@ -42,7 +42,7 @@ async fn main() {
         } else {
             retry_count += 1;
 
-            if retry_count > 5 {
+            if retry_count <= 5 {
                 // If failed to connect wait a few seconds and try again
                 set_timeout(Duration::from_secs(10)).await;
             } else {
