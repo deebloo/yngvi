@@ -84,13 +84,11 @@ impl<'a> Station<'a> {
 
                         record.wind_chill = Some(wind_chill);
 
-                        Ok(WeatherRecord::Type1(record))
-                    } else {
-                        Ok(decoded_record)
+                        return Ok(WeatherRecord::Type1(record));
                     }
-                } else {
-                    Ok(decoded_record)
                 }
+
+                Ok(decoded_record)
             }
             Err(err) => Err(err),
         }
