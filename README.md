@@ -7,4 +7,4 @@ Only tested with the 5-1 weather station and [display for 5-1 weather station](h
 
 Pulls data from display and populates InfluxDb with Chronograf visualizations.
 
-![alt text](images/dashboard.png)
+![alt text](images/dashboard_1.png)
