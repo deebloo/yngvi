@@ -79,10 +79,9 @@ impl<'a> Station<'a> {
                     // check to see if there is a previous recorded temp
                     if let Some(last_temp) = self.last_recorded_temp {
                         // If we have a previous temp calculate new wind chill
-                        let wind_speed = record.wind_speed;
-                        let wind_chill = calc_wind_chill(wind_speed, last_temp);
+                        let new_wind_chill = calc_wind_chill(record.wind_speed, last_temp);
 
-                        record.wind_chill = Some(wind_chill);
+                        record.wind_chill = Some(new_wind_chill);
 
                         return Ok(WeatherRecord::Type1(record));
                     }
