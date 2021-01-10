@@ -88,12 +88,12 @@ impl<'a> Station<'a> {
     }
 
     pub fn decode_r1_t1(data: &Report1, prev_temp: Option<f32>) -> WeatherRecordType1 {
-        let rain = Station::decode_rain(&data);
+        let rain = Station::decode_rain(data);
         let wind_speed = Station::decode_wind_speed(data);
 
-        if let Some(last_temp) = prev_temp {
+        if let Some(temp) = prev_temp {
             // If we have a previous temp calculate new wind chill
-            let wind_chill = calc_wind_chill(wind_speed, last_temp);
+            let wind_chill = calc_wind_chill(wind_speed, temp);
 
             WeatherRecordType1 {
                 wind_speed,
