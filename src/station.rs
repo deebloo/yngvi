@@ -73,9 +73,9 @@ impl<'a> Station<'a> {
 
         match res {
             Ok(_) => {
-                let r = Station::decode_r1(&buf);
+                let decoded_record = Station::decode_r1(&buf);
 
-                if let WeatherRecord::Type1(mut record) = &r {
+                if let WeatherRecord::Type1(mut record) = decoded_record {
                     // check to see if there is a previous recorded temp
                     if let Some(last_temp) = self.last_recorded_temp {
                         // If we have a previous temp calculate new wind chill
@@ -86,10 +86,10 @@ impl<'a> Station<'a> {
 
                         Ok(WeatherRecord::Type1(record))
                     } else {
-                        Ok(r)
+                        Ok(decoded_record)
                     }
                 } else {
-                    Ok(r)
+                    Ok(decoded_record)
                 }
             }
             Err(err) => Err(err),
