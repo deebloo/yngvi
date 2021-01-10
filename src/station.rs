@@ -72,46 +72,53 @@ impl<'a> Station<'a> {
         let res = self.device.get_feature_report(&mut buf);
 
         match res {
-            Ok(_) => {
-                let decoded_record = Station::decode_r1(&buf);
-
-                if let WeatherRecord::Type1(mut record) = decoded_record {
-                    // check to see if there is a previous recorded temp
-                    if let Some(last_temp) = self.last_recorded_temp {
-                        // If we have a previous temp calculate new wind chill
-                        let new_wind_chill = calc_wind_chill(record.wind_speed, last_temp);
-
-                        record.wind_chill = Some(new_wind_chill);
-
-                        return Ok(WeatherRecord::Type1(record));
-                    }
-                }
-
-                Ok(decoded_record)
-            }
+            Ok(_) => Ok(Station::decode_r1(&buf, self.last_recorded_temp)),
             Err(err) => Err(err),
         }
     }
 
-    pub fn decode_r1(data: &Report1) -> WeatherRecord {
+    pub fn decode_r1(data: &Report1, prev_temp: Option<f32>) -> WeatherRecord {
+        let report_flavor = Station::decode_r1_flavor(&data);
+
+        if report_flavor == 1 {
+            WeatherRecord::Type1(Station::decode_r1_t1(data, prev_temp))
+        } else {
+            WeatherRecord::Type2(Station::decode_r1_t2(data))
+        }
+    }
+
+    pub fn decode_r1_t1(data: &Report1, prev_temp: Option<f32>) -> WeatherRecordType1 {
+        let rain = Station::decode_rain(&data);
         let wind_speed = Station::decode_wind_speed(data);
 
-        if Station::decode_r1_flavor(&data) == 1 {
-            return WeatherRecord::Type1(WeatherRecordType1 {
+        if let Some(last_temp) = prev_temp {
+            // If we have a previous temp calculate new wind chill
+            let wind_chill = calc_wind_chill(wind_speed, last_temp);
+
+            WeatherRecordType1 {
+                wind_speed,
+                wind_chill: Some(wind_chill),
+                rain,
+            }
+        } else {
+            WeatherRecordType1 {
                 wind_speed,
                 wind_chill: None,
-                rain: Station::decode_rain(&data),
-            });
+                rain,
+            }
         }
+    }
 
+    pub fn decode_r1_t2(data: &Report1) -> WeatherRecordType2 {
+        let wind_speed = Station::decode_wind_speed(data);
         let out_temp = Station::decode_out_temp(&data);
 
-        WeatherRecord::Type2(WeatherRecordType2 {
+        WeatherRecordType2 {
             wind_speed,
             out_temp,
             out_humid: Station::decode_humidity(&data),
             wind_chill: calc_wind_chill(wind_speed, out_temp),
-        })
+        }
     }
 
     pub fn decode_wind_speed(data: &Report1) -> f32 {
@@ -154,11 +161,12 @@ mod tests {
     #[test]
     fn decode_r1_type_1() {
         let raw: [u8; 10] = [1, 197, 26, 113, 0, 200, 0, 108, 3, 255];
-        let r = Station::decode_r1(&raw);
+        let r = Station::decode_r1(&raw, Some(31.499998));
 
         if let WeatherRecord::Type1(val) = r {
             assert_eq!(val.rain, 1.08);
             assert_eq!(val.wind_speed, 3.0);
+            assert_eq!(val.wind_chill, Some(28.75116));
         } else {
             panic!("record is not of type 1");
         }
@@ -167,7 +175,7 @@ mod tests {
     #[test]
     fn decode_r1_type_2() {
         let raw: [u8; 10] = [1, 197, 26, 120, 0, 5, 75, 75, 3, 255];
-        let r = Station::decode_r1(&raw);
+        let r = Station::decode_r1(&raw, Some(31.499998));
 
         if let WeatherRecord::Type2(val) = r {
             assert_eq!(val.wind_speed, 0.0);
