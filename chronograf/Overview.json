@@ -12,6 +12,123 @@
 		"id": "1",
 		"cells": [
 			{
+				"i": "8f3ea4e7-6a2d-4b1d-88e1-aa03c0e90d59",
+				"x": 0,
+				"y": 12,
+				"w": 2,
+				"h": 2,
+				"name": "Peak Wind Speed",
+				"queries": [
+					{
+						"query": "SELECT max(\"wind_speed\") AS \"max_wind_speed\" FROM \"weather\".\"autogen\".\"weather\" WHERE time > :dashboardTime: AND time < :upperDashboardTime: GROUP BY time(1d) FILL(null)",
+						"queryConfig": {
+							"database": "weather",
+							"measurement": "weather",
+							"retentionPolicy": "autogen",
+							"fields": [
+								{
+									"value": "max",
+									"type": "func",
+									"alias": "max_wind_speed",
+									"args": [
+										{
+											"value": "wind_speed",
+											"type": "field",
+											"alias": ""
+										}
+									]
+								}
+							],
+							"tags": {},
+							"groupBy": {
+								"time": "1d",
+								"tags": []
+							},
+							"areTagsAccepted": false,
+							"fill": "null",
+							"rawText": null,
+							"range": null,
+							"shifts": null
+						},
+						"source": "",
+						"type": "influxql"
+					}
+				],
+				"axes": {
+					"x": {
+						"bounds": [
+							"",
+							""
+						],
+						"label": "",
+						"prefix": "",
+						"suffix": "",
+						"base": "10",
+						"scale": "linear"
+					},
+					"y": {
+						"bounds": [
+							"",
+							""
+						],
+						"label": "",
+						"prefix": "",
+						"suffix": " mph",
+						"base": "10",
+						"scale": "linear"
+					},
+					"y2": {
+						"bounds": [
+							"",
+							""
+						],
+						"label": "",
+						"prefix": "",
+						"suffix": "",
+						"base": "10",
+						"scale": "linear"
+					}
+				},
+				"type": "single-stat",
+				"colors": [
+					{
+						"id": "base",
+						"type": "text",
+						"hex": "#00C9FF",
+						"name": "laser",
+						"value": "-1000000000000000000"
+					}
+				],
+				"legend": {},
+				"tableOptions": {
+					"verticalTimeAxis": true,
+					"sortBy": {
+						"internalName": "time",
+						"displayName": "",
+						"visible": true
+					},
+					"wrapping": "truncate",
+					"fixFirstColumn": true
+				},
+				"fieldOptions": [
+					{
+						"internalName": "time",
+						"displayName": "",
+						"visible": true
+					}
+				],
+				"timeFormat": "MM/DD/YYYY HH:mm:ss",
+				"decimalPlaces": {
+					"isEnforced": true,
+					"digits": 0
+				},
+				"note": "",
+				"noteVisibility": "default",
+				"links": {
+					"self": "/chronograf/v1/dashboards/1/cells/8f3ea4e7-6a2d-4b1d-88e1-aa03c0e90d59"
+				}
+			},
+			{
 				"i": "6d411458-92b8-484b-9c32-7cef996e56f3",
 				"x": 2,
 				"y": 0,
@@ -540,8 +657,8 @@
 					{
 						"id": "base",
 						"type": "text",
-						"hex": "#00C9FF",
-						"name": "laser",
+						"hex": "#FFD255",
+						"name": "thunder",
 						"value": "-1000000000000000000"
 					}
 				],
@@ -649,8 +766,8 @@
 					{
 						"id": "base",
 						"type": "text",
-						"hex": "#00C9FF",
-						"name": "laser",
+						"hex": "#ffffff",
+						"name": "white",
 						"value": "-1000000000000000000"
 					}
 				],
@@ -688,7 +805,7 @@
 				"x": 0,
 				"y": 9,
 				"w": 2,
-				"h": 5,
+				"h": 3,
 				"name": "Avg Wind Speed",
 				"queries": [
 					{
@@ -875,8 +992,8 @@
 					{
 						"id": "base",
 						"type": "text",
-						"hex": "#32B08C",
-						"name": "viridian",
+						"hex": "#7A65F2",
+						"name": "star",
 						"value": "-1000000000000000000"
 					}
 				],
@@ -984,8 +1101,8 @@
 					{
 						"id": "base",
 						"type": "text",
-						"hex": "#00C9FF",
-						"name": "laser",
+						"hex": "#4ED8A0",
+						"name": "rainforest",
 						"value": "-1000000000000000000"
 					}
 				],
