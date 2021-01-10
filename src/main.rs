@@ -34,7 +34,7 @@ async fn main() {
             let client = Client::new(&influx_addr, "weather");
             let writer = Writer::new(&client);
 
-            let station = Station::new(&value, &writer);
+            let mut station = Station::new(&value, &writer);
 
             station.start().await;
         } else {

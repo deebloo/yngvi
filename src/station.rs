@@ -7,13 +7,14 @@ use std::time::Duration;
 
 type Report1 = [u8; 10];
 
-#[derive(Debug)]
+#[derive(Debug, Clone, Copy)]
 pub struct WeatherRecordType1 {
     pub wind_speed: f32,
     pub rain: f32,
+    pub wind_chill: Option<f32>,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone, Copy)]
 pub struct WeatherRecordType2 {
     pub wind_speed: f32,
     pub out_temp: f32,
@@ -30,21 +31,34 @@ pub enum WeatherRecord {
 pub struct Station<'a> {
     pub device: &'a HidDevice,
     pub writer: &'a Writer<'a>,
+
+    // keep track of the last recorded temp
+    last_recorded_temp: Option<f32>,
 }
 impl<'a> Station<'a> {
     pub fn new(device: &'a HidDevice, writer: &'a Writer<'a>) -> Station<'a> {
-        Station { device, writer }
+        Station {
+            device,
+            writer,
+            last_recorded_temp: None,
+        }
     }
 
-    pub async fn start(&self) {
+    pub async fn start(&mut self) {
         loop {
-            let report = self.read_report_r1();
+            let read = self.read_report_r1();
 
-            if let Ok(record) = report {
-                let write_result = self.writer.write(&record).await;
+            if let Ok(report) = read {
+                if let WeatherRecord::Type2(val) = report {
+                    // Keep track of the latest temp for other calculations
+                    self.last_recorded_temp = Some(val.out_temp);
+                }
+
+                // write the result
+                let write_result = self.writer.write(&report).await;
 
                 if write_result.is_ok() {
-                    println!("{:?}", record);
+                    println!("{:?}", report);
                 }
             }
 
@@ -58,7 +72,26 @@ impl<'a> Station<'a> {
         let res = self.device.get_feature_report(&mut buf);
 
         match res {
-            Ok(_) => Ok(Station::decode_r1(&buf)),
+            Ok(_) => {
+                let r = Station::decode_r1(&buf);
+
+                if let WeatherRecord::Type1(mut record) = &r {
+                    // check to see if there is a previous recorded temp
+                    if let Some(last_temp) = self.last_recorded_temp {
+                        // If we have a previous temp calculate new wind chill
+                        let wind_speed = record.wind_speed;
+                        let wind_chill = calc_wind_chill(wind_speed, last_temp);
+
+                        record.wind_chill = Some(wind_chill);
+
+                        Ok(WeatherRecord::Type1(record))
+                    } else {
+                        Ok(r)
+                    }
+                } else {
+                    Ok(r)
+                }
+            }
             Err(err) => Err(err),
         }
     }
@@ -69,6 +102,7 @@ impl<'a> Station<'a> {
         if Station::decode_r1_flavor(&data) == 1 {
             return WeatherRecord::Type1(WeatherRecordType1 {
                 wind_speed,
+                wind_chill: None,
                 rain: Station::decode_rain(&data),
             });
         }

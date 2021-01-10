@@ -8,6 +8,7 @@ pub struct WeatherReadingType1 {
     time: DateTime<Utc>,
     rain: f32,
     wind_speed: f32,
+    wind_chill: Option<f32>,
 }
 
 #[derive(InfluxDbWriteable)]
@@ -36,6 +37,7 @@ impl<'a> Writer<'a> {
                     time,
                     rain: value.rain,
                     wind_speed: value.wind_speed,
+                    wind_chill: value.wind_chill,
                 };
 
                 self.client
