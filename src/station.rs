@@ -1,7 +1,9 @@
 use crate::util::calc_wind_chill;
-use crate::writer::Writer;
+use crate::writer::{WeatherReading, Writer};
 
+use chrono::Utc;
 use hidapi::{HidDevice, HidError};
+use influxdb::Timestamp;
 use settimeout::set_timeout;
 use std::time::Duration;
 
@@ -12,6 +14,7 @@ pub struct WeatherRecordType1 {
     pub wind_speed: f32,
     pub rain: f32,
     pub wind_chill: Option<f32>,
+    pub out_temp: Option<f32>,
 }
 
 #[derive(Debug, Clone, Copy)]
@@ -48,21 +51,44 @@ impl<'a> Station<'a> {
         loop {
             let read = self.read_report_r1();
 
-            if let Ok(report) = read {
-                if let WeatherRecord::Type2(val) = report {
-                    // Keep track of the latest temp for other calculations
-                    self.last_recorded_temp = Some(val.out_temp);
-                }
+            if let Ok(weather_record) = read {
+                let weather_reading = Station::report_r1_to_reading(&weather_record);
+
+                self.last_recorded_temp = weather_reading.out_temp;
 
                 // write the result
-                let write_result = self.writer.write(&report).await;
+                let write_result = self.writer.write(&weather_reading).await;
 
                 if write_result.is_ok() {
-                    println!("{:?}", report);
+                    println!("{:?}", weather_reading);
                 }
             }
 
             set_timeout(Duration::from_secs(18)).await;
+        }
+    }
+
+    fn report_r1_to_reading(weather_record: &WeatherRecord) -> WeatherReading {
+        let time = Timestamp::from(Utc::now()).into();
+
+        match weather_record {
+            WeatherRecord::Type1(value) => WeatherReading {
+                time,
+                rain: Some(value.rain),
+                wind_speed: Some(value.wind_speed),
+                out_temp: value.out_temp,
+                out_humid: None,
+                wind_chill: value.wind_chill,
+            },
+
+            WeatherRecord::Type2(value) => WeatherReading {
+                time,
+                rain: None,
+                wind_speed: Some(value.wind_speed),
+                out_temp: Some(value.out_temp),
+                out_humid: Some(value.out_humid),
+                wind_chill: Some(value.wind_chill),
+            },
         }
     }
 
@@ -98,12 +124,14 @@ impl<'a> Station<'a> {
             WeatherRecordType1 {
                 wind_speed,
                 wind_chill: Some(wind_chill),
+                out_temp: Some(temp),
                 rain,
             }
         } else {
             WeatherRecordType1 {
                 wind_speed,
                 wind_chill: None,
+                out_temp: None,
                 rain,
             }
         }
