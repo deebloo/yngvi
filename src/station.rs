@@ -2,7 +2,7 @@ use crate::util::calc_wind_chill;
 use crate::writer::{WeatherReading, Writer};
 
 use chrono::Utc;
-use hidapi::{HidApi, HidDevice, HidError};
+use hidapi::{HidApi, HidDevice};
 use influxdb::Timestamp;
 use settimeout::set_timeout;
 use std::time::Duration;
@@ -40,24 +40,30 @@ pub struct Station<'a> {
     pub writer: &'a Writer<'a>,
     pub device_ids: DeviceIds,
     last_recorded_temp: Option<f32>, // keep track of the last recorded temp
-    device: HidDevice,
+    device: Option<HidDevice>,
 }
 impl<'a> Station<'a> {
     pub fn new(hid: &'a HidApi, device_ids: DeviceIds, writer: &'a Writer<'a>) -> Station<'a> {
-        let device = hid.open(device_ids.vid, device_ids.pid).unwrap();
-
         Station {
             hid,
             writer,
             last_recorded_temp: None,
             device_ids,
-            device,
+            device: None,
         }
     }
 
+    /**
+     * Open device and start reading reports.
+     * If a failure to read occurs wait and then re-open device
+     */
     pub async fn start(&mut self) {
+        self.open_device().await;
+
         loop {
-            match self.read_report_r1() {
+            let report = self.read_report_r1();
+
+            match report {
                 Ok(weather_record) => {
                     let weather_reading = Station::report_r1_to_reading(&weather_record);
 
@@ -76,32 +82,70 @@ impl<'a> Station<'a> {
                 Err(_) => {
                     println!("There was a problem reading report R1. Reopening...");
 
-                    self.open_device(); // reopen device if error
+                    set_timeout(Duration::from_secs(30)).await; // wait for a bit
 
-                    set_timeout(Duration::from_secs(30)).await;
+                    self.open_device().await; // reopen device
                 }
             }
         }
     }
 
-    fn read_report_r1(&self) -> Result<WeatherRecord, HidError> {
-        let mut buf: Report1 = [1u8; 10];
+    /**
+     * Open HID device.
+     * Attempt to connect 3 times
+     */
+    async fn open_device(&mut self) {
+        let mut is_open = false;
+        let mut retry_attempts = 0;
+        let max_retry_attempts = 3;
 
-        let res = self.device.get_feature_report(&mut buf);
+        println!("Opening HID device...");
 
-        match res {
-            Ok(_) => Ok(Station::decode_r1(&buf, self.last_recorded_temp)),
-            Err(err) => Err(err),
+        while !is_open {
+            let open_result = self.hid.open(self.device_ids.vid, self.device_ids.pid);
+
+            if let Ok(device) = open_result {
+                println!("HID device open...",);
+
+                is_open = true;
+
+                self.device = Some(device);
+            } else {
+                if retry_attempts > max_retry_attempts {
+                    panic!(
+                        "There was a problem opening the hid device. Retry attempts ({:?}) exceeded",
+                        max_retry_attempts
+                    );
+                } else {
+                    retry_attempts += 1;
+
+                    println!(
+                        "There was a problem opening HID device. Retrying. Retry Attempt {:?}",
+                        retry_attempts
+                    );
+
+                    set_timeout(Duration::from_secs(10)).await;
+                }
+            }
         }
     }
 
-    fn open_device(&mut self) {
-        let device = self
-            .hid
-            .open(self.device_ids.vid, self.device_ids.pid)
-            .unwrap();
+    /**
+     * Read and decode report R1
+     */
+    fn read_report_r1(&self) -> Result<WeatherRecord, &str> {
+        if let Some(d) = &self.device {
+            let mut buf: Report1 = [1u8; 10];
 
-        self.device = device;
+            let res = d.get_feature_report(&mut buf);
+
+            match res {
+                Ok(_) => Ok(Station::decode_r1(&buf, self.last_recorded_temp)),
+                Err(_) => Err("Failed to read report"),
+            }
+        } else {
+            Err("Failed to read report")
+        }
     }
 
     fn decode_r1(data: &Report1, prev_temp: Option<f32>) -> WeatherRecord {
