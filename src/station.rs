@@ -54,6 +54,7 @@ impl<'a> Station<'a> {
             if let Ok(weather_record) = read {
                 let weather_reading = Station::report_r1_to_reading(&weather_record);
 
+                // keep track of the last recorded temp. Used for other calculations
                 self.last_recorded_temp = weather_reading.out_temp;
 
                 // write the result
@@ -65,6 +66,17 @@ impl<'a> Station<'a> {
             }
 
             set_timeout(Duration::from_secs(18)).await;
+        }
+    }
+
+    pub fn read_report_r1(&self) -> Result<WeatherRecord, HidError> {
+        let mut buf: Report1 = [1u8; 10];
+
+        let res = self.device.get_feature_report(&mut buf);
+
+        match res {
+            Ok(_) => Ok(Station::decode_r1(&buf, self.last_recorded_temp)),
+            Err(err) => Err(err),
         }
     }
 
@@ -89,17 +101,6 @@ impl<'a> Station<'a> {
                 out_humid: Some(value.out_humid),
                 wind_chill: Some(value.wind_chill),
             },
-        }
-    }
-
-    pub fn read_report_r1(&self) -> Result<WeatherRecord, HidError> {
-        let mut buf: Report1 = [1u8; 10];
-
-        let res = self.device.get_feature_report(&mut buf);
-
-        match res {
-            Ok(_) => Ok(Station::decode_r1(&buf, self.last_recorded_temp)),
-            Err(err) => Err(err),
         }
     }
 
