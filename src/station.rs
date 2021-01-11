@@ -2,7 +2,7 @@ use crate::util::calc_wind_chill;
 use crate::writer::{WeatherReading, Writer};
 
 use chrono::Utc;
-use hidapi::{HidDevice, HidError};
+use hidapi::{HidApi, HidDevice, HidError};
 use influxdb::Timestamp;
 use settimeout::set_timeout;
 use std::time::Duration;
@@ -25,51 +25,66 @@ pub struct WeatherRecordType2 {
     pub wind_chill: f32,
 }
 
-#[derive(Debug)]
 pub enum WeatherRecord {
     Type1(WeatherRecordType1),
     Type2(WeatherRecordType2),
 }
 
-pub struct Station<'a> {
-    pub device: &'a HidDevice,
-    pub writer: &'a Writer<'a>,
+pub struct DeviceIds {
+    pub vid: u16,
+    pub pid: u16,
+}
 
-    // keep track of the last recorded temp
-    last_recorded_temp: Option<f32>,
+pub struct Station<'a> {
+    pub hid: &'a HidApi,
+    pub writer: &'a Writer<'a>,
+    pub device_ids: DeviceIds,
+    last_recorded_temp: Option<f32>, // keep track of the last recorded temp
+    device: HidDevice,
 }
 impl<'a> Station<'a> {
-    pub fn new(device: &'a HidDevice, writer: &'a Writer<'a>) -> Station<'a> {
+    pub fn new(hid: &'a HidApi, device_ids: DeviceIds, writer: &'a Writer<'a>) -> Station<'a> {
+        let device = hid.open(device_ids.vid, device_ids.pid).unwrap();
+
         Station {
-            device,
+            hid,
             writer,
             last_recorded_temp: None,
+            device_ids,
+            device,
         }
     }
 
     pub async fn start(&mut self) {
         loop {
-            let read = self.read_report_r1();
+            match self.read_report_r1() {
+                Ok(weather_record) => {
+                    let weather_reading = Station::report_r1_to_reading(&weather_record);
 
-            if let Ok(weather_record) = read {
-                let weather_reading = Station::report_r1_to_reading(&weather_record);
+                    // keep track of the last recorded temp. Used for other calculations
+                    self.last_recorded_temp = weather_reading.out_temp;
 
-                // keep track of the last recorded temp. Used for other calculations
-                self.last_recorded_temp = weather_reading.out_temp;
+                    // write the result
+                    let write_result = self.writer.write(&weather_reading).await;
 
-                // write the result
-                let write_result = self.writer.write(&weather_reading).await;
+                    if write_result.is_ok() {
+                        println!("{:?}", weather_reading);
+                    }
 
-                if write_result.is_ok() {
-                    println!("{:?}", weather_reading);
+                    set_timeout(Duration::from_secs(18)).await;
+                }
+                Err(_) => {
+                    println!("There was a problem reading report R1. Reopening...");
+
+                    self.open_device(); // reopen device if error
+
+                    set_timeout(Duration::from_secs(30)).await;
                 }
             }
-
-            set_timeout(Duration::from_secs(18)).await;
         }
     }
 
-    pub fn read_report_r1(&self) -> Result<WeatherRecord, HidError> {
+    fn read_report_r1(&self) -> Result<WeatherRecord, HidError> {
         let mut buf: Report1 = [1u8; 10];
 
         let res = self.device.get_feature_report(&mut buf);
@@ -77,6 +92,25 @@ impl<'a> Station<'a> {
         match res {
             Ok(_) => Ok(Station::decode_r1(&buf, self.last_recorded_temp)),
             Err(err) => Err(err),
+        }
+    }
+
+    fn open_device(&mut self) {
+        let device = self
+            .hid
+            .open(self.device_ids.vid, self.device_ids.pid)
+            .unwrap();
+
+        self.device = device;
+    }
+
+    fn decode_r1(data: &Report1, prev_temp: Option<f32>) -> WeatherRecord {
+        let report_flavor = Station::decode_r1_flavor(&data);
+
+        if report_flavor == 1 {
+            WeatherRecord::Type1(Station::decode_r1_t1(data, prev_temp))
+        } else {
+            WeatherRecord::Type2(Station::decode_r1_t2(data))
         }
     }
 
@@ -104,17 +138,7 @@ impl<'a> Station<'a> {
         }
     }
 
-    pub fn decode_r1(data: &Report1, prev_temp: Option<f32>) -> WeatherRecord {
-        let report_flavor = Station::decode_r1_flavor(&data);
-
-        if report_flavor == 1 {
-            WeatherRecord::Type1(Station::decode_r1_t1(data, prev_temp))
-        } else {
-            WeatherRecord::Type2(Station::decode_r1_t2(data))
-        }
-    }
-
-    pub fn decode_r1_t1(data: &Report1, prev_temp: Option<f32>) -> WeatherRecordType1 {
+    fn decode_r1_t1(data: &Report1, prev_temp: Option<f32>) -> WeatherRecordType1 {
         let rain = Station::decode_rain(data);
         let wind_speed = Station::decode_wind_speed(data);
 
@@ -138,7 +162,7 @@ impl<'a> Station<'a> {
         }
     }
 
-    pub fn decode_r1_t2(data: &Report1) -> WeatherRecordType2 {
+    fn decode_r1_t2(data: &Report1) -> WeatherRecordType2 {
         let wind_speed = Station::decode_wind_speed(data);
         let out_temp = Station::decode_out_temp(&data);
 
@@ -150,7 +174,7 @@ impl<'a> Station<'a> {
         }
     }
 
-    pub fn decode_wind_speed(data: &Report1) -> f32 {
+    fn decode_wind_speed(data: &Report1) -> f32 {
         let n = ((data[4] & 0x1f) << 3) | ((data[5] & 0x70) >> 4);
 
         if n == 0 {
@@ -160,11 +184,11 @@ impl<'a> Station<'a> {
         ((0.8278 * n as f32 + 1.0) / 1.609).round()
     }
 
-    pub fn decode_r1_flavor(data: &Report1) -> u8 {
+    fn decode_r1_flavor(data: &Report1) -> u8 {
         data[3] & 0x0f
     }
 
-    pub fn decode_out_temp(data: &Report1) -> f32 {
+    fn decode_out_temp(data: &Report1) -> f32 {
         let a = ((data[5] & 0x0f) as u32) << 7;
         let b = (data[6] & 0x7f) as u32;
         let celcius = (a | b) as f32 / 18.0 - 40.0;
@@ -172,11 +196,11 @@ impl<'a> Station<'a> {
         (celcius * 9.) / 5. + 32.
     }
 
-    pub fn decode_humidity(data: &Report1) -> u8 {
+    fn decode_humidity(data: &Report1) -> u8 {
         data[7]
     }
 
-    pub fn decode_rain(data: &Report1) -> f32 {
+    fn decode_rain(data: &Report1) -> f32 {
         let cm = (((data[6] & 0x3f) << 7) | (data[7] & 0x7f)) as f32 * 0.0254;
 
         cm / 2.54
