@@ -27,15 +27,15 @@ async fn main() {
     while !device_api_ready {
         let hid = HidApi::new();
 
-        let device_ids = DeviceIds {
-            vid: 0x24c0,
-            pid: 0x003,
-        };
-
         if let Ok(api) = hid {
             println!("HID API is ready...",);
 
             device_api_ready = true;
+
+            let device_ids = DeviceIds {
+                vid: 0x24c0,
+                pid: 0x003,
+            };
 
             let mut station = Station::new(&api, device_ids, &writer);
 

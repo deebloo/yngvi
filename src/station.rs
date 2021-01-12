@@ -47,8 +47,8 @@ impl<'a> Station<'a> {
         Station {
             hid,
             writer,
-            last_recorded_temp: None,
             device_ids,
+            last_recorded_temp: None,
             device: None,
         }
     }
@@ -101,7 +101,7 @@ impl<'a> Station<'a> {
 
         println!("Opening HID device...");
 
-        while !is_open {
+        while !is_open && retry_attempts <= max_retry_attempts {
             let open_result = self.hid.open(self.device_ids.vid, self.device_ids.pid);
 
             match open_result {
@@ -113,7 +113,7 @@ impl<'a> Station<'a> {
                     self.device = Some(device);
                 }
                 Err(_) => {
-                    if retry_attempts > max_retry_attempts {
+                    if retry_attempts == max_retry_attempts {
                         panic!(
                             "There was a problem opening the hid device. Retry attempts ({:?}) exceeded",
                             max_retry_attempts
