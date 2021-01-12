@@ -1,6 +1,6 @@
 pub fn calc_wind_chill(wind_speed: f32, out_temp: f32) -> f32 {
     if wind_speed < 3. {
-        return out_temp as f32;
+        return out_temp;
     }
 
     let speed = wind_speed.powf(0.16);
