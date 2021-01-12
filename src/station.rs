@@ -1,9 +1,7 @@
 use crate::util::calc_wind_chill;
 use crate::writer::{WeatherReading, Writer};
 
-use chrono::Utc;
 use hidapi::{HidApi, HidDevice};
-use influxdb::Timestamp;
 use settimeout::set_timeout;
 use std::time::Duration;
 
@@ -39,7 +37,7 @@ pub struct Station<'a> {
     pub hid: &'a HidApi,
     pub writer: &'a Writer<'a>,
     pub device_ids: DeviceIds,
-    last_recorded_temp: Option<f32>, // keep track of the last recorded temp
+    last_recorded_reading: WeatherReading, // keep track of the last recorded temp
     device: Option<HidDevice>,
 }
 impl<'a> Station<'a> {
@@ -48,7 +46,7 @@ impl<'a> Station<'a> {
             hid,
             writer,
             device_ids,
-            last_recorded_temp: None,
+            last_recorded_reading: WeatherReading::new(),
             device: None,
         }
     }
@@ -65,10 +63,11 @@ impl<'a> Station<'a> {
 
             match report {
                 Ok(weather_record) => {
-                    let weather_reading = Station::report_r1_to_reading(&weather_record);
+                    let prev_read = self.last_recorded_reading;
+                    let weather_reading = Station::report_r1_to_reading(&weather_record, prev_read);
 
-                    // keep track of the last recorded temp. Used for other calculations
-                    self.last_recorded_temp = weather_reading.out_temp;
+                    // keep track of the last reading. Used for other calculations
+                    self.last_recorded_reading = weather_reading;
 
                     // write the result
                     let write_result = self.writer.write(&weather_reading).await;
@@ -143,7 +142,7 @@ impl<'a> Station<'a> {
             let res = d.get_feature_report(&mut buf);
 
             match res {
-                Ok(_) => Ok(Station::decode_r1(&buf, self.last_recorded_temp)),
+                Ok(_) => Ok(Station::decode_r1(&buf, self.last_recorded_reading)),
                 Err(_) => Err("Failed to read report"),
             }
         } else {
@@ -151,18 +150,21 @@ impl<'a> Station<'a> {
         }
     }
 
-    fn decode_r1(data: &Report1, prev_temp: Option<f32>) -> WeatherRecord {
+    fn decode_r1(data: &Report1, prev_reading: WeatherReading) -> WeatherRecord {
         let report_flavor = Station::decode_r1_flavor(&data);
 
         if report_flavor == 1 {
-            WeatherRecord::Type1(Station::decode_r1_t1(data, prev_temp))
+            WeatherRecord::Type1(Station::decode_r1_t1(data, prev_reading))
         } else {
             WeatherRecord::Type2(Station::decode_r1_t2(data))
         }
     }
 
-    fn report_r1_to_reading(weather_record: &WeatherRecord) -> WeatherReading {
-        let time = Timestamp::from(Utc::now()).into();
+    fn report_r1_to_reading(
+        weather_record: &WeatherRecord,
+        prev_reading: WeatherReading,
+    ) -> WeatherReading {
+        let time = Writer::create_timestamp();
 
         match weather_record {
             WeatherRecord::Type1(value) => WeatherReading {
@@ -170,13 +172,13 @@ impl<'a> Station<'a> {
                 rain: Some(value.rain),
                 wind_speed: Some(value.wind_speed),
                 out_temp: value.out_temp,
-                out_humid: None,
+                out_humid: prev_reading.out_humid,
                 wind_chill: value.wind_chill,
             },
 
             WeatherRecord::Type2(value) => WeatherReading {
                 time,
-                rain: None,
+                rain: prev_reading.rain,
                 wind_speed: Some(value.wind_speed),
                 out_temp: Some(value.out_temp),
                 out_humid: Some(value.out_humid),
@@ -185,11 +187,11 @@ impl<'a> Station<'a> {
         }
     }
 
-    fn decode_r1_t1(data: &Report1, prev_temp: Option<f32>) -> WeatherRecordType1 {
+    fn decode_r1_t1(data: &Report1, prev_reading: WeatherReading) -> WeatherRecordType1 {
         let rain = Station::decode_rain(data);
         let wind_speed = Station::decode_wind_speed(data);
 
-        if let Some(temp) = prev_temp {
+        if let Some(temp) = prev_reading.out_temp {
             // If we have a previous temp calculate new wind chill
             let wind_chill = calc_wind_chill(wind_speed, temp);
 
@@ -261,7 +263,11 @@ mod tests {
     #[test]
     fn decode_r1_type_1() {
         let raw: [u8; 10] = [1, 197, 26, 113, 0, 200, 0, 108, 3, 255];
-        let r = Station::decode_r1(&raw, Some(31.499998));
+
+        let mut prev_reading = WeatherReading::new();
+        prev_reading.out_temp = Some(31.499998);
+
+        let r = Station::decode_r1(&raw, prev_reading);
 
         if let WeatherRecord::Type1(val) = r {
             assert_eq!(val.rain, 1.08);
@@ -275,7 +281,11 @@ mod tests {
     #[test]
     fn decode_r1_type_2() {
         let raw: [u8; 10] = [1, 197, 26, 120, 0, 5, 75, 75, 3, 255];
-        let r = Station::decode_r1(&raw, Some(31.499998));
+
+        let mut prev_reading = WeatherReading::new();
+        prev_reading.out_temp = Some(31.499998);
+
+        let r = Station::decode_r1(&raw, prev_reading);
 
         if let WeatherRecord::Type2(val) = r {
             assert_eq!(val.wind_speed, 0.0);
