@@ -80,7 +80,7 @@ impl<'a> Station<'a> {
                     set_timeout(Duration::from_secs(18)).await;
                 }
                 Err(_) => {
-                    println!("There was a problem reading report R1. Reopening...");
+                    println!("There was a problem reading report R1.");
 
                     set_timeout(Duration::from_secs(30)).await; // wait for a bit
 
@@ -104,27 +104,30 @@ impl<'a> Station<'a> {
         while !is_open {
             let open_result = self.hid.open(self.device_ids.vid, self.device_ids.pid);
 
-            if let Ok(device) = open_result {
-                println!("HID device open...",);
+            match open_result {
+                Ok(device) => {
+                    println!("HID device open...",);
 
-                is_open = true;
+                    is_open = true;
 
-                self.device = Some(device);
-            } else {
-                if retry_attempts > max_retry_attempts {
-                    panic!(
-                        "There was a problem opening the hid device. Retry attempts ({:?}) exceeded",
-                        max_retry_attempts
-                    );
-                } else {
-                    retry_attempts += 1;
+                    self.device = Some(device);
+                }
+                Err(_) => {
+                    if retry_attempts > max_retry_attempts {
+                        panic!(
+                            "There was a problem opening the hid device. Retry attempts ({:?}) exceeded",
+                            max_retry_attempts
+                        );
+                    } else {
+                        retry_attempts += 1;
 
-                    println!(
-                        "There was a problem opening HID device. Retrying. Retry Attempt {:?}",
-                        retry_attempts
-                    );
+                        println!(
+                            "There was a problem opening HID device. Retrying. Retry Attempt {:?}",
+                            retry_attempts
+                        );
 
-                    set_timeout(Duration::from_secs(10)).await;
+                        set_timeout(Duration::from_secs(10)).await;
+                    }
                 }
             }
         }
