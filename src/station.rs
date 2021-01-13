@@ -230,7 +230,7 @@ impl<'a> Station<'a> {
             return 0.0;
         }
 
-        ((0.8278 * n as f32 + 1.0) / 1.609).round()
+        (0.8278 * n as f32 + 1.0) / 1.609
     }
 
     fn decode_r1_flavor(data: &Report1) -> u8 {
