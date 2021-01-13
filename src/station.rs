@@ -1,5 +1,5 @@
 use crate::util::calc_wind_chill;
-use crate::writer::{WeatherReading, Writer};
+use crate::writer::{create_timestamp, WeatherReading, Writer};
 
 use hidapi::{HidApi, HidDevice};
 use settimeout::set_timeout;
@@ -164,7 +164,7 @@ impl<'a> Station<'a> {
         weather_record: &WeatherRecord,
         prev_reading: WeatherReading,
     ) -> WeatherReading {
-        let time = Writer::create_timestamp();
+        let time = create_timestamp();
 
         match weather_record {
             WeatherRecord::Type1(value) => WeatherReading {

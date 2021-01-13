@@ -1,6 +1,10 @@
 use chrono::{DateTime, Utc};
 use influxdb::{Client, Error, InfluxDbWriteable, Timestamp};
 
+pub fn create_timestamp() -> DateTime<Utc> {
+    Timestamp::from(Utc::now()).into()
+}
+
 #[derive(InfluxDbWriteable, Clone, Copy, Debug)]
 pub struct WeatherReading {
     pub time: DateTime<Utc>,
@@ -13,7 +17,7 @@ pub struct WeatherReading {
 impl WeatherReading {
     pub fn new() -> WeatherReading {
         WeatherReading {
-            time: Writer::create_timestamp(),
+            time: create_timestamp(),
             rain: None,
             wind_speed: None,
             out_temp: None,
@@ -35,9 +39,5 @@ impl<'a> Writer<'a> {
         let query = weather_reading.into_query("weather");
 
         self.client.query(&query).await
-    }
-
-    pub fn create_timestamp() -> DateTime<Utc> {
-        Timestamp::from(Utc::now()).into()
     }
 }
