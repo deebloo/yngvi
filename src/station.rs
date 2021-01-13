@@ -136,24 +136,18 @@ impl<'a> Station<'a> {
         self.weather_reading.wind_speed = Some(wind_speed);
 
         if report_flavor == 1 {
-            let rain = Station::decode_rain(&data);
-
-            self.weather_reading.rain = Some(rain);
+            self.weather_reading.rain = Some(Station::decode_rain(&data));
 
             if let Some(out_temp) = self.weather_reading.out_temp {
                 // Calculate wind chill if a temp has already been recorded
-                let wind_chill = calc_wind_chill(wind_speed, out_temp);
-
-                self.weather_reading.wind_chill = Some(wind_chill);
+                self.weather_reading.wind_chill = Some(calc_wind_chill(wind_speed, out_temp));
             }
         } else {
             let out_temp = Station::decode_out_temp(&data);
-            let out_humid = Station::decode_out_humidity(&data);
-            let wind_chill = calc_wind_chill(wind_speed, out_temp);
 
             self.weather_reading.out_temp = Some(out_temp);
-            self.weather_reading.out_humid = Some(out_humid);
-            self.weather_reading.wind_chill = Some(wind_chill);
+            self.weather_reading.out_humid = Some(Station::decode_out_humidity(&data));
+            self.weather_reading.wind_chill = Some(calc_wind_chill(wind_speed, out_temp));
         }
     }
 
