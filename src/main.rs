@@ -39,7 +39,7 @@ async fn main() {
 
             let mut station = Station::new(&api, device_ids, &writer);
 
-            println!("Weather Station is ready...",);
+            println!("Weather Station is ready...");
 
             station.start().await;
         } else {
