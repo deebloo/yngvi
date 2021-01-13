@@ -14,13 +14,13 @@
 			{
 				"i": "8f3ea4e7-6a2d-4b1d-88e1-aa03c0e90d59",
 				"x": 0,
-				"y": 12,
+				"y": 10,
 				"w": 2,
 				"h": 2,
 				"name": "Peak Wind Speed",
 				"queries": [
 					{
-						"query": "SELECT max(\"wind_speed\") AS \"max_wind_speed\" FROM \"weather\".\"autogen\".\"weather\" WHERE time > :dashboardTime: AND time < :upperDashboardTime: GROUP BY time(1d) FILL(null)",
+						"query": "SELECT max(\"wind_speed\") FROM \"weather\".\"autogen\".\"weather\" WHERE time > :dashboardTime: AND time < :upperDashboardTime:",
 						"queryConfig": {
 							"database": "weather",
 							"measurement": "weather",
@@ -29,7 +29,7 @@
 								{
 									"value": "max",
 									"type": "func",
-									"alias": "max_wind_speed",
+									"alias": "",
 									"args": [
 										{
 											"value": "wind_speed",
@@ -41,11 +41,10 @@
 							],
 							"tags": {},
 							"groupBy": {
-								"time": "1d",
+								"time": "",
 								"tags": []
 							},
 							"areTagsAccepted": false,
-							"fill": "null",
 							"rawText": null,
 							"range": null,
 							"shifts": null
@@ -133,7 +132,7 @@
 				"x": 2,
 				"y": 0,
 				"w": 2,
-				"h": 3,
+				"h": 2,
 				"name": "Wind Chill",
 				"queries": [
 					{
@@ -234,13 +233,13 @@
 			{
 				"i": "d3f2ee43-ebe3-48b2-b357-92f64d4825be",
 				"x": 10,
-				"y": 5,
+				"y": 4,
 				"w": 2,
 				"h": 2,
 				"name": "Avg Temp",
 				"queries": [
 					{
-						"query": "SELECT mean(\"out_temp\") AS \"mean_out_temp\" FROM \"weather\".\"autogen\".\"weather\" WHERE time > :dashboardTime: AND time < :upperDashboardTime: GROUP BY time(1w) FILL(null)",
+						"query": "SELECT mean(\"out_temp\") FROM \"weather\".\"autogen\".\"weather\" WHERE time > :dashboardTime: AND time < :upperDashboardTime:",
 						"queryConfig": {
 							"database": "weather",
 							"measurement": "weather",
@@ -249,7 +248,7 @@
 								{
 									"value": "mean",
 									"type": "func",
-									"alias": "mean_out_temp",
+									"alias": "",
 									"args": [
 										{
 											"value": "out_temp",
@@ -261,11 +260,10 @@
 							],
 							"tags": {},
 							"groupBy": {
-								"time": "1w",
+								"time": "",
 								"tags": []
 							},
 							"areTagsAccepted": false,
-							"fill": "null",
 							"rawText": null,
 							"range": null,
 							"shifts": null
@@ -351,13 +349,13 @@
 			{
 				"i": "425d962f-cba2-497b-9ccd-c4d872b4e59e",
 				"x": 10,
-				"y": 7,
+				"y": 6,
 				"w": 2,
 				"h": 2,
 				"name": "High Temp",
 				"queries": [
 					{
-						"query": "SELECT max(\"out_temp\") AS \"max_out_temp\" FROM \"weather\".\"autogen\".\"weather\" WHERE time > :dashboardTime: AND time < :upperDashboardTime: GROUP BY time(1w) FILL(null)",
+						"query": "SELECT max(\"out_temp\") FROM \"weather\".\"autogen\".\"weather\" WHERE time > :dashboardTime: AND time < :upperDashboardTime:",
 						"queryConfig": {
 							"database": "weather",
 							"measurement": "weather",
@@ -366,7 +364,7 @@
 								{
 									"value": "max",
 									"type": "func",
-									"alias": "max_out_temp",
+									"alias": "",
 									"args": [
 										{
 											"value": "out_temp",
@@ -378,11 +376,10 @@
 							],
 							"tags": {},
 							"groupBy": {
-								"time": "1w",
+								"time": "",
 								"tags": []
 							},
 							"areTagsAccepted": false,
-							"fill": "null",
 							"rawText": null,
 							"range": null,
 							"shifts": null
@@ -468,13 +465,13 @@
 			{
 				"i": "cd443f34-be0b-4634-a8c1-a355fe51d48d",
 				"x": 10,
-				"y": 3,
+				"y": 2,
 				"w": 2,
 				"h": 2,
 				"name": "Low Temp",
 				"queries": [
 					{
-						"query": "SELECT min(\"out_temp\") AS \"min_out_temp\" FROM \"weather\".\"autogen\".\"weather\" WHERE time > :dashboardTime: AND time < :upperDashboardTime: GROUP BY time(7d) FILL(null)",
+						"query": "SELECT min(\"out_temp\") FROM \"weather\".\"autogen\".\"weather\" WHERE time > :dashboardTime: AND time < :upperDashboardTime:",
 						"queryConfig": {
 							"database": "weather",
 							"measurement": "weather",
@@ -483,7 +480,7 @@
 								{
 									"value": "min",
 									"type": "func",
-									"alias": "min_out_temp",
+									"alias": "",
 									"args": [
 										{
 											"value": "out_temp",
@@ -495,11 +492,10 @@
 							],
 							"tags": {},
 							"groupBy": {
-								"time": "1w",
+								"time": "",
 								"tags": []
 							},
 							"areTagsAccepted": false,
-							"fill": "null",
 							"rawText": null,
 							"range": null,
 							"shifts": null
@@ -584,10 +580,10 @@
 			},
 			{
 				"i": "ed8c7539-4797-4d71-b1e1-d0c8c61ad1d2",
-				"x": 6,
+				"x": 7,
 				"y": 0,
-				"w": 3,
-				"h": 3,
+				"w": 2,
+				"h": 2,
 				"name": "Humidity",
 				"queries": [
 					{
@@ -696,7 +692,7 @@
 				"x": 9,
 				"y": 0,
 				"w": 3,
-				"h": 3,
+				"h": 2,
 				"name": "Total Rainfall",
 				"queries": [
 					{
@@ -803,13 +799,13 @@
 			{
 				"i": "5417ece1-744c-4fc8-9df4-309671ec0376",
 				"x": 0,
-				"y": 9,
+				"y": 8,
 				"w": 2,
-				"h": 3,
+				"h": 2,
 				"name": "Avg Wind Speed",
 				"queries": [
 					{
-						"query": "SELECT mean(\"wind_speed\") AS \"mean_wind_speed\" FROM \"weather\".\"autogen\".\"weather\" WHERE time > :dashboardTime: AND time < :upperDashboardTime: GROUP BY time(1d) FILL(null)",
+						"query": "SELECT mean(\"wind_speed\") FROM \"weather\".\"autogen\".\"weather\" WHERE time > :dashboardTime: AND time < :upperDashboardTime:",
 						"queryConfig": {
 							"database": "weather",
 							"measurement": "weather",
@@ -818,7 +814,7 @@
 								{
 									"value": "mean",
 									"type": "func",
-									"alias": "mean_wind_speed",
+									"alias": "",
 									"args": [
 										{
 											"value": "wind_speed",
@@ -830,11 +826,10 @@
 							],
 							"tags": {},
 							"groupBy": {
-								"time": "1d",
+								"time": "",
 								"tags": []
 							},
 							"areTagsAccepted": false,
-							"fill": "null",
 							"rawText": null,
 							"range": null,
 							"shifts": null
@@ -921,8 +916,8 @@
 				"i": "0be26ea4-b5b1-40d7-b86e-5e09e26b8078",
 				"x": 4,
 				"y": 0,
-				"w": 2,
-				"h": 3,
+				"w": 3,
+				"h": 2,
 				"name": "Wind Speed",
 				"queries": [
 					{
@@ -1031,7 +1026,7 @@
 				"x": 0,
 				"y": 0,
 				"w": 2,
-				"h": 3,
+				"h": 2,
 				"name": "Current Temp",
 				"queries": [
 					{
@@ -1138,13 +1133,13 @@
 			{
 				"i": "30247844-ac1b-410e-bbb4-bb1be0c277ad",
 				"x": 0,
-				"y": 14,
+				"y": 12,
 				"w": 12,
-				"h": 5,
+				"h": 4,
 				"name": "Humidity",
 				"queries": [
 					{
-						"query": "SELECT round(mean(\"out_humid\")) AS \"mean_out_humid\" FROM \"weather\".\"autogen\".\"weather\" WHERE time > :dashboardTime: AND time < :upperDashboardTime: GROUP BY time(10m) FILL(none)",
+						"query": "SELECT round(mean(\"out_humid\")) AS \"mean_out_humid\" FROM \"weather\".\"autogen\".\"weather\" WHERE time > :dashboardTime: AND time < :upperDashboardTime: GROUP BY time(:interval:) FILL(none)",
 						"queryConfig": {
 							"database": "",
 							"measurement": "",
@@ -1156,7 +1151,7 @@
 								"tags": []
 							},
 							"areTagsAccepted": false,
-							"rawText": "SELECT round(mean(\"out_humid\")) AS \"mean_out_humid\" FROM \"weather\".\"autogen\".\"weather\" WHERE time > :dashboardTime: AND time < :upperDashboardTime: GROUP BY time(10m) FILL(none)",
+							"rawText": "SELECT round(mean(\"out_humid\")) AS \"mean_out_humid\" FROM \"weather\".\"autogen\".\"weather\" WHERE time > :dashboardTime: AND time < :upperDashboardTime: GROUP BY time(:interval:) FILL(none)",
 							"range": null,
 							"shifts": null
 						},
@@ -1255,13 +1250,13 @@
 			{
 				"i": "e14908b1-08bf-4771-8dc8-e6b5999ad234",
 				"x": 0,
-				"y": 3,
+				"y": 2,
 				"w": 10,
 				"h": 6,
 				"name": "Temperature",
 				"queries": [
 					{
-						"query": "SELECT round(mean(\"wind_chill\")) AS \"mean_wind_chill\", round(mean(\"out_temp\")) AS \"mean_out_temp\" FROM \"weather\".\"autogen\".\"weather\" WHERE time > :dashboardTime: AND time < :upperDashboardTime: GROUP BY time(10m) FILL(none)",
+						"query": "SELECT round(mean(\"out_temp\")) AS \"mean_out_temp\", round(mean(\"wind_chill\")) AS \"mean_wind_chill\" FROM \"weather\".\"autogen\".\"weather\" WHERE time > :dashboardTime: AND time < :upperDashboardTime: GROUP BY time(:interval:) FILL(none)",
 						"queryConfig": {
 							"database": "",
 							"measurement": "",
@@ -1273,7 +1268,7 @@
 								"tags": []
 							},
 							"areTagsAccepted": false,
-							"rawText": "SELECT round(mean(\"wind_chill\")) AS \"mean_wind_chill\", round(mean(\"out_temp\")) AS \"mean_out_temp\" FROM \"weather\".\"autogen\".\"weather\" WHERE time > :dashboardTime: AND time < :upperDashboardTime: GROUP BY time(10m) FILL(none)",
+							"rawText": "SELECT round(mean(\"out_temp\")) AS \"mean_out_temp\", round(mean(\"wind_chill\")) AS \"mean_wind_chill\" FROM \"weather\".\"autogen\".\"weather\" WHERE time > :dashboardTime: AND time < :upperDashboardTime: GROUP BY time(:interval:) FILL(none)",
 							"range": null,
 							"shifts": null
 						},
@@ -1319,21 +1314,21 @@
 				"type": "line",
 				"colors": [
 					{
-						"id": "7ace7fb0-7333-4103-88e3-c09515a8de97",
+						"id": "358b1203-9fc1-4944-a53e-78ea82f1c6b4",
 						"type": "scale",
 						"hex": "#31C0F6",
 						"name": "Nineteen Eighty Four",
 						"value": "0"
 					},
 					{
-						"id": "6ee323ea-9f51-412d-9499-5761fb3825a9",
+						"id": "f3cccefd-920f-4340-9e7a-9dad91dac32a",
 						"type": "scale",
 						"hex": "#A500A5",
 						"name": "Nineteen Eighty Four",
 						"value": "0"
 					},
 					{
-						"id": "c00b44d6-0e53-4f45-a435-974e4a3ead88",
+						"id": "4416489d-ee8c-411d-b25c-2e0222bd955f",
 						"type": "scale",
 						"hex": "#FF7E27",
 						"name": "Nineteen Eighty Four",
@@ -1356,6 +1351,16 @@
 						"internalName": "time",
 						"displayName": "",
 						"visible": true
+					},
+					{
+						"internalName": "weather.mean_out_temp",
+						"displayName": "",
+						"visible": true
+					},
+					{
+						"internalName": "weather.mean_wind_chill",
+						"displayName": "",
+						"visible": true
 					}
 				],
 				"timeFormat": "MM/DD/YYYY HH:mm:ss",
@@ -1372,13 +1377,13 @@
 			{
 				"i": "9ce3f373-da90-4256-b0fb-329da1ddaddc",
 				"x": 2,
-				"y": 9,
+				"y": 8,
 				"w": 10,
-				"h": 5,
+				"h": 4,
 				"name": "Wind Speed",
 				"queries": [
 					{
-						"query": "SELECT round(mean(\"wind_speed\")) AS \"mean_wind_speed\" FROM \"weather\".\"autogen\".\"weather\" WHERE time > :dashboardTime: AND time < :upperDashboardTime: GROUP BY time(10m) FILL(none)",
+						"query": "SELECT round(mean(\"wind_speed\")) AS \"mean_wind_speed\" FROM \"weather\".\"autogen\".\"weather\" WHERE time > :dashboardTime: AND time < :upperDashboardTime: GROUP BY time(:interval:) FILL(none)",
 						"queryConfig": {
 							"database": "",
 							"measurement": "",
@@ -1390,7 +1395,7 @@
 								"tags": []
 							},
 							"areTagsAccepted": false,
-							"rawText": "SELECT round(mean(\"wind_speed\")) AS \"mean_wind_speed\" FROM \"weather\".\"autogen\".\"weather\" WHERE time > :dashboardTime: AND time < :upperDashboardTime: GROUP BY time(10m) FILL(none)",
+							"rawText": "SELECT round(mean(\"wind_speed\")) AS \"mean_wind_speed\" FROM \"weather\".\"autogen\".\"weather\" WHERE time > :dashboardTime: AND time < :upperDashboardTime: GROUP BY time(:interval:) FILL(none)",
 							"range": null,
 							"shifts": null
 						},
@@ -1488,7 +1493,7 @@
 			}
 		],
 		"templates": [],
-		"name": "Overview",
+		"name": "Weather",
 		"organization": "default",
 		"links": {
 			"self": "/chronograf/v1/dashboards/1",
