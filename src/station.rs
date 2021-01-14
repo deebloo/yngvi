@@ -189,6 +189,22 @@ mod tests {
     use super::*;
 
     #[test]
+    fn decode_r1_falvor_1() {
+        let report: Report1 = [1, 197, 26, 113, 0, 200, 0, 108, 3, 255];
+        let flavor = Station::decode_r1_flavor(&report);
+
+        assert_eq!(flavor, 1);
+    }
+
+    #[test]
+    fn decode_r1_falvor_8() {
+        let report: Report1 = [1, 197, 26, 120, 0, 5, 75, 75, 3, 255];
+        let flavor = Station::decode_r1_flavor(&report);
+
+        assert_eq!(flavor, 8);
+    }
+
+    #[test]
     fn decode_rain() {
         let report: Report1 = [1, 197, 26, 113, 0, 200, 0, 108, 3, 255];
         let rain = Station::decode_rain(&report);
