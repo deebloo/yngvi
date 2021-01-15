@@ -1,5 +1,6 @@
 use chrono::{DateTime, Utc};
 use influxdb::{Client, Error, InfluxDbWriteable, Timestamp};
+use std::env;
 
 pub fn create_timestamp() -> DateTime<Utc> {
     Timestamp::from(Utc::now()).into()
@@ -27,11 +28,15 @@ impl WeatherReading {
     }
 }
 
-pub struct Writer<'a> {
-    client: &'a Client,
+pub struct Writer {
+    client: Client,
 }
-impl<'a> Writer<'a> {
-    pub fn new(client: &'a Client) -> Writer {
+impl Writer {
+    pub fn new() -> Writer {
+        let defaults_influx_addr = String::from("http://localhost:8086");
+        let influx_addr = env::var("INFLUX_ADDR").unwrap_or(defaults_influx_addr);
+        let client = Client::new(influx_addr, "weather");
+
         Writer { client }
     }
 

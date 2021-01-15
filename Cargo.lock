@@ -8,7 +8,6 @@ dependencies = [
  "chrono",
  "hidapi",
  "influxdb",
- "settimeout",
 ]
 
 [[package]]
@@ -1449,12 +1448,6 @@ dependencies = [
  "ryu",
  "serde",
 ]
-
-[[package]]
-name = "settimeout"
-version = "0.1.2"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "07442a64416240130ad96a9abc54ddbf0cd215d1ff6325fbc0ac639342f06de2"
 
 [[package]]
 name = "sha1"

@@ -1,8 +1,8 @@
 use crate::util::calc_wind_chill;
 use crate::writer::{create_timestamp, WeatherReading, Writer};
 
+use async_std::task;
 use hidapi::{HidApi, HidDevice};
-use settimeout::set_timeout;
 use std::time::Duration;
 
 type Report1 = [u8; 10];
@@ -14,13 +14,13 @@ pub struct DeviceIds {
 
 pub struct Station<'a> {
     pub hid: &'a HidApi,
-    pub writer: &'a Writer<'a>,
+    pub writer: &'a Writer,
     pub device_ids: DeviceIds,
     weather_reading: WeatherReading,
     device: Option<HidDevice>,
 }
 impl<'a> Station<'a> {
-    pub fn new(hid: &'a HidApi, device_ids: DeviceIds, writer: &'a Writer<'a>) -> Station<'a> {
+    pub fn new(hid: &'a HidApi, device_ids: DeviceIds, writer: &'a Writer) -> Station<'a> {
         Station {
             hid,
             writer,
@@ -51,12 +51,12 @@ impl<'a> Station<'a> {
                         println!("{:?}", self.weather_reading);
                     }
 
-                    set_timeout(Duration::from_secs(18)).await;
+                    task::sleep(Duration::from_secs(18)).await;
                 }
                 Err(_) => {
                     println!("There was a problem reading report R1.");
 
-                    set_timeout(Duration::from_secs(30)).await; // wait for a bit
+                    task::sleep(Duration::from_secs(30)).await; // wait for a bit
 
                     self.open_device().await; // reopen device
                 }
@@ -100,7 +100,7 @@ impl<'a> Station<'a> {
                             retry_attempts
                         );
 
-                        set_timeout(Duration::from_secs(10)).await;
+                        task::sleep(Duration::from_secs(10)).await;
                     }
                 }
             }

@@ -2,21 +2,15 @@ mod station;
 mod util;
 mod writer;
 
+use async_std::task;
 use hidapi::HidApi;
-use influxdb::Client;
-use settimeout::set_timeout;
 use station::{DeviceIds, Station};
-use std::env;
 use std::time::Duration;
 use writer::Writer;
 
 #[async_std::main]
 async fn main() {
     println!("Application starting...");
-
-    let influx_addr = env::var("INFLUX_ADDR").unwrap_or(String::from("http://localhost:8086"));
-    let client = Client::new(&influx_addr, "weather");
-    let writer = Writer::new(&client);
 
     let mut device_api_ready = false;
     let mut retry_attempts = 0;
@@ -32,6 +26,7 @@ async fn main() {
 
             device_api_ready = true;
 
+            let writer = Writer::new();
             let device_ids = DeviceIds {
                 vid: 0x24c0,
                 pid: 0x003,
@@ -56,7 +51,7 @@ async fn main() {
                     retry_attempts
                 );
 
-                set_timeout(Duration::from_secs(10)).await;
+                task::sleep(Duration::from_secs(10)).await;
             }
         }
     }
