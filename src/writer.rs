@@ -3,16 +3,12 @@ use chrono::{DateTime, Utc};
 use influxdb::{Client, Error, InfluxDbWriteable, Timestamp};
 use std::env;
 
-pub fn create_timestamp() -> DateTime<Utc> {
-    Timestamp::from(Utc::now()).into()
-}
-
 #[async_trait]
 pub trait Writer {
     async fn write(&self, weather_reading: &WeatherReading) -> Result<String, Error>;
 }
 
-#[derive(InfluxDbWriteable, Clone, Copy, Debug)]
+#[derive(Clone, Copy, Debug)]
 pub struct WeatherReading {
     pub time: DateTime<Utc>,
     pub rain: Option<f32>,
@@ -25,12 +21,35 @@ pub struct WeatherReading {
 impl WeatherReading {
     pub fn new() -> WeatherReading {
         WeatherReading {
-            time: create_timestamp(),
+            time: Utc::now(),
             rain: None,
             wind_speed: None,
             out_temp: None,
             out_humid: None,
             wind_chill: None,
+        }
+    }
+}
+
+#[derive(InfluxDbWriteable, Clone, Copy, Debug)]
+pub struct WeatherReadingInflux {
+    pub time: DateTime<Utc>,
+    pub rain: Option<f32>,
+    pub wind_speed: Option<f32>,
+    pub out_temp: Option<f32>,
+    pub out_humid: Option<u8>,
+    pub wind_chill: Option<f32>,
+}
+
+impl WeatherReadingInflux {
+    pub fn from_weather_reading(weather_reading: &WeatherReading) -> WeatherReadingInflux {
+        WeatherReadingInflux {
+            time: Timestamp::from(weather_reading.time).into(),
+            rain: weather_reading.rain,
+            wind_speed: weather_reading.wind_speed,
+            out_temp: weather_reading.out_temp,
+            out_humid: weather_reading.out_humid,
+            wind_chill: weather_reading.wind_chill,
         }
     }
 }
@@ -52,7 +71,8 @@ impl InfluxWriter {
 #[async_trait]
 impl Writer for InfluxWriter {
     async fn write(&self, weather_reading: &WeatherReading) -> Result<String, Error> {
-        let query = weather_reading.into_query("weather");
+        let weather_reading_influx = WeatherReadingInflux::from_weather_reading(&weather_reading);
+        let query = weather_reading_influx.into_query("weather");
 
         self.client.query(&query).await
     }

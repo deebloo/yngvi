@@ -1,7 +1,8 @@
 use crate::util::calc_wind_chill;
-use crate::writer::{create_timestamp, WeatherReading, Writer};
+use crate::writer::{WeatherReading, Writer};
 
 use async_std::task;
+use chrono::Utc;
 use hidapi::{HidApi, HidDevice};
 use std::time::Duration;
 
@@ -128,7 +129,7 @@ impl<'a> Station<'a> {
 
     fn update_weather_reading_r1(&mut self, data: Report1) {
         // update reading timestamp
-        self.weather_reading.time = create_timestamp();
+        self.weather_reading.time = Utc::now();
 
         let report_flavor = Station::decode_r1_flavor(&data);
 
