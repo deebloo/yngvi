@@ -6,7 +6,7 @@ use async_std::task;
 use hidapi::HidApi;
 use station::{DeviceIds, Station};
 use std::time::Duration;
-use writer::Writer;
+use writer::InfluxWriter;
 
 #[async_std::main]
 async fn main() {
@@ -26,7 +26,7 @@ async fn main() {
 
             device_api_ready = true;
 
-            let writer = Writer::new();
+            let writer = InfluxWriter::new();
             let device_ids = DeviceIds {
                 vid: 0x24c0,
                 pid: 0x003,

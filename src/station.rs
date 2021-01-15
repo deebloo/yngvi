@@ -14,13 +14,14 @@ pub struct DeviceIds {
 
 pub struct Station<'a> {
     pub hid: &'a HidApi,
-    pub writer: &'a Writer,
+    pub writer: &'a dyn Writer,
     pub device_ids: DeviceIds,
     weather_reading: WeatherReading,
     device: Option<HidDevice>,
 }
+
 impl<'a> Station<'a> {
-    pub fn new(hid: &'a HidApi, device_ids: DeviceIds, writer: &'a Writer) -> Station<'a> {
+    pub fn new(hid: &'a HidApi, device_ids: DeviceIds, writer: &'a impl Writer) -> Station<'a> {
         Station {
             hid,
             writer,

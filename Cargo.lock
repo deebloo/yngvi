@@ -5,6 +5,7 @@ name = "acurite-weather"
 version = "0.1.0"
 dependencies = [
  "async-std",
+ "async-trait",
  "chrono",
  "hidapi",
  "influxdb",
