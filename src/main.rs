@@ -1,12 +1,13 @@
 mod station;
 mod util;
 mod writer;
+mod writer_influx;
 
 use async_std::task;
 use hidapi::HidApi;
 use station::{DeviceIds, Station};
 use std::time::Duration;
-use writer::InfluxWriter;
+use writer_influx::InfluxWriter;
 
 #[async_std::main]
 async fn main() {
