@@ -19,38 +19,39 @@ async fn main() {
 
     println!("Attempting to create HID API...");
 
-    while !device_api_ready {
-        let hid = HidApi::new();
+    while !device_api_ready && retry_attempts < max_retry_attempts {
+        match HidApi::new() {
+            Ok(api) => {
+                println!("HID API is ready...",);
 
-        if let Ok(api) = hid {
-            println!("HID API is ready...",);
+                device_api_ready = true;
 
-            device_api_ready = true;
+                let writer = InfluxWriter::new();
 
-            let writer = InfluxWriter::new();
-            let device_ids = DeviceIds {
-                vid: 0x24c0,
-                pid: 0x003,
-            };
-
-            let mut station = Station::new(&api, device_ids, &writer);
-
-            println!("Weather Station is ready...");
-
-            station.start().await;
-        } else {
-            if retry_attempts > max_retry_attempts {
-                println!(
-                    "There was a problem connecting to the HID API. Retry attempts ({:?}) exceeded",
-                    max_retry_attempts
+                let mut station = Station::new(
+                    &api,
+                    DeviceIds {
+                        vid: 0x24c0,
+                        pid: 0x003,
+                    },
+                    &writer,
                 );
-            } else {
+
+                println!("Weather Station is ready...");
+
+                station.start().await;
+            }
+            Err(_) => {
                 retry_attempts += 1;
 
                 println!(
                     "There was a problem  connecting to the HID API. Retrying. Retry Attempt {:?}",
                     retry_attempts
                 );
+
+                if retry_attempts == max_retry_attempts {
+                    println!("This is the last attempt");
+                }
 
                 task::sleep(Duration::from_secs(10)).await;
             }

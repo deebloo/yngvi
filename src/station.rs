@@ -77,7 +77,7 @@ impl<'a> Station<'a> {
 
         println!("Opening HID device...");
 
-        while !is_open && retry_attempts <= max_retry_attempts {
+        while !is_open && retry_attempts < max_retry_attempts {
             let open_result = self.hid.open(self.device_ids.vid, self.device_ids.pid);
 
             match open_result {
@@ -89,21 +89,18 @@ impl<'a> Station<'a> {
                     self.device = Some(device);
                 }
                 Err(_) => {
+                    retry_attempts += 1;
+
+                    println!(
+                        "There was a problem opening HID device. Retrying. Retry Attempt {:?}",
+                        retry_attempts
+                    );
+
                     if retry_attempts == max_retry_attempts {
-                        panic!(
-                            "There was a problem opening the hid device. Retry attempts ({:?}) exceeded",
-                            max_retry_attempts
-                        );
-                    } else {
-                        retry_attempts += 1;
-
-                        println!(
-                            "There was a problem opening HID device. Retrying. Retry Attempt {:?}",
-                            retry_attempts
-                        );
-
-                        task::sleep(Duration::from_secs(10)).await;
+                        println!("This is the last attempt");
                     }
+
+                    task::sleep(Duration::from_secs(10)).await;
                 }
             }
         }
@@ -198,7 +195,7 @@ mod tests {
     use super::*;
     use async_trait::async_trait;
 
-    pub struct MockWriter;
+    struct MockWriter;
 
     #[async_trait]
     impl Writer for MockWriter {
