@@ -6,7 +6,7 @@ pub trait Writer {
     async fn write(&self, weather_reading: &WeatherReading) -> Result<(), ()>;
 }
 
-#[derive(Clone, Copy, Debug)]
+#[derive(Clone, Copy, Debug, PartialEq)]
 pub struct WeatherReading {
     pub time: DateTime<Utc>,
     pub rain: Option<f32>,

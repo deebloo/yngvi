@@ -196,6 +196,16 @@ impl<'a> Station<'a> {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use async_trait::async_trait;
+
+    pub struct MockWriter;
+
+    #[async_trait]
+    impl Writer for MockWriter {
+        async fn write(&self, _weather_reading: &WeatherReading) -> Result<(), ()> {
+            Ok({})
+        }
+    }
 
     #[test]
     fn decode_r1_falvor_1() {
@@ -243,5 +253,30 @@ mod tests {
         let out_humid = Station::decode_out_humidity(&report);
 
         assert_eq!(out_humid, 75);
+    }
+
+    #[test]
+    fn creates_correct_reading() {
+        let hid = HidApi::new().unwrap();
+        let writer = MockWriter {};
+
+        let mut station = Station::new(&hid, DeviceIds { vid: 0, pid: 1 }, &writer);
+
+        station.update_weather_reading_r1([1, 197, 26, 120, 0, 5, 75, 75, 3, 255]);
+
+        println!("{:?}", station.weather_reading);
+
+        assert_eq!(
+            station.weather_reading,
+            WeatherReading {
+                time: station.weather_reading.time,
+                rain: None,
+                rain_delta: None,
+                wind_speed: Some(0.0),
+                out_temp: Some(31.499998),
+                out_humid: Some(75),
+                wind_chill: Some(31.499998)
+            }
+        )
     }
 }
