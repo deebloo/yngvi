@@ -45,13 +45,10 @@ async fn main() {
                 retry_attempts += 1;
 
                 println!(
-                    "There was a problem  connecting to the HID API. Retrying. Retry Attempt {:?}",
-                    retry_attempts
+                    "There was a problem connecting to the HID API. Retrying. Retry Attempt {:?}/{:?}",
+                    retry_attempts,
+                    max_retry_attempts
                 );
-
-                if retry_attempts == max_retry_attempts {
-                    println!("This is the last attempt");
-                }
 
                 task::sleep(Duration::from_secs(10)).await;
             }

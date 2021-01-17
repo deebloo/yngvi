@@ -40,9 +40,7 @@ impl<'a> Station<'a> {
         self.open_device().await;
 
         loop {
-            let report = self.read_report_r1();
-
-            match report {
+            match self.read_report_r1() {
                 Ok(report) => {
                     self.update_weather_reading_r1(report);
 
@@ -73,7 +71,7 @@ impl<'a> Station<'a> {
     async fn open_device(&mut self) {
         let mut is_open = false;
         let mut retry_attempts = 0;
-        let max_retry_attempts = 3;
+        let max_retry_attempts = 5;
 
         println!("Opening HID device...");
 
@@ -92,13 +90,9 @@ impl<'a> Station<'a> {
                     retry_attempts += 1;
 
                     println!(
-                        "There was a problem opening HID device. Retrying. Retry Attempt {:?}",
-                        retry_attempts
+                        "There was a problem opening HID device. Retrying. Retry Attempt {:?}/{:?}",
+                        retry_attempts, max_retry_attempts
                     );
-
-                    if retry_attempts == max_retry_attempts {
-                        println!("This is the last attempt");
-                    }
 
                     task::sleep(Duration::from_secs(10)).await;
                 }
