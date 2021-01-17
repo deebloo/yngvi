@@ -13,6 +13,11 @@ pub struct DeviceIds {
     pub pid: u16,
 }
 
+enum StationError {
+    R1ReadError,
+    ConnectError,
+}
+
 pub struct Station<'a> {
     pub hid: &'a HidApi,
     pub writer: &'a dyn Writer,
@@ -39,7 +44,9 @@ impl<'a> Station<'a> {
     pub async fn start(&mut self) {
         self.open_device().await;
 
-        loop {
+        let mut run = true;
+
+        while run {
             match self.read_report_r1() {
                 Ok(report) => {
                     self.update_weather_reading_r1(report);
@@ -53,12 +60,17 @@ impl<'a> Station<'a> {
 
                     task::sleep(Duration::from_secs(18)).await;
                 }
-                Err(_) => {
-                    println!("There was a problem reading report R1.");
+                Err(StationError::R1ReadError) => {
+                    println!("Failed to read report R1");
 
                     task::sleep(Duration::from_secs(30)).await; // wait for a bit
 
                     self.open_device().await; // reopen device
+                }
+                Err(StationError::ConnectError) => {
+                    println!("Failed to connect to device. Stopping.");
+
+                    run = false;
                 }
             }
         }
@@ -66,7 +78,7 @@ impl<'a> Station<'a> {
 
     /**
      * Open HID device.
-     * Attempt to connect 3 times
+     * Attempt to connect 5 times
      */
     async fn open_device(&mut self) {
         let mut is_open = false;
@@ -103,7 +115,7 @@ impl<'a> Station<'a> {
     /**
      * Read and decode report R1
      */
-    fn read_report_r1(&self) -> Result<Report1, &str> {
+    fn read_report_r1(&self) -> Result<Report1, StationError> {
         if let Some(d) = &self.device {
             let mut buf: Report1 = [1u8; 10];
 
@@ -111,10 +123,10 @@ impl<'a> Station<'a> {
 
             match res {
                 Ok(_) => Ok(buf),
-                Err(_) => Err("Failed to read report"),
+                Err(_) => Err(StationError::R1ReadError),
             }
         } else {
-            Err("Failed to read report")
+            Err(StationError::ConnectError)
         }
     }
 
