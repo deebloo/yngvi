@@ -9,6 +9,7 @@ use crate::writer::{WeatherReading, Writer};
 pub struct WeatherReadingInflux {
     pub time: DateTime<Utc>,
     pub rain: Option<f32>,
+    pub rain_delta: Option<f32>,
     pub wind_speed: Option<f32>,
     pub out_temp: Option<f32>,
     pub out_humid: Option<u8>,
@@ -20,6 +21,7 @@ impl WeatherReadingInflux {
         WeatherReadingInflux {
             time: Timestamp::from(weather_reading.time).into(),
             rain: weather_reading.rain,
+            rain_delta: weather_reading.rain_delta,
             wind_speed: weather_reading.wind_speed,
             out_temp: weather_reading.out_temp,
             out_humid: weather_reading.out_humid,

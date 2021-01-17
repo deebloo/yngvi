@@ -10,6 +10,7 @@ pub trait Writer {
 pub struct WeatherReading {
     pub time: DateTime<Utc>,
     pub rain: Option<f32>,
+    pub rain_delta: Option<f32>,
     pub wind_speed: Option<f32>,
     pub out_temp: Option<f32>,
     pub out_humid: Option<u8>,
@@ -21,6 +22,7 @@ impl WeatherReading {
         WeatherReading {
             time: Utc::now(),
             rain: None,
+            rain_delta: None,
             wind_speed: None,
             out_temp: None,
             out_humid: None,

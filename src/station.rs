@@ -138,7 +138,14 @@ impl<'a> Station<'a> {
         self.weather_reading.wind_speed = Some(wind_speed);
 
         if report_flavor == 1 {
-            self.weather_reading.rain = Some(Station::decode_rain(&data));
+            let new_rain_total = Station::decode_rain(&data);
+
+            if let Some(prev_rain_total) = self.weather_reading.rain {
+                // Calculate wind chill if a temp has already been recorded
+                self.weather_reading.rain_delta = Some(new_rain_total - prev_rain_total);
+            }
+
+            self.weather_reading.rain = Some(new_rain_total);
 
             if let Some(out_temp) = self.weather_reading.out_temp {
                 // Calculate wind chill if a temp has already been recorded
