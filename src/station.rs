@@ -144,8 +144,11 @@ impl<'a> Station<'a> {
             let new_rain_total = Station::decode_rain(&data);
 
             if let Some(prev_rain_total) = self.weather_reading.rain {
-                // Calculate wind chill if a temp has already been recorded
-                self.weather_reading.rain_delta = Some(new_rain_total - prev_rain_total);
+                if new_rain_total >= prev_rain_total {
+                    self.weather_reading.rain_delta = Some(new_rain_total - prev_rain_total);
+                } else {
+                    self.weather_reading.rain_delta = Some(0.0);
+                }
             }
 
             self.weather_reading.rain = Some(new_rain_total);
@@ -186,7 +189,7 @@ impl<'a> Station<'a> {
     }
 
     fn decode_out_humidity(data: &Report1) -> u8 {
-        data[7]
+        data[7] & 0x7f
     }
 
     fn decode_rain(data: &Report1) -> f32 {
