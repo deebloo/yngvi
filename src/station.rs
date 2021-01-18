@@ -49,6 +49,9 @@ impl<'a> Station<'a> {
         while run {
             match self.read_report_r1() {
                 Ok(report) => {
+                    // update reading timestamp
+                    self.weather_reading.time = Utc::now();
+
                     self.update_weather_reading_r1(report);
 
                     // write the result
@@ -131,9 +134,6 @@ impl<'a> Station<'a> {
     }
 
     fn update_weather_reading_r1(&mut self, data: Report1) {
-        // update reading timestamp
-        self.weather_reading.time = Utc::now();
-
         let report_flavor = Station::decode_r1_flavor(&data);
 
         // Both flavors have wind speed
@@ -144,7 +144,7 @@ impl<'a> Station<'a> {
             let new_rain_total = Station::decode_rain(&data);
 
             if let Some(prev_rain_total) = self.weather_reading.rain {
-                if new_rain_total >= prev_rain_total {
+                if new_rain_total > prev_rain_total {
                     self.weather_reading.rain_delta = Some(new_rain_total - prev_rain_total);
                 } else {
                     self.weather_reading.rain_delta = Some(0.0);
@@ -205,7 +205,6 @@ mod tests {
     use async_trait::async_trait;
 
     struct MockWriter;
-
     #[async_trait]
     impl Writer for MockWriter {
         async fn write(&self, _weather_reading: &WeatherReading) -> Result<(), ()> {
