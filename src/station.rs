@@ -257,6 +257,14 @@ mod tests {
     }
 
     #[test]
+    fn decode_wind_dir() {
+        let report: Report1 = [1, 197, 26, 113, 0, 200, 0, 108, 3, 255];
+        let wind_dir = Station::decode_wind_dir(&report);
+
+        assert_eq!(wind_dir, 67.5);
+    }
+
+    #[test]
     fn decode_out_temp() {
         let report: Report1 = [1, 197, 26, 120, 0, 5, 75, 75, 3, 255];
         let out_temp = Station::decode_out_temp(&report);
@@ -270,14 +278,6 @@ mod tests {
         let out_humid = Station::decode_out_humidity(&report);
 
         assert_eq!(out_humid, 75);
-    }
-
-    #[test]
-    fn decode_wind_dir() {
-        let report: Report1 = [1, 197, 26, 120, 0, 5, 75, 75, 3, 255];
-        let wind_dir = Station::decode_wind_dir(&report);
-
-        assert_eq!(wind_dir, 225.);
     }
 
     #[test]
