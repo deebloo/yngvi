@@ -1,10 +1,10 @@
-use crate::util::calc_wind_chill;
-use crate::writer::{WeatherReading, Writer};
-
 use async_std::task;
 use chrono::Utc;
 use hidapi::{HidApi, HidDevice};
 use std::time::Duration;
+
+use crate::util::calc_wind_chill;
+use crate::writer::{WeatherReading, Writer};
 
 type Report1 = [u8; 10];
 
@@ -24,16 +24,23 @@ pub struct Station<'a> {
     pub device_ids: DeviceIds,
     weather_reading: WeatherReading,
     device: Option<HidDevice>,
+    wind_dir_deg: [f32; 16],
 }
 
 impl<'a> Station<'a> {
     pub fn new(hid: &'a HidApi, device_ids: DeviceIds, writer: &'a impl Writer) -> Station<'a> {
+        let wind_dir_deg: [f32; 16] = [
+            315.0, 247.5, 292.5, 270.0, 337.5, 225.0, 0.0, 202.5, 67.5, 135.0, 90.0, 112.5, 45.0,
+            157.5, 22.5, 180.0,
+        ];
+
         Station {
             hid,
             writer,
             device_ids,
             weather_reading: WeatherReading::new(),
             device: None,
+            wind_dir_deg,
         }
     }
 
@@ -152,6 +159,7 @@ impl<'a> Station<'a> {
             }
 
             self.weather_reading.rain = Some(new_rain_total);
+            self.weather_reading.wind_dir = Some(self.decode_wind_dir(&data));
 
             if let Some(out_temp) = self.weather_reading.out_temp {
                 // Calculate wind chill if a temp has already been recorded
@@ -196,6 +204,12 @@ impl<'a> Station<'a> {
         let cm = (((data[6] & 0x3f) << 7) | (data[7] & 0x7f)) as f32 * 0.0254;
 
         cm / 2.54
+    }
+
+    fn decode_wind_dir(&self, data: &Report1) -> f32 {
+        let index = data[5] & 0x0f;
+
+        self.wind_dir_deg[index as usize]
     }
 }
 
@@ -278,6 +292,7 @@ mod tests {
                 rain: None,
                 rain_delta: None,
                 wind_speed: Some(0.0),
+                wind_dir: None,
                 out_temp: Some(31.499998),
                 out_humid: Some(75),
                 wind_chill: Some(31.499998)
