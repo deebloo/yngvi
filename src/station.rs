@@ -18,29 +18,27 @@ enum StationError {
     ConnectError,
 }
 
+const WIND_DIR_BY_IDX: [f32; 16] = [
+    315.0, 247.5, 292.5, 270.0, 337.5, 225.0, 0.0, 202.5, 67.5, 135.0, 90.0, 112.5, 45.0, 157.5,
+    22.5, 180.0,
+];
+
 pub struct Station<'a> {
     pub hid: &'a HidApi,
     pub writer: &'a dyn Writer,
     pub device_ids: DeviceIds,
     weather_reading: WeatherReading,
     device: Option<HidDevice>,
-    wind_dir_deg: [f32; 16],
 }
 
 impl<'a> Station<'a> {
     pub fn new(hid: &'a HidApi, device_ids: DeviceIds, writer: &'a impl Writer) -> Station<'a> {
-        let wind_dir_deg: [f32; 16] = [
-            315.0, 247.5, 292.5, 270.0, 337.5, 225.0, 0.0, 202.5, 67.5, 135.0, 90.0, 112.5, 45.0,
-            157.5, 22.5, 180.0,
-        ];
-
         Station {
             hid,
             writer,
             device_ids,
             weather_reading: WeatherReading::new(),
             device: None,
-            wind_dir_deg,
         }
     }
 
@@ -159,7 +157,7 @@ impl<'a> Station<'a> {
             }
 
             self.weather_reading.rain = Some(new_rain_total);
-            self.weather_reading.wind_dir = Some(self.decode_wind_dir(&data));
+            self.weather_reading.wind_dir = Some(Station::decode_wind_dir(&data));
 
             if let Some(out_temp) = self.weather_reading.out_temp {
                 // Calculate wind chill if a temp has already been recorded
@@ -206,10 +204,10 @@ impl<'a> Station<'a> {
         cm / 2.54
     }
 
-    fn decode_wind_dir(&self, data: &Report1) -> f32 {
+    fn decode_wind_dir(data: &Report1) -> f32 {
         let index = data[5] & 0x0f;
 
-        self.wind_dir_deg[index as usize]
+        WIND_DIR_BY_IDX[index as usize]
     }
 }
 
@@ -272,6 +270,14 @@ mod tests {
         let out_humid = Station::decode_out_humidity(&report);
 
         assert_eq!(out_humid, 75);
+    }
+
+    #[test]
+    fn decode_wind_dir() {
+        let report: Report1 = [1, 197, 26, 120, 0, 5, 75, 75, 3, 255];
+        let wind_dir = Station::decode_wind_dir(&report);
+
+        assert_eq!(wind_dir, 225.);
     }
 
     #[test]
