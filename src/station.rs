@@ -15,7 +15,8 @@ pub struct DeviceIds {
 
 enum StationError {
     R1ReadError,
-    ConnectError,
+    NoDevice,
+    R1ReportInvalid(Report1),
 }
 
 const WIND_DIR_BY_IDX: [f32; 16] = [
@@ -76,21 +77,24 @@ impl<'a> Station<'a> {
                 Err(StationError::R1ReadError) => {
                     println!("Failed to read report R1");
 
-                    task::sleep(Duration::from_secs(30)).await; // wait for a bit
+                    task::sleep(Duration::from_secs(30)).await;
 
-                    self.open_device().await; // reopen device
+                    self.open_device().await;
                 }
-                Err(StationError::ConnectError) => {
-                    println!("Failed to connect to device. Stopping.");
+                Err(StationError::R1ReportInvalid(report)) => {
+                    println!("Report R1 Invalid {:?}", report);
 
-                    self.stop();
+                    task::sleep(Duration::from_secs(18)).await;
+                }
+                Err(StationError::NoDevice) => {
+                    println!("Failed to connect to device.");
+
+                    task::sleep(Duration::from_secs(30)).await;
+
+                    self.open_device().await;
                 }
             }
         }
-    }
-
-    pub fn stop(&mut self) {
-        self.is_running = false;
     }
 
     /**
@@ -101,6 +105,8 @@ impl<'a> Station<'a> {
         let mut is_open = false;
         let mut retry_attempts = 0;
         let max_retry_attempts = 5;
+
+        self.device = None;
 
         println!("Opening HID device...");
 
@@ -135,15 +141,22 @@ impl<'a> Station<'a> {
     fn read_report_r1(&self) -> Result<Report1, StationError> {
         if let Some(d) = &self.device {
             let mut buf: Report1 = [1u8; 10];
-
             let res = d.get_feature_report(&mut buf);
 
             match res {
-                Ok(_) => Ok(buf),
+                Ok(_) => {
+                    let is_valid = Station::check_r1(&buf);
+
+                    if is_valid {
+                        Ok(buf)
+                    } else {
+                        Err(StationError::R1ReportInvalid(buf))
+                    }
+                }
                 Err(_) => Err(StationError::R1ReadError),
             }
         } else {
-            Err(StationError::ConnectError)
+            Err(StationError::NoDevice)
         }
     }
 
@@ -217,6 +230,22 @@ impl<'a> Station<'a> {
         let index = data[5] & 0x0f;
 
         WIND_DIR_BY_IDX[index as usize]
+    }
+
+    fn check_r1(data: &Report1) -> bool {
+        if data[1] & 0x0f == 0x0f && data[3] == 0xff {
+            false
+        } else if data[3] & 0x0f != 1 && data[3] & 0x0f != 8 {
+            println!("bogus message flavor");
+
+            false
+        } else if data[9] != 0xff && data[9] != 0x00 {
+            println!("bogus final byte");
+
+            false
+        } else {
+            true
+        }
     }
 }
 
