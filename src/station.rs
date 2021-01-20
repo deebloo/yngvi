@@ -55,6 +55,7 @@ impl<'a> Station<'a> {
      * If a failure to read occurs wait and then re-open device
      */
     pub async fn start(&mut self) {
+        self.is_running = true;
         self.open_device().await;
 
         while self.is_running {
