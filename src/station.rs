@@ -23,6 +23,11 @@ const WIND_DIR_BY_IDX: [f32; 16] = [
     22.5, 180.0,
 ];
 
+// const WIND_DIR_CARD: [&str; 16] = [
+//     "NW", "WSW", "WNW", "W", "NNW", "SW", "N", "SSW", "ENE", "SE", "E", "ESE", "NE", "SSE", "NNE",
+//     "S",
+// ];
+
 pub struct Station<'a> {
     pub hid: &'a HidApi,
     pub writer: &'a dyn Writer,
@@ -288,8 +293,6 @@ mod tests {
         let mut station = Station::new(&hid, DeviceIds { vid: 0, pid: 1 }, &writer);
 
         station.update_weather_reading_r1([1, 197, 26, 120, 0, 5, 75, 75, 3, 255]);
-
-        println!("{:?}", station.weather_reading);
 
         assert_eq!(
             station.weather_reading,
