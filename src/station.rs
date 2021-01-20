@@ -72,29 +72,23 @@ impl<'a> Station<'a> {
                     if write_result.is_ok() {
                         println!("{:?}", self.weather_reading);
                     }
-
-                    task::sleep(Duration::from_secs(18)).await;
                 }
                 Err(StationError::R1ReadError) => {
                     println!("Failed to read report R1");
-
-                    task::sleep(Duration::from_secs(30)).await;
 
                     self.open_device().await;
                 }
                 Err(StationError::R1ReportInvalid(report)) => {
                     println!("Report R1 Invalid {:?}", report);
-
-                    task::sleep(Duration::from_secs(18)).await;
                 }
                 Err(StationError::NoDevice) => {
-                    println!("Failed to connect to device.");
-
-                    task::sleep(Duration::from_secs(30)).await;
+                    println!("No device found");
 
                     self.open_device().await;
                 }
             }
+            
+            task::sleep(Duration::from_secs(18)).await;
         }
     }
 
@@ -103,36 +97,14 @@ impl<'a> Station<'a> {
      * Attempt to connect 5 times
      */
     async fn open_device(&mut self) {
-        let mut is_open = false;
-        let mut retry_attempts = 0;
-        let max_retry_attempts = 5;
+        println!("Opening HID device...");
 
         self.device = None;
 
-        println!("Opening HID device...");
+        let open_result = self.hid.open(self.device_ids.vid, self.device_ids.pid);
 
-        while !is_open && retry_attempts < max_retry_attempts {
-            let open_result = self.hid.open(self.device_ids.vid, self.device_ids.pid);
-
-            match open_result {
-                Ok(device) => {
-                    println!("HID device open...",);
-
-                    is_open = true;
-
-                    self.device = Some(device);
-                }
-                Err(_) => {
-                    retry_attempts += 1;
-
-                    println!(
-                        "There was a problem opening HID device. Retrying. Retry Attempt {:?}/{:?}",
-                        retry_attempts, max_retry_attempts
-                    );
-
-                    task::sleep(Duration::from_secs(10)).await;
-                }
-            }
+        if let Ok(device) = open_result {
+            self.device = Some(device);
         }
     }
 
@@ -154,7 +126,11 @@ impl<'a> Station<'a> {
                         Err(StationError::R1ReportInvalid(buf))
                     }
                 }
-                Err(_) => Err(StationError::R1ReadError),
+                Err(err) => {
+                    println!("{:?}", err);
+
+                    Err(StationError::R1ReadError)
+                }
             }
         } else {
             Err(StationError::NoDevice)
