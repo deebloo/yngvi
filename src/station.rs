@@ -34,6 +34,7 @@ pub struct Station<'a> {
     pub device_ids: DeviceIds,
     weather_reading: WeatherReading,
     device: Option<HidDevice>,
+    is_running: bool,
 }
 
 impl<'a> Station<'a> {
@@ -44,6 +45,7 @@ impl<'a> Station<'a> {
             device_ids,
             weather_reading: WeatherReading::new(),
             device: None,
+            is_running: false,
         }
     }
 
@@ -54,9 +56,7 @@ impl<'a> Station<'a> {
     pub async fn start(&mut self) {
         self.open_device().await;
 
-        let mut run = true;
-
-        while run {
+        while self.is_running {
             match self.read_report_r1() {
                 Ok(report) => {
                     // update reading timestamp
@@ -83,10 +83,14 @@ impl<'a> Station<'a> {
                 Err(StationError::ConnectError) => {
                     println!("Failed to connect to device. Stopping.");
 
-                    run = false;
+                    self.stop();
                 }
             }
         }
+    }
+
+    pub fn stop(&mut self) {
+        self.is_running = false;
     }
 
     /**
