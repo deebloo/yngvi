@@ -209,7 +209,7 @@ impl<'a> Station<'a> {
 
             false
         } else if data[9] != 0xff && data[9] != 0x00 {
-            println!("R1: invalid message flavor");
+            println!("R1: invalid final byte");
 
             false
         } else if data[8] & 0x0f > 3 {
