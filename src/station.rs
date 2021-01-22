@@ -24,11 +24,6 @@ const WIND_DIR_BY_IDX: [f32; 16] = [
     22.5, 180.0,
 ];
 
-// const WIND_DIR_CARD: [&str; 16] = [
-//     "NW", "WSW", "WNW", "W", "NNW", "SW", "N", "SSW", "ENE", "SE", "E", "ESE", "NE", "SSE", "NNE",
-//     "S",
-// ];
-
 pub struct Station<'a> {
     pub hid: &'a HidApi,
     pub writer: &'a dyn Writer,
@@ -61,12 +56,10 @@ impl<'a> Station<'a> {
         while self.is_running {
             match self.read_report_r1() {
                 Ok(report) => {
-                    // update reading timestamp
                     self.weather_reading.time = Utc::now();
 
                     self.update_weather_reading_r1(report);
 
-                    // write the result
                     let write_result = self.writer.write(&self.weather_reading).await;
 
                     if write_result.is_ok() {
@@ -87,7 +80,6 @@ impl<'a> Station<'a> {
                     self.open_device().await;
                 }
             }
-            
             task::sleep(Duration::from_secs(18)).await;
         }
     }
@@ -118,7 +110,7 @@ impl<'a> Station<'a> {
 
             match res {
                 Ok(_) => {
-                    let is_valid = Station::check_r1(&buf);
+                    let is_valid = Station::validate_r1(&buf);
 
                     if is_valid {
                         Ok(buf)
@@ -138,7 +130,7 @@ impl<'a> Station<'a> {
     }
 
     fn update_weather_reading_r1(&mut self, data: Report1) {
-        let report_flavor = Station::decode_r1_flavor(&data);
+        let report_flavor = Station::decode_flavor(&data);
 
         // Both flavors have wind speed
         let wind_speed = Station::decode_wind_speed(&data);
@@ -148,10 +140,8 @@ impl<'a> Station<'a> {
             let new_rain_total = Station::decode_rain(&data);
 
             if let Some(prev_rain_total) = self.weather_reading.rain {
-                if new_rain_total > prev_rain_total {
+                if new_rain_total >= prev_rain_total {
                     self.weather_reading.rain_delta = Some(new_rain_total - prev_rain_total);
-                } else {
-                    self.weather_reading.rain_delta = Some(0.0);
                 }
             }
 
@@ -171,6 +161,10 @@ impl<'a> Station<'a> {
         }
     }
 
+    fn decode_flavor(data: &Report1) -> u8 {
+        data[3] & 0x0f
+    }
+
     fn decode_wind_speed(data: &Report1) -> f32 {
         let n = ((data[4] & 0x1f) << 3) | ((data[5] & 0x70) >> 4);
 
@@ -179,10 +173,6 @@ impl<'a> Station<'a> {
         }
 
         (0.8278 * n as f32 + 1.0) / 1.609
-    }
-
-    fn decode_r1_flavor(data: &Report1) -> u8 {
-        data[3] & 0x0f
     }
 
     fn decode_out_temp(data: &Report1) -> f32 {
@@ -209,15 +199,21 @@ impl<'a> Station<'a> {
         WIND_DIR_BY_IDX[index as usize]
     }
 
-    fn check_r1(data: &Report1) -> bool {
+    fn validate_r1(data: &Report1) -> bool {
         if data[1] & 0x0f == 0x0f && data[3] == 0xff {
+            println!("R1: no sensors found");
+
             false
         } else if data[3] & 0x0f != 1 && data[3] & 0x0f != 8 {
-            println!("bogus message flavor");
+            println!("R1: invalid message flavor");
 
             false
         } else if data[9] != 0xff && data[9] != 0x00 {
-            println!("bogus final byte");
+            println!("R1: invalid message flavor");
+
+            false
+        } else if data[8] & 0x0f > 3 {
+            println!("R1: invalid signal strength");
 
             false
         } else {
@@ -242,7 +238,7 @@ mod tests {
     #[test]
     fn decode_r1_falvor_1() {
         let report: Report1 = [1, 197, 26, 113, 0, 200, 0, 108, 3, 255];
-        let flavor = Station::decode_r1_flavor(&report);
+        let flavor = Station::decode_flavor(&report);
 
         assert_eq!(flavor, 1);
     }
@@ -250,7 +246,7 @@ mod tests {
     #[test]
     fn decode_r1_falvor_8() {
         let report: Report1 = [1, 197, 26, 120, 0, 5, 75, 75, 3, 255];
-        let flavor = Station::decode_r1_flavor(&report);
+        let flavor = Station::decode_flavor(&report);
 
         assert_eq!(flavor, 8);
     }

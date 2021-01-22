@@ -1,16 +1,6 @@
-version: '3.9'
+version: "3.9"
 
 services:
-  # weather:
-  #   container_name: weather
-  #   build: .
-  #   depends_on:
-  #     - influxdb
-  #   environment:
-  #     - INFLUXDB_HOST=influxdb
-  #   devices:
-  #     - /dev/ttyUSB0:/dev/ttyUSB0
-
   influxdb:
     container_name: influxdb
     image: influxdb:latest
@@ -21,18 +11,16 @@ services:
     volumes:
       - influxdb_data:/var/lib/influxdb
 
-  chronograf:
-    container_name: chronograf
-    image: chronograf:latest
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    ports:
+      - "3000:3000"
     depends_on:
       - influxdb
-    ports:
-      - 8888:8888
     volumes:
-      - chronograf_data:/var/lib/chronograf
-    environment:
-      - INFLUXDB_URL=http://influxdb:8086
+      - grafana_data:/var/lib/grafana
 
 volumes:
   influxdb_data:
-  chronograf_data:
+  grafana_data:
