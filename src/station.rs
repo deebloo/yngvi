@@ -66,14 +66,17 @@ impl<'a> Station<'a> {
                         println!("{:?}", self.weather_reading);
                     }
                 }
+
                 Err(StationError::R1ReadError) => {
                     println!("Failed to read report R1");
 
                     self.open_device().await;
                 }
+
                 Err(StationError::R1ReportInvalid(report)) => {
                     println!("Report R1 Invalid {:?}", report);
                 }
+
                 Err(StationError::NoDevice) => {
                     println!("No device found");
 
@@ -229,6 +232,7 @@ impl<'a> Station<'a> {
 mod tests {
     use super::*;
     use async_trait::async_trait;
+    use lazy_static::lazy_static;
 
     struct MockWriter;
     #[async_trait]
@@ -236,6 +240,10 @@ mod tests {
         async fn write(&self, _weather_reading: &WeatherReading) -> Result<(), ()> {
             Ok({})
         }
+    }
+
+    lazy_static! {
+        static ref HID: HidApi = HidApi::new().unwrap();
     }
 
     #[test]
@@ -296,10 +304,9 @@ mod tests {
 
     #[test]
     fn creates_correct_reading() {
-        let hid = HidApi::new().unwrap();
         let writer = MockWriter {};
 
-        let mut station = Station::new(&hid, DeviceIds { vid: 0, pid: 1 }, &writer);
+        let mut station = Station::new(&HID, DeviceIds { vid: 0, pid: 1 }, &writer);
 
         station.update_weather_reading_r1([1, 197, 26, 120, 0, 5, 75, 75, 3, 255]);
 
@@ -316,5 +323,22 @@ mod tests {
                 wind_chill: Some(31.499998)
             }
         )
+    }
+
+    #[test]
+    fn calculates_rain_delta() {
+        let writer = MockWriter {};
+
+        let mut station = Station::new(&HID, DeviceIds { vid: 0, pid: 1 }, &writer);
+
+        // rain total = 1.08
+        station.update_weather_reading_r1([1, 197, 26, 113, 0, 200, 0, 108, 3, 255]);
+
+        // rain total = 2.3600001
+        station.update_weather_reading_r1([1, 197, 26, 113, 0, 200, 1, 108, 3, 255]);
+
+        println!("{:?}", station.weather_reading);
+
+        assert_eq!(station.weather_reading.rain_delta, Some(1.2800001))
     }
 }
