@@ -328,7 +328,10 @@ mod tests {
 
         let mut station = Station::new(&HID, DeviceIds { vid: 0, pid: 1 }, &writer);
 
+        // rain total = 1.08
         station.update_weather_reading_r1([1, 197, 26, 113, 0, 200, 0, 108, 3, 255]);
+
+        // rain total = 2.3600001
         station.update_weather_reading_r1([1, 197, 26, 113, 0, 200, 1, 108, 3, 255]);
 
         println!("{:?}", station.weather_reading);
