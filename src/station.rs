@@ -136,6 +136,9 @@ impl<'a> Station<'a> {
         let wind_speed = Station::decode_wind_speed(&data);
         self.weather_reading.wind_speed = Some(wind_speed);
 
+        // Always clear rain_delta. (Will reassign if available)
+        self.weather_reading.rain_delta = None;
+
         if report_flavor == 1 {
             let new_rain_total = Station::decode_rain(&data);
 
