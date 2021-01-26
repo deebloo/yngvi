@@ -337,8 +337,6 @@ mod tests {
         // rain total = 2.3600001
         station.update_weather_reading_r1([1, 197, 26, 113, 0, 200, 1, 108, 3, 255]);
 
-        println!("{:?}", station.weather_reading);
-
         assert_eq!(station.weather_reading.rain_delta, Some(1.2800001))
     }
 }
