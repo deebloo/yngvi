@@ -28,7 +28,7 @@ pub fn calc_heat_index(temp: f32, humid: u8) -> f32 {
             - 0.00000199 * temp * temp * rh * rh;
 
         if rh <= 13. && temp >= 80. && temp <= 112. {
-            hi = hi - ((13. - rh) / 4.) * ((17. - (temp - 95.).abs()) / 17.).sqrt()
+            hi = hi - ((13. - rh) / 4.) * ((17. - (temp - 95.).abs()) / 17.).sqrt();
         } else if rh > 85. && temp >= 80. && temp <= 87. {
             hi = hi - ((rh - 85.) / 10.) * ((87. - temp) / 5.);
         }

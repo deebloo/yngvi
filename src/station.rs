@@ -165,7 +165,7 @@ impl<'a> Station<'a> {
             self.weather_reading.out_temp = Some(out_temp);
             self.weather_reading.out_humid = Some(out_humid);
             self.weather_reading.wind_chill = Some(calc_wind_chill(wind_speed, out_temp));
-            self.weather_reading.heat_index = Some(calc_heat_index(out_temp, out_humid))
+            self.weather_reading.heat_index = Some(calc_heat_index(out_temp, out_humid));
         }
     }
 
