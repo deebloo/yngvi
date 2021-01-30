@@ -63,7 +63,7 @@ impl<'a> Station<'a> {
                     let write_result = self.writer.write(&self.weather_reading).await;
 
                     if write_result.is_ok() {
-                        println!("{:?}", self.weather_reading);
+                        println!("{}", self.weather_reading);
                     }
                 }
 

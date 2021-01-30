@@ -1,5 +1,6 @@
 use async_trait::async_trait;
 use chrono::{DateTime, Utc};
+use std::fmt;
 
 #[async_trait]
 pub trait Writer {
@@ -17,6 +18,16 @@ pub struct WeatherReading {
     pub out_humid: Option<u8>,
     pub wind_chill: Option<f32>,
     pub heat_index: Option<f32>,
+}
+
+impl fmt::Display for WeatherReading {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(
+            f,
+            "#### {:?} #### \nrain: {:?} rain_delta: {:?} \nwind_speed: {:?} wind_dir: {:?} \ntemp: {:?} humidity: {:?} \nwind_chill: {:?} heat_index: {:?} \n###### END ######\n",
+            self.time, self.rain, self.rain_delta, self.wind_speed, self.wind_dir, self.out_temp, self.out_humid, self.wind_chill, self.heat_index
+        )
+    }
 }
 
 impl WeatherReading {
