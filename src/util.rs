@@ -1,5 +1,5 @@
 pub fn calc_wind_chill(wind_speed: f32, out_temp: f32) -> f32 {
-    if wind_speed < 3. {
+    if wind_speed < 3. || out_temp >= 50. {
         return out_temp;
     }
 
@@ -42,13 +42,18 @@ mod tests {
     use super::*;
 
     #[test]
-    fn test_calc_wind_chill_above_2() {
+    fn test_calc_wind_chill_at_least_3() {
         assert_eq!(calc_wind_chill(3., 38.), 36.10366);
     }
 
     #[test]
     fn test_calc_wind_chill_below_3() {
-        assert_eq!(calc_wind_chill(3., 38.), 36.10366);
+        assert_eq!(calc_wind_chill(2., 38.), 38.);
+    }
+
+    #[test]
+    fn test_calc_wind_chill_temp_above_50() {
+        assert_eq!(calc_wind_chill(2., 51.), 51.);
     }
 
     #[test]
