@@ -15,6 +15,7 @@ pub struct WeatherReadingInflux {
     pub out_temp: Option<f32>,
     pub out_humid: Option<u8>,
     pub wind_chill: Option<f32>,
+    pub heat_index: Option<f32>,
 }
 
 impl WeatherReadingInflux {
@@ -28,6 +29,7 @@ impl WeatherReadingInflux {
             out_temp: weather_reading.out_temp,
             out_humid: weather_reading.out_humid,
             wind_chill: weather_reading.wind_chill,
+            heat_index: weather_reading.heat_index,
         }
     }
 }
