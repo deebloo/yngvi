@@ -15,11 +15,8 @@ async fn main() {
 
     let mut device_api_ready = false;
     let mut retry_attempts = 0;
-    let max_retry_attempts = 5;
 
-    println!("Attempting to create HID API...");
-
-    while !device_api_ready && retry_attempts < max_retry_attempts {
+    while !device_api_ready {
         match HidApi::new() {
             Ok(api) => {
                 println!("HID API is ready...",);
@@ -42,12 +39,11 @@ async fn main() {
                 station.start().await;
             }
             Err(_) => {
-                retry_attempts += 1;
+                retry_attempts = retry_attempts + 1;
 
                 println!(
-                    "There was a problem connecting to the HID API. Retrying. Retry Attempt {:?}/{:?}",
+                    "There was a problem connecting to the HID API. Retrying. Retry Attempt {}",
                     retry_attempts,
-                    max_retry_attempts
                 );
 
                 task::sleep(Duration::from_secs(10)).await;
