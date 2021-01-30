@@ -3,7 +3,7 @@ use chrono::Utc;
 use hidapi::{HidApi, HidDevice};
 use std::time::Duration;
 
-use crate::util::calc_wind_chill;
+use crate::util::{calc_heat_index, calc_wind_chill};
 use crate::writer::{WeatherReading, Writer};
 
 type Report1 = [u8; 10];
@@ -160,10 +160,12 @@ impl<'a> Station<'a> {
             }
         } else {
             let out_temp = Station::decode_out_temp(&data);
+            let out_humid = Station::decode_out_humidity(&data);
 
             self.weather_reading.out_temp = Some(out_temp);
-            self.weather_reading.out_humid = Some(Station::decode_out_humidity(&data));
+            self.weather_reading.out_humid = Some(out_humid);
             self.weather_reading.wind_chill = Some(calc_wind_chill(wind_speed, out_temp));
+            self.weather_reading.heat_index = Some(calc_heat_index(out_temp, out_humid))
         }
     }
 
@@ -320,7 +322,8 @@ mod tests {
                 wind_dir: None,
                 out_temp: Some(31.499998),
                 out_humid: Some(75),
-                wind_chill: Some(31.499998)
+                wind_chill: Some(31.499998),
+                heat_index: Some(31.499998)
             }
         )
     }

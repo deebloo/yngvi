@@ -18,8 +18,6 @@ pub fn calc_heat_index(temp: f32, humid: u8) -> f32 {
 
     let mut hi = 0.5 * (temp + 61.0 + ((temp - 68.0) * 1.2) + (rh * 0.094));
 
-    hi = (hi + temp) / 2.;
-
     if hi > 79.0 {
         hi = -42.379 + 2.04901523 * temp + 10.14333127 * rh
             - 0.22475541 * temp * rh
@@ -60,7 +58,7 @@ mod tests {
 
     #[test]
     fn test_calc_hi_should_be_correct_simple() {
-        assert_eq!(calc_heat_index(75., 100), 75.95);
+        assert_eq!(calc_heat_index(75., 100), 76.899994);
     }
 
     #[test]
