@@ -425,6 +425,16 @@ dependencies = [
 ]
 
 [[package]]
+name = "dashmap"
+version = "4.0.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "e77a43b28d0668df09411cb0bc9a8c2adc40f9a048afe863e05fd43251e8e39c"
+dependencies = [
+ "cfg-if 1.0.0",
+ "num_cpus",
+]
+
+[[package]]
 name = "data-encoding"
 version = "2.3.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -750,11 +760,13 @@ dependencies = [
 
 [[package]]
 name = "http-client"
-version = "6.2.0"
+version = "6.3.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "010092b71b94ee49293995625ce7a607778b8b4099c8088fa84fd66bd3e0f21c"
+checksum = "98c12a6a451357392f3307325e9a15cbd27451abdaad96e74c30ea8786f615c4"
 dependencies = [
  "async-trait",
+ "cfg-if 1.0.0",
+ "dashmap",
  "futures-util",
  "http-types",
  "hyper",
@@ -863,9 +875,9 @@ checksum = "64e9829a50b42bb782c1df523f78d332fe371b10c661e78b7a3c34b0198e9fac"
 
 [[package]]
 name = "influxdb"
-version = "0.3.0"
+version = "0.4.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "930a3730787ddf754d5ffcbca48909e7aaee3076ecfc6b9547c84a10f937e7f7"
+checksum = "9fe060720fd73a206738b3f0beab024eef0db40f49a38f10a5a5e7e82dbf9e0d"
 dependencies = [
  "chrono",
  "futures",
@@ -880,9 +892,9 @@ dependencies = [
 
 [[package]]
 name = "influxdb_derive"
-version = "0.3.0"
+version = "0.4.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "bd351b85d6d79b8b73bda7452d8d9ac7da8a392f8b9eb0a4780b373539fb1e6e"
+checksum = "321345ebf687827f6254b36bb3077f00bdee36f609905d1e65d5905cc92156ab"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -1564,20 +1576,20 @@ checksum = "1e81da0851ada1f3e9d4312c704aa4f8806f0f9d69faaf8df2f3464b4a9437c2"
 
 [[package]]
 name = "surf"
-version = "2.1.0"
+version = "2.2.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "7189c787d96fe18fef704950de76d590022d9d70858a4a201e1f07a0666882ea"
+checksum = "2a154d33ca6b5e1fe6fd1c760e5a5cc1202425f6cca2e13229f16a69009f6328"
 dependencies = [
  "async-std",
  "async-trait",
- "cfg-if 0.1.10",
+ "cfg-if 1.0.0",
  "futures-util",
  "http-client",
  "http-types",
  "log",
  "mime_guess",
  "once_cell",
- "pin-project-lite 0.1.11",
+ "pin-project-lite 0.2.1",
  "serde",
  "serde_json",
 ]
