@@ -51,7 +51,8 @@ impl<'a> Station<'a> {
      */
     pub async fn start(&mut self) {
         self.is_running = true;
-        self.open_device().await;
+
+        self.open_device();
 
         while self.is_running {
             match self.read_report_r1() {
@@ -67,22 +68,17 @@ impl<'a> Station<'a> {
                     }
                 }
 
-                Err(StationError::R1ReadError) => {
-                    println!("Failed to read report R1");
+                Err(StationError::NoDevice) | Err(StationError::R1ReadError) => {
+                    println!("Problem reading from device");
 
-                    self.open_device().await;
+                    self.open_device();
                 }
 
                 Err(StationError::R1ReportInvalid(report)) => {
                     println!("Report R1 Invalid {:?}", report);
                 }
-
-                Err(StationError::NoDevice) => {
-                    println!("No device found");
-
-                    self.open_device().await;
-                }
             }
+
             task::sleep(Duration::from_secs(18)).await;
         }
     }
@@ -91,7 +87,7 @@ impl<'a> Station<'a> {
      * Open HID device.
      * Attempt to connect 5 times
      */
-    async fn open_device(&mut self) {
+    fn open_device(&mut self) {
         println!("Opening HID device...");
 
         self.device = None;
@@ -107,9 +103,9 @@ impl<'a> Station<'a> {
      * Read and decode report R1
      */
     fn read_report_r1(&self) -> Result<Report1, StationError> {
-        if let Some(d) = &self.device {
+        if let Some(device) = &self.device {
             let mut buf: Report1 = [1u8; 10];
-            let res = d.get_feature_report(&mut buf);
+            let res = device.get_feature_report(&mut buf);
 
             match res {
                 Ok(_) => {
@@ -240,7 +236,7 @@ mod tests {
     #[async_trait]
     impl Writer for MockWriter {
         async fn write(&self, _weather_reading: &WeatherReading) -> Result<(), ()> {
-            Ok({})
+            Ok(())
         }
     }
 
