@@ -33,8 +33,8 @@ pub struct Station<'a> {
 }
 
 impl<'a> Station<'a> {
-    pub fn new(hid: &'a HidApi, device_ids: DeviceIds) -> Station<'a> {
-        Station {
+    pub fn new(hid: &'a HidApi, device_ids: DeviceIds) -> Self {
+        Self {
             hid,
             device_ids,
             weather_reading: WeatherReading::new(),
@@ -70,7 +70,7 @@ impl<'a> Station<'a> {
                     println!("Problem reading from device");
 
                     self.open_device();
-                }
+                } 
 
                 Err(StationError::R1ReportInvalid(report)) => {
                     println!("Report R1 Invalid {:?}", report);
@@ -112,7 +112,7 @@ impl<'a> Station<'a> {
 
             match res {
                 Ok(_) => {
-                    if Station::validate_r1(&buf) {
+                    if Self::validate_r1(&buf) {
                         Ok(buf)
                     } else {
                         Err(StationError::R1ReportInvalid(buf))
@@ -126,17 +126,17 @@ impl<'a> Station<'a> {
     }
 
     fn update_weather_reading_r1(&mut self, data: Report1) {
-        let report_flavor = Station::decode_flavor(&data);
+        let report_flavor = Self::decode_flavor(&data);
 
         // Both flavors have wind speed
-        let wind_speed = Station::decode_wind_speed(&data);
+        let wind_speed = Self::decode_wind_speed(&data);
         self.weather_reading.wind_speed = Some(wind_speed);
 
         // Always clear rain_delta. (Will reassign if available)
         self.weather_reading.rain_delta = None;
 
         if report_flavor == 1 {
-            let new_rain_total = Station::decode_rain(&data);
+            let new_rain_total = Self::decode_rain(&data);
 
             if let Some(prev_rain_total) = self.weather_reading.rain {
                 if new_rain_total >= prev_rain_total {
@@ -145,15 +145,15 @@ impl<'a> Station<'a> {
             }
 
             self.weather_reading.rain = Some(new_rain_total);
-            self.weather_reading.wind_dir = Some(Station::decode_wind_dir(&data));
+            self.weather_reading.wind_dir = Some(Self::decode_wind_dir(&data));
 
             if let Some(out_temp) = self.weather_reading.out_temp {
                 // Calculate wind chill if a temp has already been recorded
                 self.weather_reading.wind_chill = Some(calc_wind_chill(wind_speed, out_temp));
             }
         } else {
-            let out_temp = Station::decode_out_temp(&data);
-            let out_humid = Station::decode_out_humidity(&data);
+            let out_temp = Self::decode_out_temp(&data);
+            let out_humid = Self::decode_out_humidity(&data);
 
             self.weather_reading.out_temp = Some(out_temp);
             self.weather_reading.out_humid = Some(out_humid);
