@@ -26,18 +26,16 @@ const WIND_DIR_BY_IDX: [f32; 16] = [
 
 pub struct Station<'a> {
     pub hid: &'a HidApi,
-    pub writer: &'a dyn Writer,
     pub device_ids: DeviceIds,
+    pub is_running: bool,
     weather_reading: WeatherReading,
     device: Option<HidDevice>,
-    is_running: bool,
 }
 
 impl<'a> Station<'a> {
-    pub fn new(hid: &'a HidApi, device_ids: DeviceIds, writer: &'a impl Writer) -> Station<'a> {
+    pub fn new(hid: &'a HidApi, device_ids: DeviceIds) -> Station<'a> {
         Station {
             hid,
-            writer,
             device_ids,
             weather_reading: WeatherReading::new(),
             device: None,
@@ -49,7 +47,7 @@ impl<'a> Station<'a> {
      * Open device and start reading reports.
      * If a failure to read occurs wait and then re-open device
      */
-    pub async fn start(&mut self) {
+    pub async fn start(&mut self, writer: &impl Writer) {
         self.is_running = true;
 
         self.open_device();
@@ -61,7 +59,7 @@ impl<'a> Station<'a> {
 
                     self.update_weather_reading_r1(report);
 
-                    let write_result = self.writer.write(&self.weather_reading).await;
+                    let write_result = writer.write(&self.weather_reading).await;
 
                     if write_result.is_ok() {
                         println!("{}", self.weather_reading);
@@ -81,6 +79,11 @@ impl<'a> Station<'a> {
 
             task::sleep(Duration::from_secs(18)).await;
         }
+    }
+
+    #[allow(dead_code)]
+    pub fn stop(&mut self) {
+        self.is_running = false;
     }
 
     /**
@@ -109,19 +112,13 @@ impl<'a> Station<'a> {
 
             match res {
                 Ok(_) => {
-                    let is_valid = Station::validate_r1(&buf);
-
-                    if is_valid {
+                    if Station::validate_r1(&buf) {
                         Ok(buf)
                     } else {
                         Err(StationError::R1ReportInvalid(buf))
                     }
                 }
-                Err(err) => {
-                    println!("{:?}", err);
-
-                    Err(StationError::R1ReadError)
-                }
+                Err(_) => Err(StationError::R1ReadError),
             }
         } else {
             Err(StationError::NoDevice)
@@ -229,16 +226,7 @@ impl<'a> Station<'a> {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use async_trait::async_trait;
     use lazy_static::lazy_static;
-
-    struct MockWriter;
-    #[async_trait]
-    impl Writer for MockWriter {
-        async fn write(&self, _weather_reading: &WeatherReading) -> Result<(), ()> {
-            Ok(())
-        }
-    }
 
     lazy_static! {
         static ref HID: HidApi = HidApi::new().unwrap();
@@ -302,9 +290,7 @@ mod tests {
 
     #[test]
     fn creates_correct_reading() {
-        let writer = MockWriter {};
-
-        let mut station = Station::new(&HID, DeviceIds { vid: 0, pid: 1 }, &writer);
+        let mut station = Station::new(&HID, DeviceIds { vid: 0, pid: 1 });
 
         station.update_weather_reading_r1([1, 197, 26, 120, 0, 5, 75, 75, 3, 255]);
 
@@ -326,9 +312,7 @@ mod tests {
 
     #[test]
     fn calculates_rain_delta() {
-        let writer = MockWriter {};
-
-        let mut station = Station::new(&HID, DeviceIds { vid: 0, pid: 1 }, &writer);
+        let mut station = Station::new(&HID, DeviceIds { vid: 0, pid: 1 });
 
         // rain total = 1.08
         station.update_weather_reading_r1([1, 197, 26, 113, 0, 200, 0, 108, 3, 255]);

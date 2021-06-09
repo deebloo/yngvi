@@ -20,10 +20,9 @@ async fn main() {
             vid: 0x24c0,
             pid: 0x003,
         },
-        &writer,
     );
 
     println!("Weather Station is ready...");
 
-    station.start().await;
+    station.start(&writer).await;
 }
