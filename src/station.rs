@@ -33,9 +33,9 @@ impl Station {
     pub async fn start(&mut self, reader: &impl Reader, writer: &impl Writer) {
         self.is_running = true;
 
-        let mut buf: Report1 = [1u8; 10];
-
         while self.is_running {
+            let mut buf: Report1 = [1u8; 10];
+            
             if let Ok(_) = reader.read(&mut buf) {
                 if Self::validate_r1(&buf) {
                     self.weather_reading.time = Utc::now();
