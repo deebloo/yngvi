@@ -9,7 +9,6 @@ dependencies = [
  "chrono",
  "hidapi",
  "influxdb",
- "lazy_static",
 ]
 
 [[package]]
