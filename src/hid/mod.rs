@@ -1,6 +1,6 @@
-use crate::reader::{ReadError, ReadResult, Reader};
-
 use hidapi::HidApi;
+
+use crate::reader::{ReadError, ReadResult, Reader};
 
 pub struct HidReader {
     hid: HidApi,
