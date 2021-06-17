@@ -2,14 +2,13 @@
 # It is not intended for manual editing.
 [[package]]
 name = "acurite-weather"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "async-std",
  "async-trait",
  "chrono",
  "hidapi",
  "influxdb",
- "lazy_static",
 ]
 
 [[package]]

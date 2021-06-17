@@ -1,6 +1,6 @@
 [package]
 name = "acurite-weather"
-version = "0.1.0"
+version = "0.2.0"
 authors = ["dblue <dblue@deloitte.com>"]
 edition = "2018"
 
@@ -12,4 +12,3 @@ async-trait = "0.1.50"
 chrono = "0.4.19"
 hidapi = "1.2.6"
 influxdb = { version = "0.4.0", features = ["derive"] }
-lazy_static = "1.4.0"
