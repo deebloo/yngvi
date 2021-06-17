@@ -1,44 +1,27 @@
 use async_std::task;
 use chrono::Utc;
-use hidapi::{HidApi, HidDevice};
 use std::time::Duration;
 
+use crate::reader::Reader;
 use crate::util::{calc_heat_index, calc_wind_chill};
 use crate::writer::{WeatherReading, Writer};
 
 type Report1 = [u8; 10];
-
-pub struct DeviceIds {
-    pub vid: u16,
-    pub pid: u16,
-}
-
-enum StationError {
-    R1ReadError,
-    NoDevice,
-    R1ReportInvalid(Report1),
-}
 
 const WIND_DIR_BY_IDX: [f32; 16] = [
     315.0, 247.5, 292.5, 270.0, 337.5, 225.0, 0.0, 202.5, 67.5, 135.0, 90.0, 112.5, 45.0, 157.5,
     22.5, 180.0,
 ];
 
-pub struct Station<'a> {
-    pub hid: &'a HidApi,
-    pub device_ids: DeviceIds,
+pub struct Station {
     pub is_running: bool,
     weather_reading: WeatherReading,
-    device: Option<HidDevice>,
 }
 
-impl<'a> Station<'a> {
-    pub fn new(hid: &'a HidApi, device_ids: DeviceIds) -> Self {
+impl Station {
+    pub fn new() -> Self {
         Self {
-            hid,
-            device_ids,
             weather_reading: WeatherReading::new(),
-            device: None,
             is_running: false,
         }
     }
@@ -47,34 +30,28 @@ impl<'a> Station<'a> {
      * Open device and start reading reports.
      * If a failure to read occurs wait and then re-open device
      */
-    pub async fn start(&mut self, writer: &impl Writer) {
+    pub async fn start(&mut self, reader: &impl Reader, writer: &impl Writer) {
         self.is_running = true;
 
-        self.open_device();
+        let mut buf: Report1 = [1u8; 10];
 
         while self.is_running {
-            match self.read_report_r1() {
-                Ok(report) => {
+            if let Ok(_) = reader.read(&mut buf) {
+                if Self::validate_r1(&buf) {
                     self.weather_reading.time = Utc::now();
 
-                    self.update_weather_reading_r1(report);
+                    self.update_weather_reading_r1(buf);
 
                     let write_result = writer.write(&self.weather_reading).await;
 
                     if write_result.is_ok() {
                         println!("{}", self.weather_reading);
                     }
+                } else {
+                    println!("Report R1 Invalid {:?}", buf);
                 }
-
-                Err(StationError::NoDevice) | Err(StationError::R1ReadError) => {
-                    println!("Problem reading from device");
-
-                    self.open_device();
-                } 
-
-                Err(StationError::R1ReportInvalid(report)) => {
-                    println!("Report R1 Invalid {:?}", report);
-                }
+            } else {
+                println!("Problem reading from device");
             }
 
             task::sleep(Duration::from_secs(18)).await;
@@ -84,45 +61,6 @@ impl<'a> Station<'a> {
     #[allow(dead_code)]
     pub fn stop(&mut self) {
         self.is_running = false;
-    }
-
-    /**
-     * Open HID device.
-     * Attempt to connect 5 times
-     */
-    fn open_device(&mut self) {
-        println!("Opening HID device...");
-
-        self.device = None;
-
-        let open_result = self.hid.open(self.device_ids.vid, self.device_ids.pid);
-
-        if let Ok(device) = open_result {
-            self.device = Some(device);
-        }
-    }
-
-    /**
-     * Read and decode report R1
-     */
-    fn read_report_r1(&self) -> Result<Report1, StationError> {
-        if let Some(device) = &self.device {
-            let mut buf: Report1 = [1u8; 10];
-            let res = device.get_feature_report(&mut buf);
-
-            match res {
-                Ok(_) => {
-                    if Self::validate_r1(&buf) {
-                        Ok(buf)
-                    } else {
-                        Err(StationError::R1ReportInvalid(buf))
-                    }
-                }
-                Err(_) => Err(StationError::R1ReadError),
-            }
-        } else {
-            Err(StationError::NoDevice)
-        }
     }
 
     fn update_weather_reading_r1(&mut self, data: Report1) {
@@ -226,11 +164,6 @@ impl<'a> Station<'a> {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use lazy_static::lazy_static;
-
-    lazy_static! {
-        static ref HID: HidApi = HidApi::new().unwrap();
-    }
 
     #[test]
     fn decode_r1_falvor_1() {
@@ -290,7 +223,7 @@ mod tests {
 
     #[test]
     fn creates_correct_reading() {
-        let mut station = Station::new(&HID, DeviceIds { vid: 0, pid: 1 });
+        let mut station = Station::new();
 
         station.update_weather_reading_r1([1, 197, 26, 120, 0, 5, 75, 75, 3, 255]);
 
@@ -312,7 +245,7 @@ mod tests {
 
     #[test]
     fn calculates_rain_delta() {
-        let mut station = Station::new(&HID, DeviceIds { vid: 0, pid: 1 });
+        let mut station = Station::new();
 
         // rain total = 1.08
         station.update_weather_reading_r1([1, 197, 26, 113, 0, 200, 0, 108, 3, 255]);
