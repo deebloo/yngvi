@@ -35,7 +35,7 @@ impl Station {
 
         while self.is_running {
             let mut buf: Report1 = [1u8; 10];
-            
+
             if let Ok(_) = reader.read(&mut buf) {
                 if Self::validate_r1(&buf) {
                     self.weather_reading.time = Utc::now();
@@ -74,6 +74,11 @@ impl Station {
         self.weather_reading.rain_delta = None;
 
         if report_flavor == 1 {
+            // Report flavor 1 contains
+            // 1. Wind Speed
+            // 2. Rain
+            // 3. Wind Direction
+
             let new_rain_total = Self::decode_rain(&data);
 
             if let Some(prev_rain_total) = self.weather_reading.rain {
@@ -90,6 +95,11 @@ impl Station {
                 self.weather_reading.wind_chill = Some(calc_wind_chill(wind_speed, out_temp));
             }
         } else {
+            // Report flavor 1 contains
+            // 1. Wind Speed
+            // 2. Outdoor temp
+            // 3. Outdoor humidity
+
             let out_temp = Self::decode_out_temp(&data);
             let out_humid = Self::decode_out_humidity(&data);
 
