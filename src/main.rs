@@ -5,8 +5,8 @@ mod station;
 mod util;
 mod writer;
 
-use hid::HidReader;
-use influx::InfluxWriter;
+use hid::reader::HidReader;
+use influx::writer::InfluxWriter;
 use station::Station;
 
 #[async_std::main]
