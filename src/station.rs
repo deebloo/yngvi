@@ -81,19 +81,20 @@ impl Station {
 
             let new_rain_total = Self::decode_rain(&data);
 
+            // Update the rain delta if the new rain total is greater then the previously recorded
             if let Some(prev_rain_total) = self.weather_reading.rain {
                 if new_rain_total >= prev_rain_total {
                     self.weather_reading.rain_delta = Some(new_rain_total - prev_rain_total);
                 }
             }
 
-            self.weather_reading.rain = Some(new_rain_total);
-            self.weather_reading.wind_dir = Some(Self::decode_wind_dir(&data));
-
+            // Calculate wind chill if a temp has already been recorded
             if let Some(out_temp) = self.weather_reading.out_temp {
-                // Calculate wind chill if a temp has already been recorded
                 self.weather_reading.wind_chill = Some(calc_wind_chill(wind_speed, out_temp));
             }
+            
+            self.weather_reading.rain = Some(new_rain_total);
+            self.weather_reading.wind_dir = Some(Self::decode_wind_dir(&data));
         } else {
             // Report flavor 1 contains
             // 1. Wind Speed
