@@ -1,38 +1,9 @@
 use async_trait::async_trait;
-use chrono::{DateTime, Utc};
-use influxdb::{Client, InfluxDbWriteable, Timestamp};
+use influxdb::{Client, InfluxDbWriteable};
 use std::env;
 
+use crate::influx::WeatherReadingInflux;
 use crate::writer::{WeatherReading, Writer};
-
-#[derive(InfluxDbWriteable, Clone, Copy, Debug)]
-pub struct WeatherReadingInflux {
-    pub time: DateTime<Utc>,
-    pub rain: Option<f32>,
-    pub rain_delta: Option<f32>,
-    pub wind_speed: Option<f32>,
-    pub wind_dir: Option<f32>,
-    pub out_temp: Option<f32>,
-    pub out_humid: Option<u8>,
-    pub wind_chill: Option<f32>,
-    pub heat_index: Option<f32>,
-}
-
-impl WeatherReadingInflux {
-    pub fn from_weather_reading(weather_reading: &WeatherReading) -> WeatherReadingInflux {
-        WeatherReadingInflux {
-            time: Timestamp::from(weather_reading.time).into(),
-            rain: weather_reading.rain,
-            rain_delta: weather_reading.rain_delta,
-            wind_speed: weather_reading.wind_speed,
-            wind_dir: weather_reading.wind_dir,
-            out_temp: weather_reading.out_temp,
-            out_humid: weather_reading.out_humid,
-            wind_chill: weather_reading.wind_chill,
-            heat_index: weather_reading.heat_index,
-        }
-    }
-}
 
 pub struct InfluxWriter {
     client: Client,
