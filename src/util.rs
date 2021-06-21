@@ -1,3 +1,5 @@
+// Calculated based on formula from the National Weather Service
+// https://www.weather.gov/media/epz/wxcalc/windChill.pdf
 pub fn calc_wind_chill(wind_speed: f32, out_temp: f32) -> f32 {
     if wind_speed < 3. || out_temp >= 50. {
         return out_temp;
@@ -9,6 +11,8 @@ pub fn calc_wind_chill(wind_speed: f32, out_temp: f32) -> f32 {
     raw
 }
 
+// Calculated based on formula from the National Weather Service
+// https://www.wpc.ncep.noaa.gov/html/heatindex_equation.shtml
 pub fn calc_heat_index(temp: f32, humid: u8) -> f32 {
     if temp <= 40. {
         return temp;
