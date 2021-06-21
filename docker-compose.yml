@@ -17,8 +17,8 @@ services:
     ports:
       - 3000:3000
     environment:
-      - GF_SERVER_DOMAIN=0.0.0.0:8080
-      - GF_SERVER_ROOT_URL=http://0.0.0.0:8080/weather/
+      - GF_SERVER_DOMAIN=0.0.0.0:80
+      - GF_SERVER_ROOT_URL=http://0.0.0.0:80/weather/
       - GF_SERVER_SERVE_FROM_SUB_PATH=true
     volumes:
       - grafana_data:/var/lib/grafana
