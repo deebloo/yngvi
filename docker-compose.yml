@@ -33,7 +33,7 @@ services:
       - 80:80
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf
-      - /etc/ssl/certs/:/etc/ssl/certs/
+      - ./nginx/ssl:/etc/ssl
     depends_on:
       - grafana
 
