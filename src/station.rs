@@ -3,7 +3,7 @@ use chrono::Utc;
 use std::time::Duration;
 
 use crate::reader::Reader;
-use crate::util::{calc_heat_index, calc_wind_chill};
+use crate::formulas::{calc_heat_index, calc_wind_chill};
 use crate::writer::{WeatherReading, Writer};
 
 type Report1 = [u8; 10];

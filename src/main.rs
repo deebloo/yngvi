@@ -2,7 +2,7 @@ mod hid;
 mod influx;
 mod reader;
 mod station;
-mod util;
+mod formulas;
 mod writer;
 
 use hid::HidReader;
