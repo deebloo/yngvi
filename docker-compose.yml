@@ -28,10 +28,12 @@ services:
   nginx:
     container_name: nginx
     image: nginx:1.21.0
+    build: ./nginx
     ports:
       - 80:80
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf
+      - /etc/ssl/certs/:/etc/ssl/certs/
     depends_on:
       - grafana
 
