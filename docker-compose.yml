@@ -15,11 +15,19 @@ services:
     image: grafana/grafana:latest
     container_name: grafana
     ports:
-      - "3000:3000"
+      - 3000:3000
     depends_on:
       - influxdb
     volumes:
       - grafana_data:/var/lib/grafana
+
+  nginx:
+    container_name: nginx
+    image: nginx:1.21.0
+    ports: 
+      - 8080:80
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/conf.d/weather.conf
 
 volumes:
   influxdb_data:
