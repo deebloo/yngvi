@@ -28,7 +28,6 @@ services:
   nginx:
     container_name: nginx
     image: nginx:1.21.0
-    build: ./nginx
     ports:
       - 80:80
       - 443:443
