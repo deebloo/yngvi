@@ -7,4 +7,25 @@ Only tested with the 5-1 weather station and [display for 5-1 weather station](h
 
 Pulls data from display and populates InfluxDb with Grafana visualizations.
 
+### Pull latest code
+```BASH
+git clone https://github.com/deebloo/acurite-weather.git
+```
+
+### Create release build
+```BASH
+cargo build --release
+```
+
+### Standup infra
+```BASH
+docker-compose up -d
+```
+
+### Start program
+```BASH
+./target/release/acurite-weather
+```
+
+
 ![alt text](images/dashboard_2.png)
