@@ -1,15 +1,15 @@
+mod formulas;
 mod hid;
 mod influx;
 mod reader;
 mod station;
-mod formulas;
 mod writer;
 
 use hid::HidReader;
 use influx::InfluxWriter;
 use station::Station;
 
-#[async_std::main]
+#[tokio::main]
 async fn main() {
     println!("Application starting...");
 

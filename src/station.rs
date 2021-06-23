@@ -1,9 +1,8 @@
-use async_std::task;
 use chrono::Utc;
-use std::time::Duration;
+use tokio::time::{sleep, Duration};
 
-use crate::reader::Reader;
 use crate::formulas::{calc_heat_index, calc_wind_chill};
+use crate::reader::Reader;
 use crate::writer::{WeatherReading, Writer};
 
 type Report1 = [u8; 10];
@@ -54,7 +53,7 @@ impl Station {
                 println!("Problem reading from device");
             }
 
-            task::sleep(Duration::from_secs(18)).await;
+            sleep(Duration::from_secs(18)).await;
         }
     }
 
@@ -92,7 +91,7 @@ impl Station {
             if let Some(out_temp) = self.weather_reading.out_temp {
                 self.weather_reading.wind_chill = Some(calc_wind_chill(wind_speed, out_temp));
             }
-            
+
             self.weather_reading.rain = Some(new_rain_total);
             self.weather_reading.wind_dir = Some(Self::decode_wind_dir(&data));
         } else {
