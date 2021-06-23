@@ -45,6 +45,8 @@ impl Station {
 
                     if write_result.is_ok() {
                         println!("{}", self.weather_reading);
+                    } else {
+                        println!("There was a problem when calling writer.write()")
                     }
                 } else {
                     println!("Report R1 Invalid {:?}", buf);
