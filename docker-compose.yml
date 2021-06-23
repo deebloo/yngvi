@@ -4,6 +4,8 @@ services:
   influxdb:
     container_name: influxdb
     image: influxdb:1.8.6
+    ports:
+      - 8086:8086
     environment:
       - INFLUXDB_DB=weather
     volumes:
