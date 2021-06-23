@@ -4,8 +4,6 @@ services:
   influxdb:
     container_name: influxdb
     image: influxdb:1.8.6
-    ports:
-      - 8086:8086
     environment:
       - INFLUXDB_DB=weather
     volumes:
@@ -14,8 +12,6 @@ services:
   grafana:
     container_name: grafana
     image: grafana/grafana:latest
-    ports:
-      - 3000:3000
     environment:
       - GF_SERVER_DOMAIN=0.0.0.0
       - GF_SERVER_ROOT_URL=http://0.0.0.0/grafana/
@@ -30,7 +26,6 @@ services:
     image: nginx:1.21.0
     ports:
       - 80:80
-      - 443:443
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf
     depends_on:
