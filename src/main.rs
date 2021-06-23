@@ -9,7 +9,7 @@ use hid::HidReader;
 use influx::InfluxWriter;
 use station::Station;
 
-#[tokio::main]
+#[async_std::main]
 async fn main() {
     println!("Application starting...");
 

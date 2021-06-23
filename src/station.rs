@@ -1,5 +1,6 @@
+use async_std::task;
 use chrono::Utc;
-use tokio::time::{sleep, Duration};
+use std::time::Duration;
 
 use crate::formulas::{calc_heat_index, calc_wind_chill};
 use crate::reader::Reader;
@@ -55,7 +56,7 @@ impl Station {
                 println!("Problem reading from device");
             }
 
-            sleep(Duration::from_secs(18)).await;
+            task::sleep(Duration::from_secs(18)).await;
         }
     }
 
