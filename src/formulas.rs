@@ -41,6 +41,20 @@ pub fn calc_heat_index(temp: f32, humid: u8) -> f32 {
     hi
 }
 
+// Based on simple Dew Point calculation
+// https://iridl.ldeo.columbia.edu/dochelp/QA/Basic/dewpoint.html
+pub fn calc_dew_point(temp: f32, humid: u8) -> f32 {
+    let temp_c = (temp - 32.) / 1.8;
+    let rh = humid as f32;
+
+    let res = temp_c
+        - (14.55 + 0.114 * temp_c) * (1. - (0.01 * rh))
+        - ((2.5 + 0.007 * temp_c) * (1. - (0.01 * rh))).powf(3.)
+        - (15.9 + 0.117 * temp_c) * (1. - (0.01 * rh)).powf(14.);
+
+    res * (9.0 / 5.0) + 32.
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -83,5 +97,10 @@ mod tests {
     #[test]
     fn test_calc_hi_should_be_correct_adjustment_2() {
         assert_eq!(calc_heat_index(85., 90), 101.38081);
+    }
+
+    #[test]
+    fn calc_dewpoint_should_work() {
+        assert_eq!(calc_dew_point(79., 50).round(), 59.0);
     }
 }

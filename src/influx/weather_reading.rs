@@ -14,6 +14,7 @@ pub struct WeatherReadingInflux {
     pub out_humid: Option<u8>,
     pub wind_chill: Option<f32>,
     pub heat_index: Option<f32>,
+    pub dew_point: Option<f32>,
 }
 
 impl WeatherReadingInflux {
@@ -28,6 +29,7 @@ impl WeatherReadingInflux {
             out_humid: weather_reading.out_humid,
             wind_chill: weather_reading.wind_chill,
             heat_index: weather_reading.heat_index,
+            dew_point: weather_reading.dew_point
         }
     }
 }
@@ -51,6 +53,7 @@ mod tests {
             out_humid: Some(50),
             wind_chill: Some(70.0),
             heat_index: Some(90.0),
+            dew_point: None
         });
 
         assert_eq!(
@@ -65,6 +68,7 @@ mod tests {
                 out_humid: Some(50),
                 wind_chill: Some(70.0),
                 heat_index: Some(90.0),
+                dew_point: None
             }
         );
     }

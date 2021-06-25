@@ -2,7 +2,7 @@ use async_std::task;
 use chrono::Utc;
 use std::time::Duration;
 
-use crate::formulas::{calc_heat_index, calc_wind_chill};
+use crate::formulas::{calc_heat_index, calc_wind_chill, calc_dew_point};
 use crate::reader::Reader;
 use crate::writer::{WeatherReading, Writer};
 
@@ -110,6 +110,7 @@ impl Station {
             self.weather_reading.out_humid = Some(out_humid);
             self.weather_reading.wind_chill = Some(calc_wind_chill(wind_speed, out_temp));
             self.weather_reading.heat_index = Some(calc_heat_index(out_temp, out_humid));
+            self.weather_reading.dew_point = Some(calc_dew_point(out_temp, out_humid))
         }
     }
 
@@ -251,7 +252,8 @@ mod tests {
                 out_temp: Some(31.499998),
                 out_humid: Some(75),
                 wind_chill: Some(31.499998),
-                heat_index: Some(31.499998)
+                heat_index: Some(31.499998),
+                dew_point: Some(24.52832)
             }
         )
     }

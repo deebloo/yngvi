@@ -18,6 +18,7 @@ pub struct WeatherReading {
     pub out_humid: Option<u8>,
     pub wind_chill: Option<f32>,
     pub heat_index: Option<f32>,
+    pub dew_point: Option<f32>
 }
 
 impl fmt::Display for WeatherReading {
@@ -42,6 +43,7 @@ impl WeatherReading {
             out_humid: None,
             wind_chill: None,
             heat_index: None,
+            dew_point: None
         }
     }
 }
