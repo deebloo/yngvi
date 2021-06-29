@@ -18,11 +18,11 @@ pub struct InfluxWriter {
 
 impl InfluxWriter {
     pub fn new() -> Self {
-        let config = Self::read_config().unwrap_or(InfluxConfig {
-            influx_addr: None
-        });
+        let config = Self::read_config().unwrap_or(InfluxConfig { influx_addr: None });
 
-        let influx_addr = config.influx_addr.unwrap_or(String::from("http://localhost:8086"));
+        let influx_addr = config
+            .influx_addr
+            .unwrap_or(String::from("http://localhost:8086"));
 
         let client = Client::new(influx_addr, "weather");
 
