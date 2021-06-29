@@ -1,7 +1,6 @@
 use async_trait::async_trait;
 use influxdb::{Client, InfluxDbWriteable};
 use serde::Deserialize;
-use std::error::Error;
 
 use crate::config;
 use crate::influx::WeatherReadingInflux;
@@ -22,25 +21,33 @@ pub struct InfluxWriter {
 
 impl InfluxWriter {
     pub fn new() -> Self {
-        let default_addr = String::from("http://localhost:8086");
-        let default_db = String::from("weather");
+        let config = Self::read_config();
 
-        let config = Self::read_config().unwrap_or(InfluxConfig {
-            influx_addr: None,
-            influx_db: None,
-        });
+        let client = Client::new(
+            config.influx_addr.as_ref().unwrap(),
+            config.influx_db.as_ref().unwrap(),
+        );
 
-        let influx_addr = config.influx_addr.as_ref().unwrap_or(&default_addr);
-
-        let influx_db = config.influx_db.as_ref().unwrap_or(&default_db);
-
-        let client = Client::new(influx_addr, influx_db);
+        println!("{:?}", &config);
 
         Self { client, config }
     }
 
-    pub fn read_config() -> Result<InfluxConfig, Box<dyn Error>> {
-        config::read_config::<InfluxConfig>()
+    pub fn read_config() -> InfluxConfig {
+        let mut config = config::read_config::<InfluxConfig>().unwrap_or(InfluxConfig {
+            influx_addr: None,
+            influx_db: None,
+        });
+
+        if config.influx_addr.is_none() {
+            config.influx_addr = Some(String::from("http://localhost:8086"));
+        }
+
+        if config.influx_db.is_none() {
+            config.influx_db = Some(String::from("weather"));
+        }
+
+        config
     }
 }
 
