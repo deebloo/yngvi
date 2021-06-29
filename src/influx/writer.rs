@@ -28,6 +28,8 @@ impl InfluxWriter {
             config.influx_db.as_ref().unwrap(),
         );
 
+        println!("{:?}", config);
+
         Self { client, config }
     }
 
