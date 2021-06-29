@@ -31,18 +31,18 @@ impl InfluxWriter {
         Self { client, config }
     }
 
-    pub fn read_config() -> InfluxConfig {
+    fn read_config() -> InfluxConfig {
         let mut config = config::read_config::<InfluxConfig>().unwrap_or(InfluxConfig {
             influx_addr: None,
             influx_db: None,
         });
 
         if config.influx_addr.is_none() {
-            config.influx_addr = Some(String::from("http://localhost:8086"));
+            config.influx_addr = Some("http://localhost:8086".to_string());
         }
 
         if config.influx_db.is_none() {
-            config.influx_db = Some(String::from("weather"));
+            config.influx_db = Some("weather".to_string());
         }
 
         config
