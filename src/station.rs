@@ -2,7 +2,7 @@ use async_std::task;
 use chrono::Utc;
 use std::time::Duration;
 
-use crate::formulas::{calc_heat_index, calc_wind_chill, calc_dew_point};
+use crate::formulas::{calc_dew_point, calc_heat_index, calc_wind_chill};
 use crate::reader::Reader;
 use crate::writer::{WeatherReading, Writer};
 

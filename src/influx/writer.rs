@@ -1,21 +1,36 @@
 use async_trait::async_trait;
 use influxdb::{Client, InfluxDbWriteable};
-use std::env;
+use serde::Deserialize;
+use std::error::Error;
 
+use crate::config;
 use crate::influx::WeatherReadingInflux;
 use crate::writer::{WeatherReading, Writer};
+
+#[derive(Deserialize, Debug)]
+pub struct InfluxConfig {
+    pub influx_addr: Option<String>,
+}
 
 pub struct InfluxWriter {
     client: Client,
 }
 
 impl InfluxWriter {
-    pub fn new() -> InfluxWriter {
-        let defaults_influx_addr = String::from("http://localhost:8086");
-        let influx_addr = env::var("INFLUX_ADDR").unwrap_or(defaults_influx_addr);
+    pub fn new() -> Self {
+        let config = Self::read_config().unwrap_or(InfluxConfig {
+            influx_addr: None
+        });
+
+        let influx_addr = config.influx_addr.unwrap_or(String::from("http://localhost:8086"));
+
         let client = Client::new(influx_addr, "weather");
 
-        InfluxWriter { client }
+        Self { client }
+    }
+
+    pub fn read_config() -> Result<InfluxConfig, Box<dyn Error>> {
+        config::read_config::<InfluxConfig>()
     }
 }
 
