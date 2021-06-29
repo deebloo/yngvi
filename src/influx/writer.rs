@@ -7,26 +7,36 @@ use crate::config;
 use crate::influx::WeatherReadingInflux;
 use crate::writer::{WeatherReading, Writer};
 
-#[derive(Deserialize, Debug)]
+#[derive(Deserialize, Debug, Clone)]
 pub struct InfluxConfig {
     pub influx_addr: Option<String>,
+    pub influx_db: Option<String>,
 }
 
 pub struct InfluxWriter {
     client: Client,
+
+    #[allow(dead_code)]
+    config: InfluxConfig,
 }
 
 impl InfluxWriter {
     pub fn new() -> Self {
-        let config = Self::read_config().unwrap_or(InfluxConfig { influx_addr: None });
+        let default_addr = String::from("http://localhost:8086");
+        let default_db = String::from("weather");
 
-        let influx_addr = config
-            .influx_addr
-            .unwrap_or(String::from("http://localhost:8086"));
+        let config = Self::read_config().unwrap_or(InfluxConfig {
+            influx_addr: None,
+            influx_db: None,
+        });
 
-        let client = Client::new(influx_addr, "weather");
+        let influx_addr = config.influx_addr.as_ref().unwrap_or(&default_addr);
 
-        Self { client }
+        let influx_db = config.influx_db.as_ref().unwrap_or(&default_db);
+
+        let client = Client::new(influx_addr, influx_db);
+
+        Self { client, config }
     }
 
     pub fn read_config() -> Result<InfluxConfig, Box<dyn Error>> {
