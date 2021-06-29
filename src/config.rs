@@ -8,13 +8,10 @@ pub fn read_config<T: DeserializeOwned>() -> Result<T, Box<dyn Error>> {
 
     let path = &args[1];
 
-    // Open the file in read-only mode with buffer.
     let file = File::open(path)?;
     let reader = BufReader::new(file);
 
-    // Read the JSON contents of the file as an instance of `User`.
     let config = serde_json::from_reader(reader)?;
 
-    // Return the `User`.
     Ok(config)
 }
