@@ -4,7 +4,7 @@ use std::fmt;
 
 #[async_trait]
 pub trait Writer {
-    async fn write(&self, weather_reading: &WeatherReading) -> Result<(), ()>;
+    async fn write(&mut self, weather_reading: &WeatherReading) -> Result<(), ()>;
 }
 
 #[derive(Clone, Copy, Debug, PartialEq)]

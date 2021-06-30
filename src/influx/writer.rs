@@ -51,7 +51,7 @@ impl InfluxWriter {
 
 #[async_trait]
 impl Writer for InfluxWriter {
-    async fn write(&self, weather_reading: &WeatherReading) -> Result<(), ()> {
+    async fn write(&mut self, weather_reading: &WeatherReading) -> Result<(), ()> {
         let weather_reading_influx = WeatherReadingInflux::from_weather_reading(&weather_reading);
         let query = weather_reading_influx.into_query("weather");
 

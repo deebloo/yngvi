@@ -1,5 +1,5 @@
 [package]
-name = "acurite-weather"
+name = "acurite"
 version = "0.2.0"
 authors = ["dblue <dblue@deloitte.com>"]
 edition = "2018"

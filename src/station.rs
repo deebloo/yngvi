@@ -26,43 +26,46 @@ impl Station {
         }
     }
 
-    /**
-     * Open device and start reading reports.
-     * If a failure to read occurs wait and then re-open device
-     */
-    pub async fn start(&mut self, reader: &impl Reader, writer: &impl Writer) {
+    // Open device and start reading reports.
+    // If a failure to read occurs wait and then re-open device
+    pub async fn start(&mut self, reader: &mut impl Reader, writer: &mut impl Writer) {
         self.is_running = true;
 
         while self.is_running {
-            let mut buf: Report1 = [1u8; 10];
+            self.run(reader, writer).await; // Run read write cycle
 
-            if let Ok(_) = reader.read(&mut buf) {
-                if Self::validate_r1(&buf) {
-                    self.weather_reading.time = Utc::now();
-
-                    self.update_weather_reading_r1(buf);
-
-                    let write_result = writer.write(&self.weather_reading).await;
-
-                    if write_result.is_ok() {
-                        println!("{}", self.weather_reading);
-                    } else {
-                        println!("There was a problem when calling writer.write()")
-                    }
-                } else {
-                    println!("Report R1 Invalid {:?}", buf);
-                }
-            } else {
-                println!("Problem reading from device");
-            }
-
-            task::sleep(Duration::from_secs(18)).await;
+            task::sleep(Duration::from_secs(18)).await; // wait 18s for the next cycle
         }
     }
 
     #[allow(dead_code)]
     pub fn stop(&mut self) {
         self.is_running = false;
+    }
+
+    // Run the read and write cycle once
+    pub async fn run(&mut self, reader: &mut impl Reader, writer: &mut impl Writer) {
+        let mut buf: Report1 = [1u8; 10];
+
+        if let Ok(_) = reader.read(&mut buf) {
+            if Self::validate_r1(&buf) {
+                self.weather_reading.time = Utc::now();
+
+                self.update_weather_reading_r1(buf);
+
+                let write_result = writer.write(&self.weather_reading).await;
+
+                if write_result.is_ok() {
+                    println!("{}", self.weather_reading);
+                } else {
+                    println!("There was a problem when calling writer.write()")
+                }
+            } else {
+                println!("Report R1 Invalid {:?}", buf);
+            }
+        } else {
+            println!("Problem reading from device");
+        }
     }
 
     fn update_weather_reading_r1(&mut self, data: Report1) {

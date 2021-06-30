@@ -14,11 +14,11 @@ use station::Station;
 async fn main() {
     println!("Application starting...");
 
-    let reader = HidReader::new(0x24c0, 0x003);
-    let writer = InfluxWriter::new();
+    let mut reader = HidReader::new(0x24c0, 0x003);
+    let mut writer = InfluxWriter::new();
     let mut station = Station::new();
 
     println!("Weather Station is ready...");
 
-    station.start(&reader, &writer).await;
+    station.start(&mut reader, &mut writer).await;
 }
