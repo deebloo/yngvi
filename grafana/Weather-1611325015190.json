@@ -26,7 +26,7 @@
             "fixedColor": "green",
             "mode": "fixed"
           },
-          "custom": {},
+          "decimals": 0,
           "mappings": [],
           "thresholds": {
             "mode": "absolute",
@@ -42,8 +42,8 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 4,
-        "w": 4,
+        "h": 5,
+        "w": 3,
         "x": 0,
         "y": 0
       },
@@ -54,15 +54,14 @@
         "justifyMode": "auto",
         "orientation": "auto",
         "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
+          "calcs": ["lastNotNull"],
           "fields": "",
           "values": false
         },
+        "text": {},
         "textMode": "auto"
       },
-      "pluginVersion": "7.3.7",
+      "pluginVersion": "8.0.3",
       "targets": [
         {
           "groupBy": [],
@@ -74,9 +73,7 @@
           "select": [
             [
               {
-                "params": [
-                  "out_temp"
-                ],
+                "params": ["out_temp"],
                 "type": "field"
               }
             ]
@@ -94,10 +91,10 @@
       "fieldConfig": {
         "defaults": {
           "color": {
-            "fixedColor": "blue",
-            "mode": "fixed"
+            "fixedColor": "orange",
+            "mode": "palette-classic"
           },
-          "custom": {},
+          "decimals": 0,
           "mappings": [],
           "thresholds": {
             "mode": "absolute",
@@ -113,29 +110,27 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 2,
-        "w": 4,
-        "x": 4,
+        "h": 5,
+        "w": 6,
+        "x": 3,
         "y": 0
       },
-      "id": 8,
+      "id": 26,
       "options": {
-        "colorMode": "value",
-        "graphMode": "none",
-        "justifyMode": "auto",
-        "orientation": "auto",
+        "displayMode": "lcd",
+        "orientation": "horizontal",
         "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
+          "calcs": ["lastNotNull"],
           "fields": "",
           "values": false
         },
-        "textMode": "auto"
+        "showUnfilled": true,
+        "text": {}
       },
-      "pluginVersion": "7.3.7",
+      "pluginVersion": "8.0.3",
       "targets": [
         {
+          "alias": "Heat Index",
           "groupBy": [],
           "measurement": "weather",
           "orderByTime": "ASC",
@@ -145,10 +140,72 @@
           "select": [
             [
               {
-                "params": [
-                  "wind_chill"
-                ],
+                "params": ["heat_index"],
                 "type": "field"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "Wind Chill",
+          "groupBy": [
+            {
+              "params": ["$__interval"],
+              "type": "time"
+            },
+            {
+              "params": ["null"],
+              "type": "fill"
+            }
+          ],
+          "hide": false,
+          "measurement": "weather",
+          "orderByTime": "ASC",
+          "policy": ["autogen"],
+          "refId": "B",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": ["wind_chill"],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "mean"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "Dew Point",
+          "groupBy": [
+            {
+              "params": ["$__interval"],
+              "type": "time"
+            },
+            {
+              "params": ["null"],
+              "type": "fill"
+            }
+          ],
+          "hide": false,
+          "measurement": "weather",
+          "orderByTime": "ASC",
+          "policy": ["autogen"],
+          "refId": "C",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": ["dew_point"],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "mean"
               }
             ]
           ],
@@ -157,8 +214,7 @@
       ],
       "timeFrom": null,
       "timeShift": null,
-      "title": "Wind Chill",
-      "type": "stat"
+      "type": "bargauge"
     },
     {
       "datasource": null,
@@ -167,7 +223,6 @@
           "color": {
             "mode": "fixed"
           },
-          "custom": {},
           "decimals": 0,
           "mappings": [],
           "thresholds": {
@@ -188,9 +243,9 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 4,
+        "h": 5,
         "w": 4,
-        "x": 8,
+        "x": 9,
         "y": 0
       },
       "id": 10,
@@ -200,15 +255,14 @@
         "justifyMode": "auto",
         "orientation": "auto",
         "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
+          "calcs": ["lastNotNull"],
           "fields": "",
           "values": false
         },
+        "text": {},
         "textMode": "auto"
       },
-      "pluginVersion": "7.3.7",
+      "pluginVersion": "8.0.3",
       "targets": [
         {
           "groupBy": [],
@@ -220,9 +274,7 @@
           "select": [
             [
               {
-                "params": [
-                  "wind_speed"
-                ],
+                "params": ["wind_speed"],
                 "type": "field"
               }
             ]
@@ -242,69 +294,72 @@
           "color": {
             "mode": "fixed"
           },
-          "custom": {},
           "decimals": 1,
           "mappings": [
             {
-              "from": "",
-              "id": 1,
-              "text": "N",
-              "to": "",
-              "type": 1,
-              "value": "0"
+              "options": {
+                "0": {
+                  "index": 7,
+                  "text": "N"
+                },
+                "90": {
+                  "index": 6,
+                  "text": "E"
+                },
+                "180": {
+                  "index": 5,
+                  "text": "S"
+                },
+                "270": {
+                  "index": 4,
+                  "text": "W"
+                }
+              },
+              "type": "value"
             },
             {
-              "from": "",
-              "id": 2,
-              "text": "E",
-              "to": "",
-              "type": 1,
-              "value": "90"
+              "options": {
+                "from": 271,
+                "result": {
+                  "index": 0,
+                  "text": "NW"
+                },
+                "to": 359
+              },
+              "type": "range"
             },
             {
-              "from": "",
-              "id": 3,
-              "text": "S",
-              "to": "",
-              "type": 1,
-              "value": "180"
+              "options": {
+                "from": 181,
+                "result": {
+                  "index": 1,
+                  "text": "SW"
+                },
+                "to": 269
+              },
+              "type": "range"
             },
             {
-              "from": "",
-              "id": 4,
-              "text": "W",
-              "to": "",
-              "type": 1,
-              "value": "270.0"
+              "options": {
+                "from": 91,
+                "result": {
+                  "index": 2,
+                  "text": "SE"
+                },
+                "to": 179
+              },
+              "type": "range"
             },
             {
-              "from": "1",
-              "id": 5,
-              "text": "NE",
-              "to": "89",
-              "type": 2
-            },
-            {
-              "from": "91",
-              "id": 6,
-              "text": "SE",
-              "to": "179",
-              "type": 2
-            },
-            {
-              "from": "181",
-              "id": 7,
-              "text": "SW",
-              "to": "269",
-              "type": 2,
-              "value": "181"
-            },
-            {
-              "from": "271",
-              "id": 8,
-              "text": "NW",
-              "to": "359",
-              "type": 2
+              "options": {
+                "from": 1,
+                "result": {
+                  "index": 3,
+                  "text": "NE"
+                },
+                "to": 89
+              },
+              "type": "range"
             }
           ],
           "thresholds": {
@@ -321,9 +376,9 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 4,
-        "w": 4,
-        "x": 12,
+        "h": 5,
+        "w": 3,
+        "x": 13,
         "y": 0
       },
       "id": 15,
@@ -333,15 +388,14 @@
         "justifyMode": "auto",
         "orientation": "auto",
         "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
+          "calcs": ["lastNotNull"],
           "fields": "",
           "values": false
         },
+        "text": {},
         "textMode": "auto"
       },
-      "pluginVersion": "7.3.7",
+      "pluginVersion": "8.0.3",
       "targets": [
         {
           "groupBy": [],
@@ -353,9 +407,7 @@
           "select": [
             [
               {
-                "params": [
-                  "wind_dir"
-                ],
+                "params": ["wind_dir"],
                 "type": "field"
               }
             ]
@@ -375,8 +427,9 @@
           "color": {
             "mode": "continuous-BlYlRd"
           },
-          "custom": {},
           "mappings": [],
+          "max": 100,
+          "min": 0,
           "thresholds": {
             "mode": "absolute",
             "steps": [
@@ -391,7 +444,7 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 4,
+        "h": 5,
         "w": 4,
         "x": 16,
         "y": 0
@@ -403,15 +456,14 @@
         "justifyMode": "auto",
         "orientation": "auto",
         "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
+          "calcs": ["lastNotNull"],
           "fields": "",
           "values": false
         },
+        "text": {},
         "textMode": "auto"
       },
-      "pluginVersion": "7.3.7",
+      "pluginVersion": "8.0.3",
       "targets": [
         {
           "groupBy": [],
@@ -423,9 +475,7 @@
           "select": [
             [
               {
-                "params": [
-                  "out_humid"
-                ],
+                "params": ["out_humid"],
                 "type": "field"
               }
             ]
@@ -442,7 +492,6 @@
       "datasource": null,
       "fieldConfig": {
         "defaults": {
-          "custom": {},
           "decimals": 2,
           "mappings": [],
           "thresholds": {
@@ -459,7 +508,7 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 4,
+        "h": 5,
         "w": 4,
         "x": 20,
         "y": 0
@@ -471,15 +520,14 @@
         "justifyMode": "auto",
         "orientation": "auto",
         "reduceOptions": {
-          "calcs": [
-            "sum"
-          ],
+          "calcs": ["sum"],
           "fields": "",
           "values": false
         },
+        "text": {},
         "textMode": "auto"
       },
-      "pluginVersion": "7.3.7",
+      "pluginVersion": "8.0.3",
       "targets": [
         {
           "groupBy": [],
@@ -493,9 +541,7 @@
           "select": [
             [
               {
-                "params": [
-                  "rain_delta"
-                ],
+                "params": ["rain_delta"],
                 "type": "field"
               }
             ]
@@ -509,78 +555,6 @@
       "type": "stat"
     },
     {
-      "datasource": null,
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "fixedColor": "orange",
-            "mode": "fixed"
-          },
-          "custom": {},
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "semi-dark-blue",
-                "value": null
-              }
-            ]
-          },
-          "unit": "fahrenheit"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 2,
-        "w": 4,
-        "x": 4,
-        "y": 2
-      },
-      "id": 26,
-      "options": {
-        "colorMode": "value",
-        "graphMode": "none",
-        "justifyMode": "auto",
-        "orientation": "auto",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "textMode": "auto"
-      },
-      "pluginVersion": "7.3.7",
-      "targets": [
-        {
-          "alias": "Heat Index",
-          "groupBy": [],
-          "measurement": "weather",
-          "orderByTime": "ASC",
-          "policy": "autogen",
-          "refId": "A",
-          "resultFormat": "time_series",
-          "select": [
-            [
-              {
-                "params": [
-                  "heat_index"
-                ],
-                "type": "field"
-              }
-            ]
-          ],
-          "tags": []
-        }
-      ],
-      "timeFrom": null,
-      "timeShift": null,
-      "title": "Heat Index",
-      "type": "stat"
-    },
-    {
       "aliasColors": {},
       "bars": false,
       "dashLength": 10,
@@ -589,7 +563,6 @@
       "decimals": null,
       "fieldConfig": {
         "defaults": {
-          "custom": {},
           "unit": "fahrenheit"
         },
         "overrides": []
@@ -597,10 +570,10 @@
       "fill": 1,
       "fillGradient": 0,
       "gridPos": {
-        "h": 12,
+        "h": 15,
         "w": 20,
         "x": 0,
-        "y": 4
+        "y": 5
       },
       "hiddenSeries": false,
       "id": 2,
@@ -623,7 +596,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "7.3.7",
+      "pluginVersion": "8.0.3",
       "pointradius": 2,
       "points": false,
       "renderer": "flot",
@@ -636,15 +609,11 @@
           "alias": "Out Temp",
           "groupBy": [
             {
-              "params": [
-                "10m"
-              ],
+              "params": ["5m"],
               "type": "time"
             },
             {
-              "params": [
-                "none"
-              ],
+              "params": ["none"],
               "type": "fill"
             }
           ],
@@ -659,9 +628,7 @@
           "select": [
             [
               {
-                "params": [
-                  "out_temp"
-                ],
+                "params": ["out_temp"],
                 "type": "field"
               },
               {
@@ -677,15 +644,11 @@
           "alias": "Wind Chill",
           "groupBy": [
             {
-              "params": [
-                "10m"
-              ],
+              "params": ["5m"],
               "type": "time"
             },
             {
-              "params": [
-                "none"
-              ],
+              "params": ["none"],
               "type": "fill"
             }
           ],
@@ -700,9 +663,7 @@
           "select": [
             [
               {
-                "params": [
-                  "wind_chill"
-                ],
+                "params": ["wind_chill"],
                 "type": "field"
               },
               {
@@ -717,15 +678,11 @@
           "alias": "Heat Index",
           "groupBy": [
             {
-              "params": [
-                "10m"
-              ],
+              "params": ["5m"],
               "type": "time"
             },
             {
-              "params": [
-                "none"
-              ],
+              "params": ["none"],
               "type": "fill"
             }
           ],
@@ -740,9 +697,39 @@
           "select": [
             [
               {
-                "params": [
-                  "heat_index"
-                ],
+                "params": ["heat_index"],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "mean"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "Dew Point",
+          "groupBy": [
+            {
+              "params": ["5m"],
+              "type": "time"
+            },
+            {
+              "params": ["none"],
+              "type": "fill"
+            }
+          ],
+          "hide": false,
+          "measurement": "weather",
+          "orderByTime": "ASC",
+          "policy": ["autogen"],
+          "refId": "D",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": ["dew_point"],
                 "type": "field"
               },
               {
@@ -774,7 +761,8 @@
       },
       "yaxes": [
         {
-          "decimals": -1,
+          "$$hashKey": "object:82",
+          "decimals": 0,
           "format": "fahrenheit",
           "label": "",
           "logBase": 1,
@@ -783,13 +771,14 @@
           "show": true
         },
         {
-          "decimals": -1,
+          "$$hashKey": "object:83",
+          "decimals": 0,
           "format": "short",
           "label": null,
           "logBase": 1,
           "max": null,
           "min": null,
-          "show": true
+          "show": false
         }
       ],
       "yaxis": {
@@ -804,10 +793,6 @@
           "color": {
             "fixedColor": "semi-dark-green",
             "mode": "fixed"
-          },
-          "custom": {
-            "align": null,
-            "filterable": false
           },
           "decimals": 0,
           "mappings": [],
@@ -825,10 +810,10 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 4,
+        "h": 5,
         "w": 4,
         "x": 20,
-        "y": 4
+        "y": 5
       },
       "id": 22,
       "options": {
@@ -837,15 +822,14 @@
         "justifyMode": "auto",
         "orientation": "horizontal",
         "reduceOptions": {
-          "calcs": [
-            "mean"
-          ],
+          "calcs": ["mean"],
           "fields": "",
           "values": false
         },
+        "text": {},
         "textMode": "auto"
       },
-      "pluginVersion": "7.3.7",
+      "pluginVersion": "8.0.3",
       "targets": [
         {
           "alias": "Wind Speed",
@@ -860,9 +844,7 @@
           "select": [
             [
               {
-                "params": [
-                  "out_temp"
-                ],
+                "params": ["out_temp"],
                 "type": "field"
               }
             ]
@@ -879,11 +861,7 @@
           "options": {
             "includeTimeField": false,
             "mode": "reduceFields",
-            "reducers": [
-              "min",
-              "mean",
-              "max"
-            ]
+            "reducers": ["min", "mean", "max"]
           }
         }
       ],
@@ -896,10 +874,6 @@
           "color": {
             "fixedColor": "blue",
             "mode": "fixed"
-          },
-          "custom": {
-            "align": null,
-            "filterable": false
           },
           "decimals": 0,
           "mappings": [],
@@ -921,10 +895,10 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 4,
+        "h": 5,
         "w": 4,
         "x": 20,
-        "y": 8
+        "y": 10
       },
       "id": 23,
       "options": {
@@ -933,15 +907,14 @@
         "justifyMode": "auto",
         "orientation": "horizontal",
         "reduceOptions": {
-          "calcs": [
-            "mean"
-          ],
+          "calcs": ["mean"],
           "fields": "",
           "values": false
         },
+        "text": {},
         "textMode": "auto"
       },
-      "pluginVersion": "7.3.7",
+      "pluginVersion": "8.0.3",
       "targets": [
         {
           "alias": "Wind Speed",
@@ -956,9 +929,7 @@
           "select": [
             [
               {
-                "params": [
-                  "wind_chill"
-                ],
+                "params": ["wind_chill"],
                 "type": "field"
               }
             ]
@@ -975,11 +946,7 @@
           "options": {
             "includeTimeField": false,
             "mode": "reduceFields",
-            "reducers": [
-              "min",
-              "mean",
-              "max"
-            ]
+            "reducers": ["min", "mean", "max"]
           }
         }
       ],
@@ -992,10 +959,6 @@
           "color": {
             "fixedColor": "orange",
             "mode": "fixed"
-          },
-          "custom": {
-            "align": null,
-            "filterable": false
           },
           "decimals": 0,
           "mappings": [],
@@ -1017,10 +980,10 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 4,
+        "h": 5,
         "w": 4,
         "x": 20,
-        "y": 12
+        "y": 15
       },
       "id": 25,
       "options": {
@@ -1029,15 +992,14 @@
         "justifyMode": "auto",
         "orientation": "horizontal",
         "reduceOptions": {
-          "calcs": [
-            "mean"
-          ],
+          "calcs": ["mean"],
           "fields": "",
           "values": false
         },
+        "text": {},
         "textMode": "auto"
       },
-      "pluginVersion": "7.3.7",
+      "pluginVersion": "8.0.3",
       "targets": [
         {
           "alias": "Heat Index",
@@ -1052,9 +1014,7 @@
           "select": [
             [
               {
-                "params": [
-                  "heat_index"
-                ],
+                "params": ["heat_index"],
                 "type": "field"
               }
             ]
@@ -1071,11 +1031,7 @@
           "options": {
             "includeTimeField": false,
             "mode": "reduceFields",
-            "reducers": [
-              "min",
-              "mean",
-              "max"
-            ]
+            "reducers": ["min", "mean", "max"]
           }
         }
       ],
@@ -1085,10 +1041,6 @@
       "datasource": null,
       "fieldConfig": {
         "defaults": {
-          "custom": {
-            "align": null,
-            "filterable": false
-          },
           "decimals": 0,
           "mappings": [],
           "thresholds": {
@@ -1109,10 +1061,10 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 9,
-        "w": 3,
+        "h": 10,
+        "w": 2,
         "x": 0,
-        "y": 16
+        "y": 20
       },
       "id": 21,
       "options": {
@@ -1121,15 +1073,14 @@
         "justifyMode": "auto",
         "orientation": "horizontal",
         "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
+          "calcs": ["lastNotNull"],
           "fields": "",
           "values": false
         },
+        "text": {},
         "textMode": "auto"
       },
-      "pluginVersion": "7.3.7",
+      "pluginVersion": "8.0.3",
       "targets": [
         {
           "alias": "Wind Speed",
@@ -1144,9 +1095,7 @@
           "select": [
             [
               {
-                "params": [
-                  "wind_speed"
-                ],
+                "params": ["wind_speed"],
                 "type": "field"
               }
             ]
@@ -1156,18 +1105,13 @@
       ],
       "timeFrom": null,
       "timeShift": null,
-      "title": "Wind Speed",
       "transformations": [
         {
           "id": "reduce",
           "options": {
             "includeTimeField": false,
             "mode": "reduceFields",
-            "reducers": [
-              "min",
-              "mean",
-              "max"
-            ]
+            "reducers": ["min", "mean", "max"]
           }
         }
       ],
@@ -1181,17 +1125,17 @@
       "datasource": "InfluxDB",
       "fieldConfig": {
         "defaults": {
-          "custom": {}
+          "unit": "velocitymph"
         },
         "overrides": []
       },
       "fill": 1,
       "fillGradient": 0,
       "gridPos": {
-        "h": 9,
-        "w": 21,
-        "x": 3,
-        "y": 16
+        "h": 10,
+        "w": 22,
+        "x": 2,
+        "y": 20
       },
       "hiddenSeries": false,
       "id": 14,
@@ -1212,7 +1156,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "7.3.7",
+      "pluginVersion": "8.0.3",
       "pointradius": 2,
       "points": false,
       "renderer": "flot",
@@ -1225,15 +1169,11 @@
           "alias": "Wind Speed",
           "groupBy": [
             {
-              "params": [
-                "10m"
-              ],
+              "params": ["5m"],
               "type": "time"
             },
             {
-              "params": [
-                "none"
-              ],
+              "params": ["none"],
               "type": "fill"
             }
           ],
@@ -1247,9 +1187,7 @@
           "select": [
             [
               {
-                "params": [
-                  "wind_speed"
-                ],
+                "params": ["wind_speed"],
                 "type": "field"
               },
               {
@@ -1281,150 +1219,24 @@
       },
       "yaxes": [
         {
-          "decimals": -1,
-          "format": "short",
+          "$$hashKey": "object:53",
+          "decimals": 0,
+          "format": "velocitymph",
           "label": "",
           "logBase": 1,
           "max": null,
-          "min": null,
+          "min": "0",
           "show": true
         },
         {
+          "$$hashKey": "object:54",
           "decimals": -1,
           "format": "short",
           "label": null,
           "logBase": 1,
           "max": null,
           "min": null,
-          "show": true
-        }
-      ],
-      "yaxis": {
-        "align": false,
-        "alignLevel": null
-      }
-    },
-    {
-      "aliasColors": {},
-      "bars": false,
-      "dashLength": 10,
-      "dashes": false,
-      "datasource": null,
-      "decimals": 0,
-      "fieldConfig": {
-        "defaults": {
-          "custom": {}
-        },
-        "overrides": []
-      },
-      "fill": 1,
-      "fillGradient": 0,
-      "gridPos": {
-        "h": 9,
-        "w": 14,
-        "x": 0,
-        "y": 25
-      },
-      "hiddenSeries": false,
-      "id": 17,
-      "legend": {
-        "alignAsTable": false,
-        "avg": false,
-        "current": false,
-        "max": false,
-        "min": false,
-        "show": false,
-        "total": false,
-        "values": false
-      },
-      "lines": true,
-      "linewidth": 1,
-      "nullPointMode": "null",
-      "options": {
-        "alertThreshold": true
-      },
-      "percentage": false,
-      "pluginVersion": "7.3.7",
-      "pointradius": 2,
-      "points": false,
-      "renderer": "flot",
-      "seriesOverrides": [],
-      "spaceLength": 10,
-      "stack": false,
-      "steppedLine": false,
-      "targets": [
-        {
-          "alias": "Humidity",
-          "groupBy": [
-            {
-              "params": [
-                "10m"
-              ],
-              "type": "time"
-            },
-            {
-              "params": [
-                "none"
-              ],
-              "type": "fill"
-            }
-          ],
-          "measurement": "weather",
-          "orderByTime": "ASC",
-          "policy": "autogen",
-          "refId": "A",
-          "resultFormat": "time_series",
-          "select": [
-            [
-              {
-                "params": [
-                  "out_humid"
-                ],
-                "type": "field"
-              },
-              {
-                "params": [],
-                "type": "mean"
-              }
-            ]
-          ],
-          "tags": []
-        }
-      ],
-      "thresholds": [],
-      "timeFrom": null,
-      "timeRegions": [],
-      "timeShift": null,
-      "title": "Humidity",
-      "tooltip": {
-        "shared": true,
-        "sort": 0,
-        "value_type": "individual"
-      },
-      "type": "graph",
-      "xaxis": {
-        "buckets": null,
-        "mode": "time",
-        "name": null,
-        "show": true,
-        "values": []
-      },
-      "yaxes": [
-        {
-          "format": "short",
-          "label": null,
-          "logBase": 1,
-          "max": null,
-          "min": null,
-          "show": true
-        },
-        {
-          "format": "short",
-          "label": null,
-          "logBase": 1,
-          "max": null,
-          "min": null,
-          "show": true
+          "show": false
         }
       ],
       "yaxis": {
@@ -1441,7 +1253,6 @@
       "decimals": 2,
       "fieldConfig": {
         "defaults": {
-          "custom": {},
           "unit": "in"
         },
         "overrides": []
@@ -1449,10 +1260,10 @@
       "fill": 1,
       "fillGradient": 0,
       "gridPos": {
-        "h": 12,
+        "h": 10,
         "w": 10,
-        "x": 14,
-        "y": 25
+        "x": 0,
+        "y": 30
       },
       "hiddenSeries": false,
       "id": 18,
@@ -1473,7 +1284,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "7.3.7",
+      "pluginVersion": "8.0.3",
       "pointradius": 2,
       "points": false,
       "renderer": "flot",
@@ -1486,15 +1297,11 @@
           "alias": "Rain",
           "groupBy": [
             {
-              "params": [
-                "10m"
-              ],
+              "params": ["10m"],
               "type": "time"
             },
             {
-              "params": [
-                "none"
-              ],
+              "params": ["none"],
               "type": "fill"
             }
           ],
@@ -1506,9 +1313,7 @@
           "select": [
             [
               {
-                "params": [
-                  "rain_delta"
-                ],
+                "params": ["rain_delta"],
                 "type": "field"
               },
               {
@@ -1563,6 +1368,130 @@
       }
     },
     {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": null,
+      "decimals": 0,
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percent"
+        },
+        "overrides": []
+      },
+      "fill": 1,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 10,
+        "w": 12,
+        "x": 10,
+        "y": 30
+      },
+      "hiddenSeries": false,
+      "id": 17,
+      "legend": {
+        "alignAsTable": false,
+        "avg": false,
+        "current": false,
+        "max": false,
+        "min": false,
+        "show": false,
+        "total": false,
+        "values": false
+      },
+      "lines": true,
+      "linewidth": 1,
+      "nullPointMode": "null",
+      "options": {
+        "alertThreshold": true
+      },
+      "percentage": false,
+      "pluginVersion": "8.0.3",
+      "pointradius": 2,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "alias": "Humidity",
+          "groupBy": [
+            {
+              "params": ["5m"],
+              "type": "time"
+            },
+            {
+              "params": ["none"],
+              "type": "fill"
+            }
+          ],
+          "measurement": "weather",
+          "orderByTime": "ASC",
+          "policy": "autogen",
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": ["out_humid"],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "mean"
+              }
+            ]
+          ],
+          "tags": []
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "Humidity",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "$$hashKey": "object:167",
+          "format": "percent",
+          "label": "",
+          "logBase": 1,
+          "max": "100",
+          "min": "0",
+          "show": true
+        },
+        {
+          "$$hashKey": "object:168",
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": false
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
       "datasource": null,
       "fieldConfig": {
         "defaults": {
@@ -1570,12 +1499,10 @@
             "fixedColor": "semi-dark-yellow",
             "mode": "fixed"
           },
-          "custom": {
-            "align": null,
-            "filterable": false
-          },
           "decimals": 0,
           "mappings": [],
+          "max": 100,
+          "min": 0,
           "thresholds": {
             "mode": "absolute",
             "steps": [
@@ -1594,27 +1521,26 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 3,
-        "w": 14,
-        "x": 0,
-        "y": 34
+        "h": 10,
+        "w": 2,
+        "x": 22,
+        "y": 30
       },
       "id": 24,
       "options": {
         "colorMode": "value",
         "graphMode": "none",
         "justifyMode": "auto",
-        "orientation": "auto",
+        "orientation": "horizontal",
         "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
+          "calcs": ["lastNotNull"],
           "fields": "",
           "values": false
         },
+        "text": {},
         "textMode": "auto"
       },
-      "pluginVersion": "7.3.7",
+      "pluginVersion": "8.0.3",
       "targets": [
         {
           "alias": "Wind Speed",
@@ -1629,9 +1555,7 @@
           "select": [
             [
               {
-                "params": [
-                  "out_humid"
-                ],
+                "params": ["out_humid"],
                 "type": "field"
               }
             ]
@@ -1641,18 +1565,13 @@
       ],
       "timeFrom": null,
       "timeShift": null,
-      "title": "",
       "transformations": [
         {
           "id": "reduce",
           "options": {
             "includeTimeField": false,
             "mode": "reduceFields",
-            "reducers": [
-              "min",
-              "mean",
-              "max"
-            ]
+            "reducers": ["min", "mean", "max"]
           }
         }
       ],
@@ -1660,7 +1579,7 @@
     }
   ],
   "refresh": "5s",
-  "schemaVersion": 26,
+  "schemaVersion": 30,
   "style": "dark",
   "tags": [],
   "templating": {
@@ -1673,6 +1592,6 @@
   "timepicker": {},
   "timezone": "browser",
   "title": "Weather",
-  "uid": "jC4B6LBMk",
-  "version": 88
+  "uid": "RadSLXRgz",
+  "version": 23
 }
