@@ -44,9 +44,7 @@ async fn test_add() {
     let mut writer = TestWriter { readings: vec![] };
     let mut station = acurite::Station::new();
 
-    station.run(&mut reader, &mut writer).await;
-
-    for _ in 1..3 {
+    for _ in 1..=3 {
         station.run(&mut reader, &mut writer).await;
     }
 
