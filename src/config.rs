@@ -16,3 +16,17 @@ pub fn read_config<T: DeserializeOwned>() -> Result<T, Box<dyn Error>> {
 
     Ok(config)
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use serde::Deserialize;
+
+    #[test]
+    fn should_return_error_not_panic() {
+        #[derive(Deserialize)]
+        pub struct TestConfig;
+
+        assert_eq!(read_config::<TestConfig>().is_err(), true);
+    }
+}
