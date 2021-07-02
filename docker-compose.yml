@@ -4,6 +4,7 @@ services:
   influxdb:
     container_name: influxdb
     image: influxdb:1.8.6
+    restart: always
     ports:
       - 8086:8086
     environment:
@@ -14,6 +15,7 @@ services:
   grafana:
     container_name: grafana
     image: grafana/grafana:latest
+    restart: always
     environment:
       - GF_SERVER_DOMAIN=0.0.0.0
       - GF_SERVER_ROOT_URL=http://0.0.0.0/grafana/
@@ -26,6 +28,7 @@ services:
   nginx:
     container_name: nginx
     image: nginx:1.21.0
+    restart: always
     ports:
       - 80:80
     volumes:
