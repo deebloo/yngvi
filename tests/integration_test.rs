@@ -17,12 +17,15 @@ async fn shold_read_and_record_readings() {
     let mut writer = test_writer::TestWriter { readings: vec![] };
     let mut station = acurite::Station::new();
 
+    // generate some readings
     for _ in 1..=3 {
         station.run(&mut reader, &mut writer).await;
     }
 
+    // Get stored readings from the writer
     let data = writer.readings.into_iter();
 
+    // Check writers stored weahter properties
     let rain: Vec<Option<f32>> = data.clone().map(|r| r.rain).collect();
     let rain_delta: Vec<Option<f32>> = data.clone().map(|r| r.rain_delta).collect();
     let wind_speed: Vec<Option<f32>> = data.clone().map(|r| r.wind_speed).collect();
