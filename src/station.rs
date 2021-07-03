@@ -78,42 +78,42 @@ impl Station {
         // Always clear rain_delta. (Will reassign if available)
         self.weather_reading.rain_delta = None;
 
-        if report_flavor == 1 {
-            // Report flavor 1 contains
-            // 1. Wind Speed
-            // 2. Rain
-            // 3. Wind Direction
+        match report_flavor {
+            1 => {
+                // 2. Rain
+                // 3. Wind Direction
 
-            let new_rain_total = Self::decode_rain(&data);
+                let new_rain_total = Self::decode_rain(&data);
 
-            // Update the rain delta if the new rain total is greater then the previously recorded
-            if let Some(prev_rain_total) = self.weather_reading.rain {
-                if new_rain_total >= prev_rain_total {
-                    self.weather_reading.rain_delta = Some(new_rain_total - prev_rain_total);
+                // Update the rain delta if the new rain total is greater then the previously recorded
+                if let Some(prev_rain_total) = self.weather_reading.rain {
+                    if new_rain_total >= prev_rain_total {
+                        self.weather_reading.rain_delta = Some(new_rain_total - prev_rain_total);
+                    }
                 }
-            }
 
-            // Calculate wind chill if a temp has already been recorded
-            if let Some(out_temp) = self.weather_reading.out_temp {
+                // Calculate wind chill if a temp has already been recorded
+                if let Some(out_temp) = self.weather_reading.out_temp {
+                    self.weather_reading.wind_chill = Some(calc_wind_chill(wind_speed, out_temp));
+                }
+
+                self.weather_reading.rain = Some(new_rain_total);
+                self.weather_reading.wind_dir = Some(Self::decode_wind_dir(&data));
+            }
+            8 => {
+                // 2. Outdoor temp
+                // 3. Outdoor humidity
+
+                let out_temp = Self::decode_out_temp(&data);
+                let out_humid = Self::decode_out_humidity(&data);
+
+                self.weather_reading.out_temp = Some(out_temp);
+                self.weather_reading.out_humid = Some(out_humid);
                 self.weather_reading.wind_chill = Some(calc_wind_chill(wind_speed, out_temp));
+                self.weather_reading.heat_index = Some(calc_heat_index(out_temp, out_humid));
+                self.weather_reading.dew_point = Some(calc_dew_point(out_temp, out_humid))
             }
-
-            self.weather_reading.rain = Some(new_rain_total);
-            self.weather_reading.wind_dir = Some(Self::decode_wind_dir(&data));
-        } else {
-            // Report flavor 1 contains
-            // 1. Wind Speed
-            // 2. Outdoor temp
-            // 3. Outdoor humidity
-
-            let out_temp = Self::decode_out_temp(&data);
-            let out_humid = Self::decode_out_humidity(&data);
-
-            self.weather_reading.out_temp = Some(out_temp);
-            self.weather_reading.out_humid = Some(out_humid);
-            self.weather_reading.wind_chill = Some(calc_wind_chill(wind_speed, out_temp));
-            self.weather_reading.heat_index = Some(calc_heat_index(out_temp, out_humid));
-            self.weather_reading.dew_point = Some(calc_dew_point(out_temp, out_humid))
+            _ => {}
         }
     }
 
