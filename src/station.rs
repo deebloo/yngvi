@@ -15,7 +15,8 @@ const WIND_DIR_BY_IDX: [f32; 16] = [
 
 pub struct Station {
     pub is_running: bool,
-    weather_reading: WeatherReading,
+    pub weather_reading: WeatherReading,
+    pub failed_writes: Vec<WeatherReading>,
 }
 
 impl Station {
@@ -23,6 +24,7 @@ impl Station {
         Self {
             weather_reading: WeatherReading::new(),
             is_running: false,
+            failed_writes: vec![],
         }
     }
 
@@ -57,8 +59,20 @@ impl Station {
 
                 if write_result.is_ok() {
                     println!("{}", self.weather_reading);
+
+                    if self.failed_writes.len() > 0 {
+                        println!("Replaying previously failed writes");
+
+                        for r in &self.failed_writes {
+                            let _ = writer.write(r).await;
+                        }
+
+                        self.failed_writes.clear();
+                    }
                 } else {
-                    println!("There was a problem when calling writer.write()")
+                    println!("There was a problem when calling writer.write()");
+
+                    self.failed_writes.push(self.weather_reading.clone());
                 }
             } else {
                 println!("Report R1 Invalid {:?}", buf);

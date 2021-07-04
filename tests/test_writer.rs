@@ -10,3 +10,12 @@ impl acurite::Writer for TestWriter {
         Ok(())
     }
 }
+
+pub struct ErrorWriter;
+
+#[async_trait::async_trait]
+impl acurite::Writer for ErrorWriter {
+    async fn write(&mut self, _: &acurite::WeatherReading) -> Result<(), ()> {
+        Err(())
+    }
+}
