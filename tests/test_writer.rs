@@ -1,10 +1,12 @@
+use acurite_core::{WeatherReading, Writer};
+
 pub struct TestWriter {
-    pub readings: Vec<acurite::WeatherReading>,
+    pub readings: Vec<WeatherReading>,
 }
 
 #[async_trait::async_trait]
-impl acurite::Writer for TestWriter {
-    async fn write(&mut self, weather_reading: &acurite::WeatherReading) -> Result<(), ()> {
+impl Writer for TestWriter {
+    async fn write(&mut self, weather_reading: &WeatherReading) -> Result<(), ()> {
         self.readings.push(weather_reading.clone());
 
         Ok(())
@@ -14,8 +16,8 @@ impl acurite::Writer for TestWriter {
 pub struct ErrorWriter;
 
 #[async_trait::async_trait]
-impl acurite::Writer for ErrorWriter {
-    async fn write(&mut self, _: &acurite::WeatherReading) -> Result<(), ()> {
+impl Writer for ErrorWriter {
+    async fn write(&mut self, _: &WeatherReading) -> Result<(), ()> {
         Err(())
     }
 }

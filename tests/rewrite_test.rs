@@ -16,7 +16,7 @@ async fn should_replay_failed_writes() {
 
     let mut writer = test_writer::TestWriter { readings: vec![] };
     let mut error_writer = test_writer::ErrorWriter {};
-    let mut station = acurite::Station::new();
+    let mut station = acurite_core::Station::new();
 
     // Error Out 3 times
     for _ in 1..=3 {

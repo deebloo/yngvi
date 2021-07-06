@@ -1,5 +1,5 @@
 [package]
-name = "acurite"
+name = "acurite_core"
 version = "0.2.0"
 authors = ["dblue <dblue@deloitte.com>"]
 edition = "2018"
@@ -10,8 +10,5 @@ edition = "2018"
 async-std = { version = "1.9.0", features = ["attributes"] }
 async-trait = "0.1.50"
 chrono = "0.4.19"
-hidapi = "1.2.6"
-influxdb = { version = "0.4.0", features = ["derive"] }
 serde = "1.0.126"
 serde_json = "1.0.64"
-acurite_core = { path = "core" }

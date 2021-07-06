@@ -1,6 +1,6 @@
 use hidapi::HidApi;
 
-use crate::reader::{ReadError, ReadResult, Reader};
+use acurite_core::{ReadError, ReadResult, Reader};
 
 pub struct HidReader {
     hid: HidApi,

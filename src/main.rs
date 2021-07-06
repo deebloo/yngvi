@@ -1,14 +1,9 @@
-mod config;
-mod formulas;
 mod hid;
 mod influx;
-mod reader;
-mod station;
-mod writer;
 
+use acurite_core::Station;
 use hid::HidReader;
 use influx::InfluxWriter;
-use station::Station;
 
 #[async_std::main]
 async fn main() {

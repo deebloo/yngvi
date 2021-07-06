@@ -1,10 +1,12 @@
+use acurite_core::{ReadResult, Reader};
+
 pub struct TestReader {
     pub readings: Vec<Vec<u8>>, // A list of readings to iterate through when .read() is called
     pub current_reading: usize,
 }
 
-impl acurite::Reader for TestReader {
-    fn read(&mut self, buf: &mut [u8]) -> acurite::ReadResult {
+impl Reader for TestReader {
+    fn read(&mut self, buf: &mut [u8]) -> ReadResult {
         for i in 0..=9 {
             buf[i] = self.readings[self.current_reading][i];
         }

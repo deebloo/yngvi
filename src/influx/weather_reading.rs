@@ -1,7 +1,7 @@
 use chrono::{DateTime, Utc};
 use influxdb::{InfluxDbWriteable, Timestamp};
 
-use crate::writer::WeatherReading;
+use acurite_core::WeatherReading;
 
 #[derive(InfluxDbWriteable, Clone, Copy, Debug, PartialEq)]
 pub struct WeatherReadingInflux {
