@@ -60,23 +60,7 @@ impl Station {
                 if write_result.is_ok() {
                     println!("{}", self.weather_reading);
 
-                    if self.failed_writes.len() > 0 {
-                        println!("Replaying previously failed writes");
-
-                        let mut writes_to_clear: Vec<WeatherReading> = vec![];
-
-                        for r in &self.failed_writes {
-                            let res = writer.write(r).await;
-
-                            if res.is_ok() {
-                                writes_to_clear.push(r.clone());
-                            }
-                        }
-
-                        for r in writes_to_clear {
-                            self.failed_writes.retain(|x| x.time != r.time)
-                        }
-                    }
+                    self.replay_failed_writes(writer).await;
                 } else {
                     println!("There was a problem when calling writer.write()");
 
@@ -136,6 +120,26 @@ impl Station {
                 self.weather_reading.dew_point = Some(calc_dew_point(out_temp, out_humid))
             }
             _ => {}
+        }
+    }
+
+    async fn replay_failed_writes(&mut self, writer: &mut impl Writer) {
+        if self.failed_writes.len() > 0 {
+            println!("Replaying previously failed writes");
+
+            let mut writes_to_clear: Vec<WeatherReading> = vec![];
+
+            for r in &self.failed_writes {
+                let res = writer.write(r).await;
+
+                if res.is_ok() {
+                    writes_to_clear.push(r.clone());
+                }
+            }
+
+            for r in writes_to_clear {
+                self.failed_writes.retain(|x| x.time != r.time)
+            }
         }
     }
 
