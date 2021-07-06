@@ -63,11 +63,19 @@ impl Station {
                     if self.failed_writes.len() > 0 {
                         println!("Replaying previously failed writes");
 
+                        let mut writes_to_clear: Vec<WeatherReading> = vec![];
+
                         for r in &self.failed_writes {
-                            let _ = writer.write(r).await;
+                            let res = writer.write(r).await;
+
+                            if res.is_ok() {
+                                writes_to_clear.push(r.clone());
+                            }
                         }
 
-                        self.failed_writes.clear();
+                        for r in writes_to_clear {
+                            self.failed_writes.retain(|x| x.time != r.time)
+                        }
                     }
                 } else {
                     println!("There was a problem when calling writer.write()");
