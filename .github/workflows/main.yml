@@ -30,7 +30,8 @@ jobs:
 
       - uses: actions-rs/cargo@v1
         with:
-          command: test -p acurite_core -p acurite
+          command: test
+          args: -p acurite_core -p acurite
 
       - uses: actions-rs/cargo@v1
         with:
