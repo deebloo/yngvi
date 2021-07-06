@@ -14,7 +14,6 @@ const WIND_DIR_BY_IDX: [f32; 16] = [
 ];
 
 pub struct Station {
-    pub is_running: bool,
     pub weather_reading: WeatherReading,
     pub failed_writes: Vec<WeatherReading>,
 }
@@ -23,7 +22,6 @@ impl Station {
     pub fn new() -> Self {
         Self {
             weather_reading: WeatherReading::new(),
-            is_running: false,
             failed_writes: vec![],
         }
     }
@@ -31,18 +29,11 @@ impl Station {
     // Open device and start reading reports.
     // If a failure to read occurs wait and then re-open device
     pub async fn start(&mut self, reader: &mut impl Reader, writer: &mut impl Writer) {
-        self.is_running = true;
-
-        while self.is_running {
+        loop {
             self.run(reader, writer).await; // Run read write cycle
 
             task::sleep(Duration::from_secs(18)).await; // wait 18s for the next cycle
         }
-    }
-
-    #[allow(dead_code)]
-    pub fn stop(&mut self) {
-        self.is_running = false;
     }
 
     // Run the read and write cycle once
