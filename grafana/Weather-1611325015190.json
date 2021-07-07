@@ -54,7 +54,9 @@
         "justifyMode": "auto",
         "orientation": "auto",
         "reduceOptions": {
-          "calcs": ["lastNotNull"],
+          "calcs": [
+            "lastNotNull"
+          ],
           "fields": "",
           "values": false
         },
@@ -73,7 +75,9 @@
           "select": [
             [
               {
-                "params": ["out_temp"],
+                "params": [
+                  "out_temp"
+                ],
                 "type": "field"
               }
             ]
@@ -120,7 +124,9 @@
         "displayMode": "lcd",
         "orientation": "horizontal",
         "reduceOptions": {
-          "calcs": ["lastNotNull"],
+          "calcs": [
+            "lastNotNull"
+          ],
           "fields": "",
           "values": false
         },
@@ -140,7 +146,9 @@
           "select": [
             [
               {
-                "params": ["heat_index"],
+                "params": [
+                  "heat_index"
+                ],
                 "type": "field"
               }
             ]
@@ -151,24 +159,32 @@
           "alias": "Wind Chill",
           "groupBy": [
             {
-              "params": ["$__interval"],
+              "params": [
+                "$__interval"
+              ],
               "type": "time"
             },
             {
-              "params": ["null"],
+              "params": [
+                "null"
+              ],
               "type": "fill"
             }
           ],
           "hide": false,
           "measurement": "weather",
           "orderByTime": "ASC",
-          "policy": ["autogen"],
+          "policy": [
+            "autogen"
+          ],
           "refId": "B",
           "resultFormat": "time_series",
           "select": [
             [
               {
-                "params": ["wind_chill"],
+                "params": [
+                  "wind_chill"
+                ],
                 "type": "field"
               },
               {
@@ -183,24 +199,32 @@
           "alias": "Dew Point",
           "groupBy": [
             {
-              "params": ["$__interval"],
+              "params": [
+                "$__interval"
+              ],
               "type": "time"
             },
             {
-              "params": ["null"],
+              "params": [
+                "null"
+              ],
               "type": "fill"
             }
           ],
           "hide": false,
           "measurement": "weather",
           "orderByTime": "ASC",
-          "policy": ["autogen"],
+          "policy": [
+            "autogen"
+          ],
           "refId": "C",
           "resultFormat": "time_series",
           "select": [
             [
               {
-                "params": ["dew_point"],
+                "params": [
+                  "dew_point"
+                ],
                 "type": "field"
               },
               {
@@ -255,7 +279,9 @@
         "justifyMode": "auto",
         "orientation": "auto",
         "reduceOptions": {
-          "calcs": ["lastNotNull"],
+          "calcs": [
+            "lastNotNull"
+          ],
           "fields": "",
           "values": false
         },
@@ -274,7 +300,9 @@
           "select": [
             [
               {
-                "params": ["wind_speed"],
+                "params": [
+                  "wind_speed"
+                ],
                 "type": "field"
               }
             ]
@@ -388,7 +416,9 @@
         "justifyMode": "auto",
         "orientation": "auto",
         "reduceOptions": {
-          "calcs": ["lastNotNull"],
+          "calcs": [
+            "lastNotNull"
+          ],
           "fields": "",
           "values": false
         },
@@ -407,7 +437,9 @@
           "select": [
             [
               {
-                "params": ["wind_dir"],
+                "params": [
+                  "wind_dir"
+                ],
                 "type": "field"
               }
             ]
@@ -456,7 +488,9 @@
         "justifyMode": "auto",
         "orientation": "auto",
         "reduceOptions": {
-          "calcs": ["lastNotNull"],
+          "calcs": [
+            "lastNotNull"
+          ],
           "fields": "",
           "values": false
         },
@@ -475,7 +509,9 @@
           "select": [
             [
               {
-                "params": ["out_humid"],
+                "params": [
+                  "out_humid"
+                ],
                 "type": "field"
               }
             ]
@@ -520,7 +556,9 @@
         "justifyMode": "auto",
         "orientation": "auto",
         "reduceOptions": {
-          "calcs": ["sum"],
+          "calcs": [
+            "sum"
+          ],
           "fields": "",
           "values": false
         },
@@ -541,7 +579,9 @@
           "select": [
             [
               {
-                "params": ["rain_delta"],
+                "params": [
+                  "rain_delta"
+                ],
                 "type": "field"
               }
             ]
@@ -609,11 +649,15 @@
           "alias": "Out Temp",
           "groupBy": [
             {
-              "params": ["5m"],
+              "params": [
+                "10m"
+              ],
               "type": "time"
             },
             {
-              "params": ["none"],
+              "params": [
+                "none"
+              ],
               "type": "fill"
             }
           ],
@@ -628,7 +672,9 @@
           "select": [
             [
               {
-                "params": ["out_temp"],
+                "params": [
+                  "out_temp"
+                ],
                 "type": "field"
               },
               {
@@ -644,11 +690,15 @@
           "alias": "Wind Chill",
           "groupBy": [
             {
-              "params": ["5m"],
+              "params": [
+                "10m"
+              ],
               "type": "time"
             },
             {
-              "params": ["none"],
+              "params": [
+                "none"
+              ],
               "type": "fill"
             }
           ],
@@ -663,7 +713,9 @@
           "select": [
             [
               {
-                "params": ["wind_chill"],
+                "params": [
+                  "wind_chill"
+                ],
                 "type": "field"
               },
               {
@@ -678,11 +730,15 @@
           "alias": "Heat Index",
           "groupBy": [
             {
-              "params": ["5m"],
+              "params": [
+                "10m"
+              ],
               "type": "time"
             },
             {
-              "params": ["none"],
+              "params": [
+                "none"
+              ],
               "type": "fill"
             }
           ],
@@ -697,7 +753,9 @@
           "select": [
             [
               {
-                "params": ["heat_index"],
+                "params": [
+                  "heat_index"
+                ],
                 "type": "field"
               },
               {
@@ -712,24 +770,32 @@
           "alias": "Dew Point",
           "groupBy": [
             {
-              "params": ["5m"],
+              "params": [
+                "10m"
+              ],
               "type": "time"
             },
             {
-              "params": ["none"],
+              "params": [
+                "none"
+              ],
               "type": "fill"
             }
           ],
           "hide": false,
           "measurement": "weather",
           "orderByTime": "ASC",
-          "policy": ["autogen"],
+          "policy": [
+            "autogen"
+          ],
           "refId": "D",
           "resultFormat": "time_series",
           "select": [
             [
               {
-                "params": ["dew_point"],
+                "params": [
+                  "dew_point"
+                ],
                 "type": "field"
               },
               {
@@ -822,7 +888,9 @@
         "justifyMode": "auto",
         "orientation": "horizontal",
         "reduceOptions": {
-          "calcs": ["mean"],
+          "calcs": [
+            "mean"
+          ],
           "fields": "",
           "values": false
         },
@@ -844,7 +912,9 @@
           "select": [
             [
               {
-                "params": ["out_temp"],
+                "params": [
+                  "out_temp"
+                ],
                 "type": "field"
               }
             ]
@@ -861,7 +931,11 @@
           "options": {
             "includeTimeField": false,
             "mode": "reduceFields",
-            "reducers": ["min", "mean", "max"]
+            "reducers": [
+              "min",
+              "mean",
+              "max"
+            ]
           }
         }
       ],
@@ -907,7 +981,9 @@
         "justifyMode": "auto",
         "orientation": "horizontal",
         "reduceOptions": {
-          "calcs": ["mean"],
+          "calcs": [
+            "mean"
+          ],
           "fields": "",
           "values": false
         },
@@ -929,7 +1005,9 @@
           "select": [
             [
               {
-                "params": ["wind_chill"],
+                "params": [
+                  "wind_chill"
+                ],
                 "type": "field"
               }
             ]
@@ -946,7 +1024,11 @@
           "options": {
             "includeTimeField": false,
             "mode": "reduceFields",
-            "reducers": ["min", "mean", "max"]
+            "reducers": [
+              "min",
+              "mean",
+              "max"
+            ]
           }
         }
       ],
@@ -992,7 +1074,9 @@
         "justifyMode": "auto",
         "orientation": "horizontal",
         "reduceOptions": {
-          "calcs": ["mean"],
+          "calcs": [
+            "mean"
+          ],
           "fields": "",
           "values": false
         },
@@ -1014,7 +1098,9 @@
           "select": [
             [
               {
-                "params": ["heat_index"],
+                "params": [
+                  "heat_index"
+                ],
                 "type": "field"
               }
             ]
@@ -1031,7 +1117,11 @@
           "options": {
             "includeTimeField": false,
             "mode": "reduceFields",
-            "reducers": ["min", "mean", "max"]
+            "reducers": [
+              "min",
+              "mean",
+              "max"
+            ]
           }
         }
       ],
@@ -1073,7 +1163,9 @@
         "justifyMode": "auto",
         "orientation": "horizontal",
         "reduceOptions": {
-          "calcs": ["lastNotNull"],
+          "calcs": [
+            "lastNotNull"
+          ],
           "fields": "",
           "values": false
         },
@@ -1095,7 +1187,9 @@
           "select": [
             [
               {
-                "params": ["wind_speed"],
+                "params": [
+                  "wind_speed"
+                ],
                 "type": "field"
               }
             ]
@@ -1111,7 +1205,11 @@
           "options": {
             "includeTimeField": false,
             "mode": "reduceFields",
-            "reducers": ["min", "mean", "max"]
+            "reducers": [
+              "min",
+              "mean",
+              "max"
+            ]
           }
         }
       ],
@@ -1169,11 +1267,15 @@
           "alias": "Wind Speed",
           "groupBy": [
             {
-              "params": ["5m"],
+              "params": [
+                "10m"
+              ],
               "type": "time"
             },
             {
-              "params": ["none"],
+              "params": [
+                "none"
+              ],
               "type": "fill"
             }
           ],
@@ -1187,7 +1289,9 @@
           "select": [
             [
               {
-                "params": ["wind_speed"],
+                "params": [
+                  "wind_speed"
+                ],
                 "type": "field"
               },
               {
@@ -1297,11 +1401,15 @@
           "alias": "Rain",
           "groupBy": [
             {
-              "params": ["10m"],
+              "params": [
+                "10m"
+              ],
               "type": "time"
             },
             {
-              "params": ["none"],
+              "params": [
+                "none"
+              ],
               "type": "fill"
             }
           ],
@@ -1313,7 +1421,9 @@
           "select": [
             [
               {
-                "params": ["rain_delta"],
+                "params": [
+                  "rain_delta"
+                ],
                 "type": "field"
               },
               {
@@ -1345,6 +1455,7 @@
       },
       "yaxes": [
         {
+          "$$hashKey": "object:81",
           "decimals": 2,
           "format": "in",
           "label": null,
@@ -1354,6 +1465,7 @@
           "show": true
         },
         {
+          "$$hashKey": "object:82",
           "format": "short",
           "label": null,
           "logBase": 1,
@@ -1420,11 +1532,15 @@
           "alias": "Humidity",
           "groupBy": [
             {
-              "params": ["5m"],
+              "params": [
+                "10m"
+              ],
               "type": "time"
             },
             {
-              "params": ["none"],
+              "params": [
+                "none"
+              ],
               "type": "fill"
             }
           ],
@@ -1436,7 +1552,9 @@
           "select": [
             [
               {
-                "params": ["out_humid"],
+                "params": [
+                  "out_humid"
+                ],
                 "type": "field"
               },
               {
@@ -1533,7 +1651,9 @@
         "justifyMode": "auto",
         "orientation": "horizontal",
         "reduceOptions": {
-          "calcs": ["lastNotNull"],
+          "calcs": [
+            "lastNotNull"
+          ],
           "fields": "",
           "values": false
         },
@@ -1555,7 +1675,9 @@
           "select": [
             [
               {
-                "params": ["out_humid"],
+                "params": [
+                  "out_humid"
+                ],
                 "type": "field"
               }
             ]
@@ -1571,7 +1693,11 @@
           "options": {
             "includeTimeField": false,
             "mode": "reduceFields",
-            "reducers": ["min", "mean", "max"]
+            "reducers": [
+              "min",
+              "mean",
+              "max"
+            ]
           }
         }
       ],
@@ -1593,5 +1719,5 @@
   "timezone": "browser",
   "title": "Weather",
   "uid": "RadSLXRgz",
-  "version": 23
+  "version": 24
 }
