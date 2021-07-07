@@ -13,6 +13,12 @@ Pulls data from display and populates InfluxDb with Grafana visualizations.
 git clone https://github.com/deebloo/acurite-weather.git
 ```
 
+### Run integration and unit tests
+
+```BASH
+cargo test -p acurite -p acurite_core
+```
+
 ### Create release build
 
 ```BASH
