@@ -34,7 +34,7 @@ docker-compose up -d
 ### Start program
 
 ```BASH
-sudo ./target/release/acurite-weather
+sudo ./target/release/acurite
 ```
 
 ![alt text](images/dashboard_2.png)
