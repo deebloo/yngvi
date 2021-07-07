@@ -1,10 +1,10 @@
+use acurite_core::config;
+use acurite_core::{WeatherReading, Writer};
 use async_trait::async_trait;
 use influxdb::{Client, InfluxDbWriteable};
 use serde::Deserialize;
 
 use crate::influx::WeatherReadingInflux;
-use acurite_core::config;
-use acurite_core::{WeatherReading, Writer};
 
 #[derive(Deserialize, Debug, Clone)]
 pub struct InfluxConfig {
