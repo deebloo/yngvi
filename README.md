@@ -31,4 +31,4 @@ docker-compose up -d
 sudo ./target/release/acurite-weather
 ```
 
-![alt text](images/dashboard.png)
+![alt text](images/dashboard_2.png)
