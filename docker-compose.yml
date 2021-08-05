@@ -14,7 +14,7 @@ services:
 
   grafana:
     container_name: grafana
-    image: grafana/grafana:8.0.6
+    image: grafana/grafana:8.1.0
     restart: always
     environment:
       - GF_SERVER_DOMAIN=0.0.0.0
