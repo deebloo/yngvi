@@ -27,7 +27,7 @@ services:
 
   nginx:
     container_name: nginx
-    image: nginx:1.21.1
+    image: nginx:1.21.3
     restart: always
     ports:
       - 80:80
