@@ -5,7 +5,7 @@ use acurite_core::Station;
 use hid::HidReader;
 use influx::InfluxWriter;
 
-#[async_std::main]
+#[tokio::main]
 async fn main() {
     println!("Application starting...");
 

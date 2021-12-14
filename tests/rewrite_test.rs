@@ -1,7 +1,7 @@
 mod test_reader;
 mod test_writer;
 
-#[async_std::test]
+#[tokio::test]
 async fn should_replay_failed_writes() {
     let mut reader = test_reader::TestReader {
         current_reading: 0,

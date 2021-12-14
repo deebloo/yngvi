@@ -1,6 +1,5 @@
-use async_std::task;
 use chrono::Utc;
-use std::time::Duration;
+use tokio::time::{sleep, Duration};
 
 use crate::formulas::{calc_dew_point, calc_heat_index, calc_wind_chill};
 use crate::reader::Reader;
@@ -32,7 +31,7 @@ impl Station {
         loop {
             self.run(reader, writer).await; // Run read write cycle
 
-            task::sleep(Duration::from_secs(18)).await; // wait 18s for the next cycle
+            sleep(Duration::from_secs(18)).await; // wait 18s for the next cycle
         }
     }
 

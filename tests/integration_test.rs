@@ -1,7 +1,7 @@
 mod test_reader;
 mod test_writer;
 
-#[async_std::test]
+#[tokio::test]
 async fn shold_read_and_record_readings() {
     let mut reader = test_reader::TestReader {
         current_reading: 0,
