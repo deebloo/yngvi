@@ -11,4 +11,4 @@ tokio = { version = "1.14.0", features = ["full"] }
 async-trait = "0.1.51"
 chrono = "0.4.19"
 serde = "1.0.130"
-serde_json = "1.0.72"
+serde_json = "1.0.73"
