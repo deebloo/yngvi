@@ -152,7 +152,7 @@ impl Station {
         let b = (data[6] & 0x7f) as u32;
         let celcius = (a | b) as f32 / 18.0 - 40.0;
 
-        (celcius * 9.) / 5. + 32.
+        (celcius * 9.) / 5. + 32. // convert to F
     }
 
     fn decode_out_humidity(data: &Report1) -> u8 {
