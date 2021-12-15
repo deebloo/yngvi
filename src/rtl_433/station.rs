@@ -1,6 +1,7 @@
 use acurite_core::formulas::{calc_dew_point, calc_heat_index, calc_wind_chill};
 
 use crate::rtl_433;
+use acurite_core::reader::Reader;
 use acurite_core::writer::{WeatherReading, Writer};
 
 pub struct Station {
@@ -18,30 +19,33 @@ impl Station {
 
     // Open device and start reading reports.
     // If a failure to read occurs wait and then re-open device
-    pub async fn start(&mut self, writer: &mut impl Writer) -> std::io::Result<()> {
-        let mut count = 0;
-
+    pub async fn start(
+        &mut self,
+        reader: &mut impl Reader<String>,
+        writer: &mut impl Writer,
+    ) -> std::io::Result<()> {
         loop {
-            count = count + 1;
-
             let mut buffer = String::new();
-            std::io::stdin().read_line(&mut buffer)?;
 
-            let reading: rtl_433::WeatherReading = serde_json::from_str(buffer.as_str())?;
+            let read_res = reader.read(&mut buffer);
 
-            if reading.sequence_num == 2 {
-                self.update_weather_reading(&reading);
+            if read_res.is_ok() {
+                let reading: rtl_433::WeatherReading = serde_json::from_str(buffer.as_str())?;
 
-                let write_result = writer.write(&self.weather_reading).await;
+                if reading.sequence_num == 2 {
+                    self.update_weather_reading(&reading);
 
-                if write_result.is_ok() {
-                    println!("{}", self.weather_reading);
+                    let write_result = writer.write(&self.weather_reading).await;
 
-                    self.replay_failed_writes(writer).await;
-                } else {
-                    println!("There was a problem when calling writer.write()");
+                    if write_result.is_ok() {
+                        println!("{}", self.weather_reading);
 
-                    self.failed_writes.push(self.weather_reading.clone());
+                        self.replay_failed_writes(writer).await;
+                    } else {
+                        println!("There was a problem when calling writer.write()");
+
+                        self.failed_writes.push(self.weather_reading.clone());
+                    }
                 }
             }
         }

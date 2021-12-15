@@ -27,7 +27,7 @@ impl Station {
 
     // Open device and start reading reports.
     // If a failure to read occurs wait and then re-open device
-    pub async fn start(&mut self, reader: &mut impl Reader, writer: &mut impl Writer) {
+    pub async fn start(&mut self, reader: &mut impl Reader<[u8; 10]>, writer: &mut impl Writer) {
         loop {
             self.run(reader, writer).await; // Run read write cycle
 
@@ -36,7 +36,7 @@ impl Station {
     }
 
     // Run the read and write cycle once
-    pub async fn run(&mut self, reader: &mut impl Reader, writer: &mut impl Writer) {
+    pub async fn run(&mut self, reader: &mut impl Reader<[u8; 10]>, writer: &mut impl Writer) {
         let mut buf: Report1 = [1u8; 10];
 
         if reader.read(&mut buf).is_ok() {
