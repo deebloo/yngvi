@@ -4,7 +4,8 @@ mod rtl_433;
 
 mod influx;
 
-use std::io;
+use acurite_core::config;
+use serde::Deserialize;
 
 struct TestWriter;
 
@@ -17,15 +18,44 @@ impl acurite_core::Writer for TestWriter {
     }
 }
 
+#[derive(Deserialize, Debug, Clone)]
+pub enum Station {
+    CONSOLE,
+    RTL433,
+}
+
+#[derive(Deserialize, Debug, Clone)]
+pub struct AcuriteConfig {
+    pub station: Station,
+}
+
 #[tokio::main]
-async fn main() -> io::Result<()> {
+async fn main() {
     println!("Application starting...");
 
-    let mut writer = TestWriter {};
-    let mut reader = rtl_433::StdinReader::new();
-    let mut station = rtl_433::Station::new();
+    // Read configuration. Default to read from the console
+    let program_config = config::read_config::<AcuriteConfig>().unwrap_or(AcuriteConfig {
+        station: Station::RTL433,
+    });
 
-    println!("Weather Station is ready...");
+    match program_config.station {
+        Station::CONSOLE => {
+            let mut writer = influx::InfluxWriter::new();
+            let mut reader = console::HidReader::new(0x24c0, 0x003);
+            let mut station = console::Station::new();
 
-    station.start(&mut reader, &mut writer).await
+            println!("Weather Station is ready...");
+
+            station.start(&mut reader, &mut writer).await;
+        }
+        Station::RTL433 => {
+            let mut writer = TestWriter {};
+            let mut reader = rtl_433::StdinReader::new();
+            let mut station = rtl_433::Station::new();
+
+            println!("Weather Station is ready...");
+
+            station.start(&mut reader, &mut writer).await;
+        }
+    }
 }

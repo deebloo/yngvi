@@ -19,18 +19,18 @@ impl Station {
 
     // Open device and start reading reports.
     // If a failure to read occurs wait and then re-open device
-    pub async fn start(
-        &mut self,
-        reader: &mut impl Reader<String>,
-        writer: &mut impl Writer,
-    ) -> std::io::Result<()> {
+    pub async fn start(&mut self, reader: &mut impl Reader<String>, writer: &mut impl Writer) {
         loop {
             let mut buffer = String::new();
-
             let read_res = reader.read(&mut buffer);
 
             if read_res.is_ok() {
-                let reading: rtl_433::WeatherReading = serde_json::from_str(buffer.as_str())?;
+                println!("### RAW ###");
+                println!("{}", &buffer);
+                println!("### RAW ###");
+
+                let reading: rtl_433::WeatherReading =
+                    serde_json::from_str(buffer.as_str()).expect("invalid json from reader");
 
                 if reading.sequence_num == 2 {
                     self.update_weather_reading(&reading);
