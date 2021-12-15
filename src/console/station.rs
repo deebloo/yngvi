@@ -1,9 +1,9 @@
 use chrono::Utc;
 use tokio::time::{sleep, Duration};
 
-use crate::formulas::{calc_dew_point, calc_heat_index, calc_wind_chill};
-use crate::reader::Reader;
-use crate::writer::{WeatherReading, Writer};
+use acurite_core::formulas::{calc_dew_point, calc_heat_index, calc_wind_chill};
+use acurite_core::reader::Reader;
+use acurite_core::writer::{WeatherReading, Writer};
 
 type Report1 = [u8; 10];
 
