@@ -15,7 +15,7 @@ async fn shold_read_and_record_readings() {
     };
 
     let mut writer = test_writer::TestWriter { readings: vec![] };
-    let mut station = acurite_core::Station::new();
+    let mut station = acurite_console::Station::new();
 
     // generate some readings
     for _ in 1..=3 {

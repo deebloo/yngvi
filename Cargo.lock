@@ -6,11 +6,26 @@ version = 3
 name = "acurite"
 version = "0.2.0"
 dependencies = [
+ "acurite_console",
  "acurite_core",
+ "acurite_rtl_433",
  "async-trait",
  "chrono",
  "hidapi",
  "influxdb",
+ "serde",
+ "serde_json",
+ "tokio",
+]
+
+[[package]]
+name = "acurite_console"
+version = "0.2.0"
+dependencies = [
+ "acurite_core",
+ "async-trait",
+ "chrono",
+ "hidapi",
  "serde",
  "serde_json",
  "tokio",
@@ -22,6 +37,19 @@ version = "0.2.0"
 dependencies = [
  "async-trait",
  "chrono",
+ "serde",
+ "serde_json",
+ "tokio",
+]
+
+[[package]]
+name = "acurite_rtl_433"
+version = "0.2.0"
+dependencies = [
+ "acurite_core",
+ "async-trait",
+ "chrono",
+ "hidapi",
  "serde",
  "serde_json",
  "tokio",

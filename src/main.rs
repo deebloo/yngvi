@@ -1,7 +1,4 @@
 // stations
-mod console;
-mod rtl_433;
-
 mod influx;
 
 use acurite_core::config;
@@ -41,8 +38,8 @@ async fn main() {
     match program_config.station {
         Station::CONSOLE => {
             let mut writer = influx::InfluxWriter::new();
-            let mut reader = console::HidReader::new(0x24c0, 0x003);
-            let mut station = console::Station::new();
+            let mut reader = acurite_console::HidReader::new(0x24c0, 0x003);
+            let mut station = acurite_console::Station::new();
 
             println!("Weather Station is ready...");
 
@@ -50,8 +47,8 @@ async fn main() {
         }
         Station::RTL433 => {
             let mut writer = TestWriter {};
-            let mut reader = rtl_433::StdinReader::new();
-            let mut station = rtl_433::Station::new();
+            let mut reader = acurite_rtl_433::StdinReader::new();
+            let mut station = acurite_rtl_433::Station::new();
 
             println!("Weather Station is ready...");
 

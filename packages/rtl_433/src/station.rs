@@ -1,4 +1,4 @@
-use crate::rtl_433::{BaseReading, FiveInOneReading};
+use crate::stdin_reader::{BaseReading, FiveInOneReading};
 use acurite_core::formulas::{calc_dew_point, calc_heat_index, calc_wind_chill};
 use acurite_core::reader::Reader;
 use acurite_core::writer::{WeatherReading, Writer};
@@ -21,38 +21,42 @@ impl Station {
     // If a failure to read occurs wait and then re-open device
     pub async fn start(&mut self, reader: &mut impl Reader<String>, writer: &mut impl Writer) {
         loop {
-            let mut buffer = String::new();
+            self.run(reader, writer).await;
+        }
+    }
 
-            // make sure read is successful
-            if reader.read(&mut buffer).is_ok() {
-                // parse the bare minimum to get the model
-                if let Ok(reading) = from_str::<BaseReading>(buffer.as_str()) {
-                    // make sure the model is the 5n1
-                    if reading.model == "Acurite-5n1" {
-                        // parse the full 5n1 message
-                        if let Ok(five_n_one) = from_str::<FiveInOneReading>(buffer.as_str()) {
-                            // the message will come in 3 things (0 base indexed) only grab the last one
-                            if five_n_one.sequence_num == 2 {
-                                // update the weather reading in place
-                                self.update_weather_reading(&five_n_one);
+    pub async fn run(&mut self, reader: &mut impl Reader<String>, writer: &mut impl Writer) {
+        let mut buffer = String::new();
 
-                                // write the result to the database
-                                let write_result = writer.write(&self.weather_reading).await;
+        // make sure read is successful
+        if reader.read(&mut buffer).is_ok() {
+            // parse the bare minimum to get the model
+            if let Ok(reading) = from_str::<BaseReading>(buffer.as_str()) {
+                // make sure the model is the 5n1
+                if reading.model == "Acurite-5n1" {
+                    // parse the full 5n1 message
+                    if let Ok(five_n_one) = from_str::<FiveInOneReading>(buffer.as_str()) {
+                        // the message will come in 3 things (0 base indexed) only grab the last one
+                        if five_n_one.sequence_num == 2 {
+                            // update the weather reading in place
+                            self.update_weather_reading(&five_n_one);
 
-                                if write_result.is_ok() {
-                                    self.replay_failed_writes(writer).await;
-                                } else {
-                                    println!("There was a problem when calling writer.write()");
+                            // write the result to the database
+                            let write_result = writer.write(&self.weather_reading).await;
 
-                                    self.failed_writes.push(self.weather_reading.clone());
-                                }
+                            if write_result.is_ok() {
+                                self.replay_failed_writes(writer).await;
+                            } else {
+                                println!("There was a problem when calling writer.write()");
+
+                                self.failed_writes.push(self.weather_reading.clone());
                             }
                         }
                     }
-                } else {
-                    println!("### There was an Error Parsing the following message ###");
-                    println!("{}", &buffer);
                 }
+            } else {
+                println!("### There was an Error Parsing the following message ###");
+                println!("{}", &buffer);
             }
         }
     }
@@ -64,7 +68,7 @@ impl Station {
         self.weather_reading.wind_speed = Some(data.wind_avg_mi_h);
 
         // Always clear rain_delta. (Will reassign if available)
-        self.weather_reading.rain_delta = None;
+        self.weather_reading.rain_delta = Some(0.0);
 
         // Update temp and wind chill
         if let Some(out_temp) = data.temperature_f {
