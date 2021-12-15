@@ -31,6 +31,8 @@ impl Station {
 
             let reading: rtl_433::WeatherReading = serde_json::from_str(buffer.as_str())?;
 
+            self.weather_reading.time = chrono::Utc::now();
+
             if reading.sequence_num == 2 {
                 self.update_weather_reading(&reading);
 
@@ -50,8 +52,6 @@ impl Station {
     }
 
     fn update_weather_reading(&mut self, data: &rtl_433::WeatherReading) {
-        self.weather_reading.time = data.time.clone();
-
         // Both flavors have wind speed
         self.weather_reading.wind_speed = Some(data.wind_avg_mi_h);
 
