@@ -1,5 +1,5 @@
 use async_trait::async_trait;
-use chrono::Utc;
+use chrono::{DateTime, Utc};
 use std::fmt;
 
 #[async_trait]
@@ -7,9 +7,9 @@ pub trait Writer {
     async fn write(&mut self, weather_reading: &WeatherReading) -> Result<(), ()>;
 }
 
-#[derive(Clone, Debug, PartialEq)]
+#[derive(Clone, Copy, Debug, PartialEq)]
 pub struct WeatherReading {
-    pub time: String,
+    pub time: DateTime<Utc>,
     pub rain: Option<f32>,
     pub rain_delta: Option<f32>,
     pub wind_speed: Option<f32>,
@@ -34,7 +34,7 @@ impl fmt::Display for WeatherReading {
 impl WeatherReading {
     pub fn new() -> WeatherReading {
         WeatherReading {
-            time: Utc::now().to_rfc2822(),
+            time: Utc::now(),
             rain: None,
             rain_delta: None,
             wind_speed: None,
