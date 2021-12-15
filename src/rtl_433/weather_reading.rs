@@ -1,7 +1,9 @@
+use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq)]
 pub struct WeatherReading {
+    pub time: DateTime<Utc>,
     pub model: String,
     pub message_type: u8,
     pub id: u32,
