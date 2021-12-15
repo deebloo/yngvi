@@ -1,8 +1,8 @@
+use crate::rtl_433::{BaseReading, FiveInOneReading};
 use acurite_core::formulas::{calc_dew_point, calc_heat_index, calc_wind_chill};
-
-use crate::rtl_433;
 use acurite_core::reader::Reader;
 use acurite_core::writer::{WeatherReading, Writer};
+use serde_json::from_str;
 
 pub struct Station {
     pub weather_reading: WeatherReading,
@@ -22,36 +22,42 @@ impl Station {
     pub async fn start(&mut self, reader: &mut impl Reader<String>, writer: &mut impl Writer) {
         loop {
             let mut buffer = String::new();
-            let read_res = reader.read(&mut buffer);
 
-            if read_res.is_ok() {
-                println!("### RAW ###");
-                println!("{}", &buffer);
-                println!("### RAW ###");
+            // make sure read is successful
+            if reader.read(&mut buffer).is_ok() {
+                // parse the bare minimum to get the model
+                if let Ok(reading) = from_str::<BaseReading>(buffer.as_str()) {
+                    // make sure the model is the 5n1
+                    if reading.model == "Acurite-5n1" {
+                        // parse the full 5n1 message
+                        if let Ok(five_n_one) = from_str::<FiveInOneReading>(buffer.as_str()) {
+                            // the message will come in 3 things (0 base indexed) only grab the last one
+                            if five_n_one.sequence_num == 2 {
+                                // update the weather reading in place
+                                self.update_weather_reading(&five_n_one);
 
-                let reading: rtl_433::WeatherReading =
-                    serde_json::from_str(buffer.as_str()).expect("invalid json from reader");
+                                // write the result to the database
+                                let write_result = writer.write(&self.weather_reading).await;
 
-                if reading.sequence_num == 2 {
-                    self.update_weather_reading(&reading);
+                                if write_result.is_ok() {
+                                    self.replay_failed_writes(writer).await;
+                                } else {
+                                    println!("There was a problem when calling writer.write()");
 
-                    let write_result = writer.write(&self.weather_reading).await;
-
-                    if write_result.is_ok() {
-                        println!("{}", self.weather_reading);
-
-                        self.replay_failed_writes(writer).await;
-                    } else {
-                        println!("There was a problem when calling writer.write()");
-
-                        self.failed_writes.push(self.weather_reading.clone());
+                                    self.failed_writes.push(self.weather_reading.clone());
+                                }
+                            }
+                        }
                     }
+                } else {
+                    println!("### There was an Error Parsing the following message ###");
+                    println!("{}", &buffer);
                 }
             }
         }
     }
 
-    fn update_weather_reading(&mut self, data: &rtl_433::WeatherReading) {
+    fn update_weather_reading(&mut self, data: &FiveInOneReading) {
         self.weather_reading.time = data.time;
 
         // Both flavors have wind speed

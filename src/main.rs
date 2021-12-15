@@ -11,8 +11,8 @@ struct TestWriter;
 
 #[async_trait::async_trait]
 impl acurite_core::Writer for TestWriter {
-    async fn write(&mut self, _weather_reading: &acurite_core::WeatherReading) -> Result<(), ()> {
-        // println!("{:?}", weather_reading);
+    async fn write(&mut self, weather_reading: &acurite_core::WeatherReading) -> Result<(), ()> {
+        println!("{}", weather_reading);
 
         Ok(())
     }
@@ -38,9 +38,10 @@ async fn main() {
         station: Station::RTL433,
     });
 
+    let mut writer = influx::InfluxWriter::new();
+
     match program_config.station {
         Station::CONSOLE => {
-            let mut writer = influx::InfluxWriter::new();
             let mut reader = console::HidReader::new(0x24c0, 0x003);
             let mut station = console::Station::new();
 
@@ -49,7 +50,6 @@ async fn main() {
             station.start(&mut reader, &mut writer).await;
         }
         Station::RTL433 => {
-            let mut writer = TestWriter {};
             let mut reader = rtl_433::StdinReader::new();
             let mut station = rtl_433::Station::new();
 
