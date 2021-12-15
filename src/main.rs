@@ -18,6 +18,8 @@
 //     station.start(&mut reader, &mut writer).await;
 // }
 
+mod rtl_433;
+
 use std::io;
 
 #[tokio::main]
@@ -30,7 +32,9 @@ async fn main() -> io::Result<()> {
         let mut buffer = String::new();
         io::stdin().read_line(&mut buffer)?;
 
+        let reading: rtl_433::WeatherReading = serde_json::from_str(buffer.as_str())?;
+
         println!("out {}", count);
-        println!("{}", buffer);
+        println!("{:?}", reading);
     }
 }
