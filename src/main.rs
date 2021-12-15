@@ -1,40 +1,28 @@
-// mod hid;
-// mod influx;
-
-// use acurite_core::Station;
-// use hid::HidReader;
-// use influx::InfluxWriter;
-
-// #[tokio::main]
-// async fn main() {
-//     println!("Application starting...");
-
-//     let mut reader = HidReader::new(0x24c0, 0x003);
-//     let mut writer = InfluxWriter::new();
-//     let mut station = Station::new();
-
-//     println!("Weather Station is ready...");
-
-//     station.start(&mut reader, &mut writer).await;
-// }
-
+mod hid;
+mod influx;
 mod rtl_433;
 
 use std::io;
 
+struct TestWriter;
+
+#[async_trait::async_trait]
+impl acurite_core::Writer for TestWriter {
+    async fn write(&mut self, weather_reading: &acurite_core::WeatherReading) -> Result<(), ()> {
+        println!("{:?}", weather_reading);
+
+        Ok(())
+    }
+}
+
 #[tokio::main]
 async fn main() -> io::Result<()> {
-    let mut count = 0;
+    println!("Application starting...");
 
-    loop {
-        count = count + 1;
+    let mut writer = TestWriter {};
+    let mut station = rtl_433::Station::new();
 
-        let mut buffer = String::new();
-        io::stdin().read_line(&mut buffer)?;
+    println!("Weather Station is ready...");
 
-        let reading: rtl_433::WeatherReading = serde_json::from_str(buffer.as_str())?;
-
-        println!("out {}", count);
-        println!("{:?}", reading);
-    }
+    station.start(&mut writer).await
 }
