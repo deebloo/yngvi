@@ -11,7 +11,7 @@ pub struct WeatherReading {
     battery_ok: u8,
     mic: String,
     wind_avg_mi_h: f32,
-    #[serde(rename(serialize = "temperature_F"))]
+    #[serde(rename(deserialize = "temperature_F"))]
     temperature_f: Option<f32>,
     humidity: Option<u32>,
     wind_dir_deg: Option<f32>,
