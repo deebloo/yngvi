@@ -22,11 +22,15 @@ use std::io;
 
 #[tokio::main]
 async fn main() -> io::Result<()> {
+    let mut count = 0;
+
     loop {
+        count = count + 1;
+
         let mut buffer = String::new();
         io::stdin().read_line(&mut buffer)?;
 
-        println!("out");
+        println!("out {}", count);
         println!("{}", buffer);
     }
 }
