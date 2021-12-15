@@ -41,7 +41,7 @@ impl Station {
 
         if reader.read(&mut buf).is_ok() {
             if Self::validate_r1(&buf) {
-                self.weather_reading.time = Utc::now();
+                self.weather_reading.time = Utc::now().to_rfc2822();
 
                 self.update_weather_reading_r1(buf);
 
