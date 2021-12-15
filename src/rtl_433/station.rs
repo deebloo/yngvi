@@ -1,5 +1,3 @@
-use chrono::{self, DateTime, Utc};
-
 use acurite_core::formulas::{calc_dew_point, calc_heat_index, calc_wind_chill};
 
 use crate::rtl_433;
@@ -50,9 +48,7 @@ impl Station {
     }
 
     fn update_weather_reading(&mut self, data: &rtl_433::WeatherReading) {
-        let datetime = DateTime::parse_from_rfc3339(data.time.as_str()).unwrap();
-
-        self.weather_reading.time = datetime.with_timezone(&Utc);
+        self.weather_reading.time = data.time;
 
         // Both flavors have wind speed
         self.weather_reading.wind_speed = Some(data.wind_avg_mi_h);
