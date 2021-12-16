@@ -3,6 +3,7 @@ use tokio::time::{sleep, Duration};
 
 use acurite_core::formulas::{calc_dew_point, calc_heat_index, calc_wind_chill};
 use acurite_core::reader::Reader;
+use acurite_core::retry_manager::RetryManager;
 use acurite_core::writer::{WeatherReading, Writer};
 
 type Report1 = [u8; 10];
@@ -14,14 +15,14 @@ const WIND_DIR_BY_IDX: [f32; 16] = [
 
 pub struct Station {
     pub weather_reading: WeatherReading,
-    pub failed_writes: Vec<WeatherReading>,
+    pub retry_manager: RetryManager,
 }
 
 impl Station {
     pub fn new() -> Self {
         Self {
             weather_reading: WeatherReading::new(),
-            failed_writes: vec![],
+            retry_manager: RetryManager::new(),
         }
     }
 
@@ -50,11 +51,11 @@ impl Station {
                 if write_result.is_ok() {
                     println!("{}", self.weather_reading);
 
-                    self.replay_failed_writes(writer).await;
+                    self.retry_manager.replay_failed_writes(writer).await;
                 } else {
                     println!("There was a problem when calling writer.write()");
 
-                    self.failed_writes.push(self.weather_reading.clone());
+                    self.retry_manager.add(self.weather_reading.clone());
                 }
             } else {
                 println!("Report R1 Invalid {:?}", buf);
@@ -110,26 +111,6 @@ impl Station {
                 self.weather_reading.dew_point = Some(calc_dew_point(out_temp, out_humid))
             }
             _ => {}
-        }
-    }
-
-    async fn replay_failed_writes(&mut self, writer: &mut impl Writer) {
-        if self.failed_writes.len() > 0 {
-            println!("Replaying previously failed writes");
-
-            let mut writes_to_clear: Vec<WeatherReading> = vec![];
-
-            for r in &self.failed_writes {
-                let res = writer.write(r).await;
-
-                if res.is_ok() {
-                    writes_to_clear.push(r.clone());
-                }
-            }
-
-            for r in writes_to_clear {
-                self.failed_writes.retain(|x| x.time != r.time)
-            }
         }
     }
 

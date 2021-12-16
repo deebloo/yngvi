@@ -23,10 +23,10 @@ async fn should_replay_failed_writes() {
         station.run(&mut reader, &mut error_writer).await;
     }
 
-    assert_eq!(station.failed_writes.len(), 3);
+    assert_eq!(station.retry_manager.failed_writes.len(), 3);
 
     station.run(&mut reader, &mut writer).await;
 
     assert_eq!(writer.readings.len(), 4);
-    assert_eq!(station.failed_writes.len(), 0);
+    assert_eq!(station.retry_manager.failed_writes.len(), 0);
 }

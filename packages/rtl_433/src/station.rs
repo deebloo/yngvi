@@ -1,19 +1,20 @@
 use crate::stdin_reader::{BaseReading, FiveInOneReading};
 use acurite_core::formulas::{calc_dew_point, calc_heat_index, calc_wind_chill};
 use acurite_core::reader::Reader;
+use acurite_core::retry_manager::RetryManager;
 use acurite_core::writer::{WeatherReading, Writer};
 use serde_json::from_str;
 
 pub struct Station {
     pub weather_reading: WeatherReading,
-    pub failed_writes: Vec<WeatherReading>,
+    pub retry_manager: RetryManager,
 }
 
 impl Station {
     pub fn new() -> Self {
         Self {
             weather_reading: WeatherReading::new(),
-            failed_writes: vec![],
+            retry_manager: RetryManager::new(),
         }
     }
 
@@ -45,11 +46,11 @@ impl Station {
                             let write_result = writer.write(&self.weather_reading).await;
 
                             if write_result.is_ok() {
-                                self.replay_failed_writes(writer).await;
+                                self.retry_manager.replay_failed_writes(writer).await;
                             } else {
                                 println!("There was a problem when calling writer.write()");
 
-                                self.failed_writes.push(self.weather_reading.clone());
+                                self.retry_manager.add(self.weather_reading.clone());
                             }
                         }
                     }
@@ -106,26 +107,6 @@ impl Station {
         // update wind direction
         if let Some(wind_direction) = data.wind_dir_deg {
             self.weather_reading.wind_dir = Some(wind_direction);
-        }
-    }
-
-    async fn replay_failed_writes(&mut self, writer: &mut impl Writer) {
-        if self.failed_writes.len() > 0 {
-            println!("Replaying previously failed writes");
-
-            let mut writes_to_clear: Vec<WeatherReading> = vec![];
-
-            for r in &self.failed_writes {
-                let res = writer.write(r).await;
-
-                if res.is_ok() {
-                    writes_to_clear.push(r.clone());
-                }
-            }
-
-            for r in writes_to_clear {
-                self.failed_writes.retain(|x| x.time != r.time)
-            }
         }
     }
 }
