@@ -8,7 +8,7 @@ pub fn read_config<T: DeserializeOwned>() -> Result<T, Box<dyn Error>> {
 
     let path = &args
         .nth(1)
-        .unwrap_or("/etc/acurite-weather/config.json".to_string());
+        .unwrap_or("/etc/acurite/config.json".to_string());
 
     let file = File::open(path)?;
     let reader = BufReader::new(file);
