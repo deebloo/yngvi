@@ -5,6 +5,6 @@ pub enum ReadError {
 
 pub type ReadResult = Result<(), ReadError>;
 
-pub trait Reader {
-    fn read(&mut self, buff: &mut [u8]) -> ReadResult;
+pub trait Reader<T> {
+    fn read(&mut self, buff: &mut T) -> ReadResult;
 }

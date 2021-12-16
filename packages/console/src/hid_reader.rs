@@ -18,8 +18,8 @@ impl HidReader {
     }
 }
 
-impl Reader for HidReader {
-    fn read(&mut self, buf: &mut [u8]) -> ReadResult {
+impl Reader<[u8; 10]> for HidReader {
+    fn read(&mut self, buf: &mut [u8; 10]) -> ReadResult {
         if let Ok(device) = self.hid.open(self.vid, self.pid) {
             match device.get_feature_report(buf) {
                 Ok(_) => Ok(()),

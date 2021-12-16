@@ -55,6 +55,8 @@ impl Writer for InfluxWriter {
         let weather_reading_influx = WeatherReadingInflux::from_weather_reading(&weather_reading);
         let query = weather_reading_influx.into_query("weather");
 
+        println!("{}", weather_reading);
+
         let res = self.client.query(&query).await;
 
         if let Ok(_) = res {

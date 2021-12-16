@@ -2,37 +2,7 @@ mod test_reader;
 mod test_writer;
 
 #[tokio::test]
-async fn should_replay_failed_writes_console() {
-    let mut reader = test_reader::TestReader {
-        current_reading: 0,
-        readings: vec![
-            vec![1, 197, 26, 120, 0, 5, 75, 75, 3, 255],
-            vec![1, 197, 26, 120, 0, 5, 75, 75, 3, 255],
-            vec![1, 197, 26, 120, 0, 5, 75, 75, 3, 255],
-            vec![1, 197, 26, 120, 0, 5, 75, 75, 3, 255],
-            vec![1, 197, 26, 120, 0, 5, 75, 75, 3, 255],
-        ],
-    };
-
-    let mut writer = test_writer::TestWriter { readings: vec![] };
-    let mut error_writer = test_writer::ErrorWriter {};
-    let mut station = acurite_console::Station::new();
-
-    // Error Out 3 times
-    for _ in 1..=3 {
-        station.run(&mut reader, &mut error_writer).await;
-    }
-
-    assert_eq!(station.retry_manager.failed_writes.len(), 3);
-
-    station.run(&mut reader, &mut writer).await;
-
-    assert_eq!(writer.readings.len(), 4);
-    assert_eq!(station.retry_manager.failed_writes.len(), 0);
-}
-
-#[tokio::test]
-async fn should_replay_failed_writes_rtl_433() {
+async fn shold_read_and_record_readings() {
     let mut reader = test_reader::RTL433TestReader {
         current_reading: 0,
         readings: vec![
@@ -45,18 +15,40 @@ async fn should_replay_failed_writes_rtl_433() {
     };
 
     let mut writer = test_writer::TestWriter { readings: vec![] };
-    let mut error_writer = test_writer::ErrorWriter {};
     let mut station = acurite_rtl_433::Station::new();
 
-    // Error Out 3 times
+    // generate some readings
     for _ in 1..=3 {
-        station.run(&mut reader, &mut error_writer).await;
+        station.run(&mut reader, &mut writer).await;
     }
 
-    assert_eq!(station.retry_manager.failed_writes.len(), 3);
+    // Get stored readings from the writer
+    let data = writer.readings.into_iter();
 
-    station.run(&mut reader, &mut writer).await;
+    // Check writers stored weahter properties
+    let rain: Vec<Option<f32>> = data.clone().map(|r| r.rain).collect();
+    let rain_delta: Vec<Option<f32>> = data.clone().map(|r| r.rain_delta).collect();
+    let wind_speed: Vec<Option<f32>> = data.clone().map(|r| r.wind_speed).collect();
+    let wind_dir: Vec<Option<f32>> = data.clone().map(|r| r.wind_dir).collect();
+    let out_temp: Vec<Option<f32>> = data.clone().map(|r| r.out_temp).collect();
+    let out_humid: Vec<Option<u8>> = data.clone().map(|r| r.out_humid).collect();
+    let wind_chill: Vec<Option<f32>> = data.clone().map(|r| r.wind_chill).collect();
+    let heat_index: Vec<Option<f32>> = data.clone().map(|r| r.heat_index).collect();
+    let dew_point: Vec<Option<f32>> = data.clone().map(|r| r.dew_point).collect();
 
-    assert_eq!(writer.readings.len(), 4);
-    assert_eq!(station.retry_manager.failed_writes.len(), 0);
+    assert_eq!(rain, [None, Some(41.83), Some(41.83)]);
+    assert_eq!(rain_delta, [Some(0.0), Some(0.0), Some(0.0)]);
+    assert_eq!(wind_speed, [Some(3.193), Some(2.679), Some(4.222)]);
+    assert_eq!(wind_dir, [None, Some(90.0), Some(90.0)]);
+    assert_eq!(out_temp, [Some(55.8), Some(55.8), Some(55.8)]);
+    assert_eq!(out_humid, [Some(70), Some(70), Some(70)]);
+    assert_eq!(wind_chill, [Some(55.8), Some(55.8), Some(55.8)]);
+    assert_eq!(
+        heat_index,
+        [Some(54.370003), Some(54.370003), Some(54.370003)]
+    );
+    assert_eq!(
+        dew_point,
+        [Some(46.282158), Some(46.282158), Some(46.282158)]
+    );
 }
