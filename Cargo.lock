@@ -23,7 +23,6 @@ name = "acurite_console"
 version = "0.2.0"
 dependencies = [
  "acurite_core",
- "async-trait",
  "chrono",
  "hidapi",
  "serde",
@@ -47,12 +46,9 @@ name = "acurite_rtl_433"
 version = "0.2.0"
 dependencies = [
  "acurite_core",
- "async-trait",
  "chrono",
- "hidapi",
  "serde",
  "serde_json",
- "tokio",
 ]
 
 [[package]]
