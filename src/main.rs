@@ -36,7 +36,7 @@ async fn main() {
         }
         Station::RTL433 => {
             let mut writer = influx::InfluxWriter::new();
-            let mut reader = acurite_rtl_433::StdinReader::new();
+            let mut reader = acurite_core::StdinReader::new();
             let mut station = acurite_rtl_433::Station::new();
 
             println!("Weather Station is ready...");

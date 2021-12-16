@@ -1,4 +1,4 @@
-use crate::stdin_reader::{BaseReading, FiveInOneReading};
+use crate::reading::{BaseReading, FiveInOneReading};
 use acurite_core::formulas::{calc_dew_point, calc_heat_index, calc_wind_chill};
 use acurite_core::reader::Reader;
 use acurite_core::retry_manager::RetryManager;

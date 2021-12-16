@@ -7,6 +7,17 @@ pub trait Writer {
     async fn write(&mut self, weather_reading: &WeatherReading) -> Result<(), ()>;
 }
 
+pub struct StdoutWriter;
+
+#[async_trait]
+impl Writer for StdoutWriter {
+    async fn write(&mut self, weather_reading: &WeatherReading) -> Result<(), ()> {
+        println!("{}", weather_reading);
+
+        Ok(())
+    }
+}
+
 #[derive(Clone, Copy, Debug, PartialEq)]
 pub struct WeatherReading {
     pub time: DateTime<Utc>,

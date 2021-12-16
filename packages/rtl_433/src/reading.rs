@@ -1,4 +1,3 @@
-use acurite_core::{ReadError, ReadResult, Reader};
 use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
 
@@ -23,22 +22,4 @@ pub struct FiveInOneReading {
     pub humidity: Option<u8>,
     pub wind_dir_deg: Option<f32>,
     pub rain_in: Option<f32>,
-}
-
-pub struct StdinReader {}
-
-impl StdinReader {
-    pub fn new() -> Self {
-        Self {}
-    }
-}
-
-impl Reader<String> for StdinReader {
-    fn read(&mut self, buf: &mut String) -> ReadResult {
-        if let Ok(_) = std::io::stdin().read_line(buf) {
-            Ok(())
-        } else {
-            Err(ReadError::NoDevice)
-        }
-    }
 }
