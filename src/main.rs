@@ -21,7 +21,7 @@ async fn main() {
 
     // Read configuration. Default to read from the console
     let program_config = config::read_config::<AcuriteConfig>().unwrap_or(AcuriteConfig {
-        station: Station::RTL433,
+        station: Station::CONSOLE,
     });
 
     match program_config.station {
