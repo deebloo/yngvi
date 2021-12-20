@@ -23,7 +23,6 @@ version = "0.2.0"
 dependencies = [
  "acurite_core",
  "chrono",
- "hidapi",
  "serde",
  "serde_json",
  "tokio",
@@ -35,6 +34,7 @@ version = "0.2.0"
 dependencies = [
  "async-trait",
  "chrono",
+ "hidapi",
  "serde",
  "serde_json",
  "tokio",

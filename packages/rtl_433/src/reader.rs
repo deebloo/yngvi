@@ -16,9 +16,9 @@ impl RTL433Reader {
             .stdout
             .ok_or_else(|| Error::new(ErrorKind::Other, "Could not capture standard output."))?;
 
-        let reader = BufReader::new(stdout);
-
-        Ok(Self { buf: reader })
+        Ok(Self {
+            buf: BufReader::new(stdout),
+        })
     }
 }
 

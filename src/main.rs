@@ -24,22 +24,18 @@ async fn main() {
         station: Station::RTL433,
     });
 
+    let mut writer = InfluxWriter::new();
+
     match program_config.station {
         Station::CONSOLE => {
-            let mut writer = InfluxWriter::new();
-            let mut reader = acurite_console::HidReader::new(0x24c0, 0x003);
+            let mut reader = acurite_core::HidReader::new(0x24c0, 0x003);
             let mut station = acurite_console::Station::new();
-
-            println!("Weather Station is ready...");
 
             station.start(&mut reader, &mut writer).await;
         }
         Station::RTL433 => {
-            let mut writer = InfluxWriter::new();
             let mut reader = acurite_rtl_433::RTL433Reader::new().unwrap();
             let mut station = acurite_rtl_433::Station::new();
-
-            println!("Weather Station is ready...");
 
             station.start(&mut reader, &mut writer).await;
         }
