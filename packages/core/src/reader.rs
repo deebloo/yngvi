@@ -22,7 +22,7 @@ impl Reader<String> for StdinReader {
         if let Ok(_) = std::io::stdin().read_line(buf) {
             Ok(())
         } else {
-            Err(ReadError::NoDevice)
+            Err(ReadError::CouldNotRead)
         }
     }
 }
