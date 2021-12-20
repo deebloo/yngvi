@@ -83,16 +83,30 @@ impl Station {
         }
 
         // update humidity
+        self.update_humidity(&data);
+
+        // update rain totals
+        self.update_rain_totals(&data);
+
+        // update wind direction
+        if let Some(wind_direction) = data.wind_dir_deg {
+            self.weather_reading.wind_dir = Some(wind_direction);
+        }
+    }
+
+    fn update_humidity(&mut self, data: &FiveInOneReading) {
         if let Some(out_humid) = data.humidity {
             self.weather_reading.out_humid = Some(out_humid);
 
             // update heat index and dew point
             if let Some(out_temp) = data.temperature_f {
                 self.weather_reading.heat_index = Some(calc_heat_index(out_temp, out_humid));
-                self.weather_reading.dew_point = Some(calc_dew_point(out_temp, out_humid))
+                self.weather_reading.dew_point = Some(calc_dew_point(out_temp, out_humid));
             }
         }
+    }
 
+    fn update_rain_totals(&mut self, data: &FiveInOneReading) {
         // update rain totals
         if let Some(new_rain_total) = data.rain_in {
             self.weather_reading.rain = Some(new_rain_total);
@@ -103,11 +117,6 @@ impl Station {
                     self.weather_reading.rain_delta = Some(new_rain_total - prev_rain_total);
                 }
             }
-        }
-
-        // update wind direction
-        if let Some(wind_direction) = data.wind_dir_deg {
-            self.weather_reading.wind_dir = Some(wind_direction);
         }
     }
 }
