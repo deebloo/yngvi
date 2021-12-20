@@ -34,6 +34,7 @@ impl Station {
             // parse the bare minimum to get the model
             if let Ok(reading) = from_str::<BaseReading>(buffer.as_str()) {
                 // make sure the model is the 5n1
+                // TODO: Update json parser to more elegantly handle other acurite stations (mainly atlas)
                 if reading.model == "Acurite-5n1" {
                     // parse the full 5n1 message
                     if let Ok(five_n_one) = from_str::<FiveInOneReading>(buffer.as_str()) {
