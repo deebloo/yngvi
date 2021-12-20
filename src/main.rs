@@ -1,7 +1,7 @@
 // stations
-mod influx;
 
 use acurite_core::config;
+use acurite_influx::InfluxWriter;
 use serde::Deserialize;
 
 #[derive(Deserialize, Debug, Clone)]
@@ -21,12 +21,12 @@ async fn main() {
 
     // Read configuration. Default to read from the console
     let program_config = config::read_config::<AcuriteConfig>().unwrap_or(AcuriteConfig {
-        station: Station::CONSOLE,
+        station: Station::RTL433,
     });
 
     match program_config.station {
         Station::CONSOLE => {
-            let mut writer = influx::InfluxWriter::new();
+            let mut writer = InfluxWriter::new();
             let mut reader = acurite_console::HidReader::new(0x24c0, 0x003);
             let mut station = acurite_console::Station::new();
 
@@ -35,8 +35,8 @@ async fn main() {
             station.start(&mut reader, &mut writer).await;
         }
         Station::RTL433 => {
-            let mut writer = influx::InfluxWriter::new();
-            let mut reader = acurite_core::StdinReader::new();
+            let mut writer = InfluxWriter::new();
+            let mut reader = acurite_rtl_433::RTL433Reader::new().unwrap();
             let mut station = acurite_rtl_433::Station::new();
 
             println!("Weather Station is ready...");
