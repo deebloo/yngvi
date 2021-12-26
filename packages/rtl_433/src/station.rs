@@ -109,14 +109,18 @@ impl Station {
     fn update_rain_totals(&mut self, data: &FiveInOneReading) {
         // update rain totals
         if let Some(new_rain_total) = data.rain_in {
-            self.weather_reading.rain = Some(new_rain_total);
-
             // Update the rain delta if the new rain total is greater then the previously recorded
             if let Some(prev_rain_total) = self.weather_reading.rain {
                 if new_rain_total >= prev_rain_total {
                     self.weather_reading.rain_delta = Some(new_rain_total - prev_rain_total);
+                } else {
+                    self.weather_reading.rain_delta = Some(0.);
                 }
+            } else {
+                self.weather_reading.rain_delta = Some(0.);
             }
+
+            self.weather_reading.rain = Some(new_rain_total);
         }
     }
 }
