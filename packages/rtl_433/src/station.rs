@@ -69,9 +69,6 @@ impl Station {
         // Both flavors have wind speed
         self.weather_reading.wind_speed = Some(data.wind_avg_mi_h);
 
-        // Always clear rain_delta. (Will reassign if available)
-        self.weather_reading.rain_delta = Some(0.0);
-
         // Update temp and wind chill
         if let Some(out_temp) = data.temperature_f {
             self.weather_reading.out_temp = Some(out_temp);
@@ -107,17 +104,16 @@ impl Station {
     }
 
     fn update_rain_totals(&mut self, data: &FiveInOneReading) {
+        // Always clear rain_delta. (Will reassign if available)
+        self.weather_reading.rain_delta = Some(0.0);
+
         // update rain totals
         if let Some(new_rain_total) = data.rain_in {
             // Update the rain delta if the new rain total is greater then the previously recorded
             if let Some(prev_rain_total) = self.weather_reading.rain {
                 if new_rain_total >= prev_rain_total {
                     self.weather_reading.rain_delta = Some(new_rain_total - prev_rain_total);
-                } else {
-                    self.weather_reading.rain_delta = Some(0.);
                 }
-            } else {
-                self.weather_reading.rain_delta = Some(0.);
             }
 
             self.weather_reading.rain = Some(new_rain_total);
