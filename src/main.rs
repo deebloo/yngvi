@@ -1,5 +1,3 @@
-// stations
-
 use acurite_core::config;
 use acurite_influx::InfluxWriter;
 use serde::Deserialize;
