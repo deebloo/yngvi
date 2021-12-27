@@ -27,16 +27,16 @@ services:
     depends_on:
       - influxdb
 
-  nginx:
-    container_name: nginx
-    image: nginx:1.21.4
-    restart: always
-    ports:
-      - 80:80
-    volumes:
-      - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf
-    depends_on:
-      - grafana
+  # nginx:
+  #   container_name: nginx
+  #   image: nginx:1.21.4
+  #   restart: always
+  #   ports:
+  #     - 80:80
+  #   volumes:
+  #     - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf
+  #   depends_on:
+  #     - grafana
 
 volumes:
   influxdb_data:
