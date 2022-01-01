@@ -21,6 +21,7 @@ impl Writer for StdoutWriter {
 #[derive(Clone, Copy, Debug, PartialEq)]
 pub struct WeatherReading {
     pub time: DateTime<Utc>,
+    pub device_id: Option<u32>,
     pub rain: Option<f32>,
     pub rain_delta: Option<f32>,
     pub wind_speed: Option<f32>,
@@ -45,6 +46,7 @@ impl fmt::Display for WeatherReading {
 impl WeatherReading {
     pub fn new() -> WeatherReading {
         WeatherReading {
+            device_id: None,
             time: Utc::now(),
             rain: None,
             rain_delta: None,

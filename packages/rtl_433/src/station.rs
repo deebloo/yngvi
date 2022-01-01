@@ -64,6 +64,7 @@ impl Station {
     }
 
     fn update_weather_reading(&mut self, data: &FiveInOneReading) {
+        self.weather_reading.device_id = Some(data.id);
         self.weather_reading.time = data.time;
 
         // Both flavors have wind speed
