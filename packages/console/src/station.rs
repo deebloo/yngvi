@@ -244,6 +244,7 @@ mod tests {
         assert_eq!(
             station.weather_reading,
             WeatherReading {
+                device_id: None,
                 time: station.weather_reading.time,
                 rain: None,
                 rain_delta: None,
