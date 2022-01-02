@@ -6,6 +6,12 @@ pub struct BaseReading {
     pub model: String,
 }
 
+impl BaseReading {
+    pub fn from_string(buf: &String) -> Result<BaseReading, serde_json::Error> {
+        serde_json::from_str::<BaseReading>(buf.as_str())
+    }
+}
+
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq)]
 pub struct FiveInOneReading {
     pub time: DateTime<Utc>,
@@ -22,4 +28,10 @@ pub struct FiveInOneReading {
     pub humidity: Option<u8>,
     pub wind_dir_deg: Option<f32>,
     pub rain_in: Option<f32>,
+}
+
+impl FiveInOneReading {
+    pub fn from_string(buf: &String) -> Result<FiveInOneReading, serde_json::Error> {
+        serde_json::from_str::<FiveInOneReading>(buf.as_str())
+    }
 }

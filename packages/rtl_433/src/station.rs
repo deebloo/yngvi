@@ -1,9 +1,6 @@
 use crate::reading::{BaseReading, FiveInOneReading};
 use acurite_core::formulas::{calc_dew_point, calc_heat_index, calc_wind_chill};
-use acurite_core::reader::Reader;
-use acurite_core::retry_manager::RetryManager;
-use acurite_core::writer::{WeatherReading, Writer};
-use serde_json::from_str;
+use acurite_core::{Reader, RetryManager, WeatherReading, Writer};
 
 pub struct Station {
     pub weather_reading: WeatherReading,
@@ -32,12 +29,12 @@ impl Station {
         // make sure read is successful
         if reader.read(&mut buf).is_ok() {
             // parse the bare minimum to get the model
-            if let Ok(reading) = from_str::<BaseReading>(buf.as_str()) {
+            if let Ok(reading) = BaseReading::from_string(&buf) {
                 // make sure the model is the 5n1
                 // TODO: Update json parser to more elegantly handle other acurite stations (mainly atlas)
                 if reading.model == "Acurite-5n1" {
                     // parse the full 5n1 message
-                    if let Ok(five_n_one) = from_str::<FiveInOneReading>(buf.as_str()) {
+                    if let Ok(five_n_one) = FiveInOneReading::from_string(&buf) {
                         // the message will come in 3 things (0 base indexed) only grab the last one
                         if five_n_one.sequence_num == 2 {
                             // update the weather reading in place
