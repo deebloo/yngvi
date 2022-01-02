@@ -2,9 +2,7 @@ use chrono::Utc;
 use tokio::time::{sleep, Duration};
 
 use acurite_core::formulas::{calc_dew_point, calc_heat_index, calc_wind_chill};
-use acurite_core::reader::Reader;
-use acurite_core::retry_manager::RetryManager;
-use acurite_core::writer::{WeatherReading, Writer};
+use acurite_core::{Reader, RetryManager, WeatherReading, Writer};
 
 type Report1 = [u8; 10];
 
