@@ -36,7 +36,7 @@ impl Station {
                     // parse the full 5n1 message
                     if let Ok(five_n_one) = FiveInOneReading::from_string(&buf) {
                         // the message will come in 3 things (0 base indexed) only grab the last one
-                        if five_n_one.sequence_num == 2 {
+                        if five_n_one.sequence_num == 0 {
                             // update the weather reading in place
                             self.update_weather_reading(&five_n_one);
 
