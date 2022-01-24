@@ -11,5 +11,5 @@ async-trait = "0.1.52"
 chrono = "0.4.19"
 influxdb = { version = "0.5.1", features = ["derive"] }
 serde = "1.0.133"
-serde_json = "1.0.75"
+serde_json = "1.0.78"
 acurite_core = { path = "../core" }
