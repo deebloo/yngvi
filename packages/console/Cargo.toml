@@ -10,5 +10,5 @@ edition = "2018"
 tokio = { version = "1.19.2", features = ["full"] }
 chrono = "0.4.19"
 serde = "1.0.139"
-serde_json = "1.0.81"
+serde_json = "1.0.82"
 acurite_core = { path = "../core" }
