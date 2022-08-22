@@ -9,7 +9,7 @@ edition = "2018"
 [dependencies]
 tokio = { version = "1.20.0", features = ["full"] }
 async-trait = "0.1.56"
-chrono = "0.4.19"
+chrono = "0.4.22"
 hidapi = "1.4.1"
 serde = "1.0.139"
 serde_json = "1.0.82"
