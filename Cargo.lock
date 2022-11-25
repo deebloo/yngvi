@@ -135,9 +135,9 @@ checksum = "baf1de4339761588bc0619e3cbc0120ee582ebb74b53b4efbf79117bd2da40fd"
 
 [[package]]
 name = "chrono"
-version = "0.4.22"
+version = "0.4.23"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "bfd4d1b31faaa3a89d7934dbded3111da0d2ef28e3ebccdb4f0179f5929d1ef1"
+checksum = "16b0a3d9ed01224b22057780a37bb8c5dbfe1be8ba48678e7bf57ec4b385411f"
 dependencies = [
  "iana-time-zone",
  "js-sys",
@@ -268,13 +268,14 @@ dependencies = [
 
 [[package]]
 name = "hidapi"
-version = "1.4.2"
+version = "1.5.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "9d26e1151deaab68f34fbfd16d491a2a0170cf98d69d3efa23873b567a4199e1"
+checksum = "798154e4b6570af74899d71155fb0072d5b17e6aa12f39c8ef22c60fb8ec99e7"
 dependencies = [
  "cc",
  "libc",
  "pkg-config",
+ "winapi",
 ]
 
 [[package]]
