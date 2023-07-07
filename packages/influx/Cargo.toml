@@ -10,6 +10,6 @@ edition = "2018"
 async-trait = "0.1.64"
 chrono = "0.4.26"
 influxdb = { version = "0.6.0", features = ["derive"] }
-serde = "1.0.159"
+serde = "1.0.167"
 serde_json = "1.0.99"
 acurite_core = { path = "../core" }
