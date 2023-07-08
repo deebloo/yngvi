@@ -19,7 +19,7 @@ services:
     ports:
       - 3000:3000
     environment:
-      - GF_SERVER_ROOT_URL=http://localhost/grafana
+      - GF_SERVER_ROOT_URL=http://192.168.4.168/grafana
       - GF_SERVER_SERVE_FROM_SUB_PATH=true
     volumes:
       - grafana_data:/var/lib/grafana
