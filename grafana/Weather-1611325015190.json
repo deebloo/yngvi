@@ -3,7 +3,10 @@
     "list": [
       {
         "builtIn": 1,
-        "datasource": "-- Grafana --",
+        "datasource": {
+          "type": "datasource",
+          "uid": "grafana"
+        },
         "enable": true,
         "hide": true,
         "iconColor": "rgba(0, 211, 255, 1)",
@@ -19,14 +22,17 @@
     ]
   },
   "editable": true,
-  "gnetId": null,
+  "fiscalYearStartMonth": 0,
   "graphTooltip": 2,
   "id": 1,
-  "iteration": 1628630204172,
   "links": [],
+  "liveNow": false,
   "panels": [
     {
-      "datasource": "InfluxDB",
+      "datasource": {
+        "type": "influxdb",
+        "uid": "WdCILugRk"
+      },
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -70,9 +76,13 @@
         "text": {},
         "textMode": "auto"
       },
-      "pluginVersion": "8.1.1",
+      "pluginVersion": "10.0.1",
       "targets": [
         {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "WdCILugRk"
+          },
           "groupBy": [],
           "measurement": "weather",
           "orderByTime": "ASC",
@@ -92,13 +102,14 @@
           "tags": []
         }
       ],
-      "timeFrom": null,
-      "timeShift": null,
       "title": "Temp",
       "type": "stat"
     },
     {
-      "datasource": null,
+      "datasource": {
+        "type": "influxdb",
+        "uid": "WdCILugRk"
+      },
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -175,6 +186,8 @@
       "id": 26,
       "options": {
         "displayMode": "lcd",
+        "minVizHeight": 10,
+        "minVizWidth": 0,
         "orientation": "horizontal",
         "reduceOptions": {
           "calcs": [
@@ -184,13 +197,19 @@
           "values": false
         },
         "showUnfilled": true,
-        "text": {}
+        "text": {},
+        "valueMode": "color"
       },
-      "pluginVersion": "8.1.1",
+      "pluginVersion": "10.0.1",
       "targets": [
         {
           "alias": "Heat Index",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "WdCILugRk"
+          },
           "groupBy": [],
+          "hide": false,
           "measurement": "weather",
           "orderByTime": "ASC",
           "policy": "autogen",
@@ -210,13 +229,15 @@
         },
         {
           "alias": "Wind Chill",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "WdCILugRk"
+          },
           "groupBy": [],
           "hide": false,
           "measurement": "weather",
           "orderByTime": "ASC",
-          "policy": [
-            "autogen"
-          ],
+          "policy": "autogen",
           "refId": "B",
           "resultFormat": "time_series",
           "select": [
@@ -233,13 +254,15 @@
         },
         {
           "alias": "Dew Point",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "WdCILugRk"
+          },
           "groupBy": [],
           "hide": false,
           "measurement": "weather",
           "orderByTime": "ASC",
-          "policy": [
-            "autogen"
-          ],
+          "policy": "autogen",
           "refId": "C",
           "resultFormat": "time_series",
           "select": [
@@ -255,12 +278,13 @@
           "tags": []
         }
       ],
-      "timeFrom": null,
-      "timeShift": null,
       "type": "bargauge"
     },
     {
-      "datasource": null,
+      "datasource": {
+        "type": "influxdb",
+        "uid": "WdCILugRk"
+      },
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -307,9 +331,13 @@
         "text": {},
         "textMode": "auto"
       },
-      "pluginVersion": "8.1.1",
+      "pluginVersion": "10.0.1",
       "targets": [
         {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "WdCILugRk"
+          },
           "groupBy": [],
           "measurement": "weather",
           "orderByTime": "ASC",
@@ -329,13 +357,14 @@
           "tags": []
         }
       ],
-      "timeFrom": null,
-      "timeShift": null,
       "title": "Wind Speed",
       "type": "stat"
     },
     {
-      "datasource": null,
+      "datasource": {
+        "type": "influxdb",
+        "uid": "WdCILugRk"
+      },
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -444,9 +473,13 @@
         "text": {},
         "textMode": "auto"
       },
-      "pluginVersion": "8.1.1",
+      "pluginVersion": "10.0.1",
       "targets": [
         {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "WdCILugRk"
+          },
           "groupBy": [],
           "measurement": "weather",
           "orderByTime": "ASC",
@@ -466,13 +499,14 @@
           "tags": []
         }
       ],
-      "timeFrom": null,
-      "timeShift": null,
       "title": "Wind Dir",
       "type": "stat"
     },
     {
-      "datasource": null,
+      "datasource": {
+        "type": "influxdb",
+        "uid": "WdCILugRk"
+      },
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -517,9 +551,13 @@
         "text": {},
         "textMode": "auto"
       },
-      "pluginVersion": "8.1.1",
+      "pluginVersion": "10.0.1",
       "targets": [
         {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "WdCILugRk"
+          },
           "groupBy": [],
           "measurement": "weather",
           "orderByTime": "ASC",
@@ -539,13 +577,14 @@
           "tags": []
         }
       ],
-      "timeFrom": null,
-      "timeShift": null,
       "title": "Humidity",
       "type": "stat"
     },
     {
-      "datasource": null,
+      "datasource": {
+        "type": "influxdb",
+        "uid": "WdCILugRk"
+      },
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -589,9 +628,13 @@
         "text": {},
         "textMode": "auto"
       },
-      "pluginVersion": "8.1.1",
+      "pluginVersion": "10.0.1",
       "targets": [
         {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "WdCILugRk"
+          },
           "groupBy": [],
           "measurement": "weather",
           "orderByTime": "ASC",
@@ -613,19 +656,22 @@
           "tags": []
         }
       ],
-      "timeFrom": null,
-      "timeShift": null,
       "title": "Rain",
       "type": "stat"
     },
     {
-      "datasource": "InfluxDB",
+      "datasource": {
+        "type": "influxdb",
+        "uid": "WdCILugRk"
+      },
       "fieldConfig": {
         "defaults": {
           "color": {
             "mode": "palette-classic"
           },
           "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
@@ -744,56 +790,22 @@
         "legend": {
           "calcs": [],
           "displayMode": "list",
-          "placement": "bottom"
+          "placement": "bottom",
+          "showLegend": true
         },
         "tooltip": {
-          "mode": "single"
+          "mode": "single",
+          "sort": "none"
         }
       },
       "pluginVersion": "8.0.5",
       "targets": [
         {
-          "alias": "Wind Chill",
-          "groupBy": [
-            {
-              "params": [
-                "$weather_grouping"
-              ],
-              "type": "time"
-            },
-            {
-              "params": [
-                "none"
-              ],
-              "type": "fill"
-            }
-          ],
-          "hide": false,
-          "measurement": "weather",
-          "orderByTime": "ASC",
-          "policy": "autogen",
-          "query": "SELECT min(\"wind_chill\") FROM \"autogen\".\"weather\" WHERE $timeFilter GROUP BY time(10m)",
-          "rawQuery": false,
-          "refId": "B",
-          "resultFormat": "time_series",
-          "select": [
-            [
-              {
-                "params": [
-                  "wind_chill"
-                ],
-                "type": "field"
-              },
-              {
-                "params": [],
-                "type": "mean"
-              }
-            ]
-          ],
-          "tags": []
-        },
-        {
           "alias": "Heat Index",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "WdCILugRk"
+          },
           "groupBy": [
             {
               "params": [
@@ -812,9 +824,7 @@
           "measurement": "weather",
           "orderByTime": "ASC",
           "policy": "autogen",
-          "query": "SELECT min(\"wind_chill\") FROM \"autogen\".\"weather\" WHERE $timeFilter GROUP BY time(10m)",
-          "rawQuery": false,
-          "refId": "C",
+          "refId": "B",
           "resultFormat": "time_series",
           "select": [
             [
@@ -833,7 +843,11 @@
           "tags": []
         },
         {
-          "alias": "Dew Point",
+          "alias": "Wind Chill",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "WdCILugRk"
+          },
           "groupBy": [
             {
               "params": [
@@ -851,9 +865,91 @@
           "hide": false,
           "measurement": "weather",
           "orderByTime": "ASC",
-          "policy": [
-            "autogen"
+          "policy": "autogen",
+          "refId": "C",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "wind_chill"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "mean"
+              }
+            ]
           ],
+          "tags": []
+        },
+        {
+          "alias": "Out Temp",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "WdCILugRk"
+          },
+          "groupBy": [
+            {
+              "params": [
+                "$weather_grouping"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "none"
+              ],
+              "type": "fill"
+            }
+          ],
+          "hide": false,
+          "measurement": "weather",
+          "orderByTime": "ASC",
+          "policy": "autogen",
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "out_temp"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "mean"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "Dew Point",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "WdCILugRk"
+          },
+          "groupBy": [
+            {
+              "params": [
+                "$weather_grouping"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "none"
+              ],
+              "type": "fill"
+            }
+          ],
+          "hide": false,
+          "measurement": "weather",
+          "orderByTime": "ASC",
+          "policy": "autogen",
           "refId": "D",
           "resultFormat": "time_series",
           "select": [
@@ -871,57 +967,16 @@
             ]
           ],
           "tags": []
-        },
-        {
-          "alias": "Out Temp",
-          "groupBy": [
-            {
-              "params": [
-                "$weather_grouping"
-              ],
-              "type": "time"
-            },
-            {
-              "params": [
-                "none"
-              ],
-              "type": "fill"
-            }
-          ],
-          "hide": false,
-          "limit": "",
-          "measurement": "weather",
-          "orderByTime": "ASC",
-          "policy": "autogen",
-          "query": "SELECT mean(\"value\") FROM \"measurement\" WHERE $timeFilter GROUP BY time($__interval) fill(null)",
-          "rawQuery": false,
-          "refId": "A",
-          "resultFormat": "time_series",
-          "select": [
-            [
-              {
-                "params": [
-                  "out_temp"
-                ],
-                "type": "field"
-              },
-              {
-                "params": [],
-                "type": "mean"
-              }
-            ]
-          ],
-          "slimit": "",
-          "tags": []
         }
       ],
-      "timeFrom": null,
-      "timeShift": null,
       "title": "Temp",
       "type": "timeseries"
     },
     {
-      "datasource": null,
+      "datasource": {
+        "type": "influxdb",
+        "uid": "WdCILugRk"
+      },
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -965,9 +1020,13 @@
         "text": {},
         "textMode": "auto"
       },
-      "pluginVersion": "8.1.1",
+      "pluginVersion": "10.0.1",
       "targets": [
         {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "WdCILugRk"
+          },
           "groupBy": [],
           "measurement": "weather",
           "orderByTime": "ASC",
@@ -989,8 +1048,6 @@
           "tags": []
         }
       ],
-      "timeFrom": null,
-      "timeShift": null,
       "title": "Temp",
       "transformations": [
         {
@@ -1010,12 +1067,19 @@
           "options": {
             "valueLabel": "reducer"
           }
+        },
+        {
+          "id": "merge",
+          "options": {}
         }
       ],
       "type": "stat"
     },
     {
-      "datasource": null,
+      "datasource": {
+        "type": "influxdb",
+        "uid": "WdCILugRk"
+      },
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -1063,9 +1127,13 @@
         "text": {},
         "textMode": "auto"
       },
-      "pluginVersion": "8.1.1",
+      "pluginVersion": "10.0.1",
       "targets": [
         {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "WdCILugRk"
+          },
           "groupBy": [],
           "measurement": "weather",
           "orderByTime": "ASC",
@@ -1087,8 +1155,6 @@
           "tags": []
         }
       ],
-      "timeFrom": null,
-      "timeShift": null,
       "title": "Wind Chill",
       "transformations": [
         {
@@ -1108,12 +1174,19 @@
           "options": {
             "valueLabel": "reducer"
           }
+        },
+        {
+          "id": "merge",
+          "options": {}
         }
       ],
       "type": "stat"
     },
     {
-      "datasource": null,
+      "datasource": {
+        "type": "influxdb",
+        "uid": "WdCILugRk"
+      },
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -1161,10 +1234,14 @@
         "text": {},
         "textMode": "auto"
       },
-      "pluginVersion": "8.1.1",
+      "pluginVersion": "10.0.1",
       "targets": [
         {
           "alias": "Heat Index",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "WdCILugRk"
+          },
           "groupBy": [],
           "measurement": "weather",
           "orderByTime": "ASC",
@@ -1186,8 +1263,6 @@
           "tags": []
         }
       ],
-      "timeFrom": null,
-      "timeShift": null,
       "title": "Heat Index",
       "transformations": [
         {
@@ -1207,12 +1282,19 @@
           "options": {
             "valueLabel": "reducer"
           }
+        },
+        {
+          "id": "merge",
+          "options": {}
         }
       ],
       "type": "stat"
     },
     {
-      "datasource": null,
+      "datasource": {
+        "type": "influxdb",
+        "uid": "WdCILugRk"
+      },
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -1260,10 +1342,14 @@
         "text": {},
         "textMode": "auto"
       },
-      "pluginVersion": "8.1.1",
+      "pluginVersion": "10.0.1",
       "targets": [
         {
           "alias": "Wind Speed",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "WdCILugRk"
+          },
           "groupBy": [],
           "measurement": "weather",
           "orderByTime": "ASC",
@@ -1285,8 +1371,6 @@
           "tags": []
         }
       ],
-      "timeFrom": null,
-      "timeShift": null,
       "transformations": [
         {
           "id": "reduce",
@@ -1305,12 +1389,19 @@
           "options": {
             "valueLabel": "reducer"
           }
+        },
+        {
+          "id": "merge",
+          "options": {}
         }
       ],
       "type": "stat"
     },
     {
-      "datasource": "InfluxDB",
+      "datasource": {
+        "type": "influxdb",
+        "uid": "WdCILugRk"
+      },
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -1318,6 +1409,8 @@
             "mode": "fixed"
           },
           "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
@@ -1375,17 +1468,23 @@
       "options": {
         "legend": {
           "calcs": [],
-          "displayMode": "hidden",
-          "placement": "bottom"
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": false
         },
         "tooltip": {
-          "mode": "single"
+          "mode": "single",
+          "sort": "none"
         }
       },
       "pluginVersion": "8.0.5",
       "targets": [
         {
           "alias": "Wind Speed",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "WdCILugRk"
+          },
           "groupBy": [
             {
               "params": [
@@ -1424,13 +1523,14 @@
           "tags": []
         }
       ],
-      "timeFrom": null,
-      "timeShift": null,
       "title": "Wind Speed",
       "type": "timeseries"
     },
     {
-      "datasource": null,
+      "datasource": {
+        "type": "influxdb",
+        "uid": "WdCILugRk"
+      },
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -1438,6 +1538,8 @@
             "mode": "fixed"
           },
           "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
@@ -1487,7 +1589,7 @@
       },
       "gridPos": {
         "h": 10,
-        "w": 10,
+        "w": 13,
         "x": 0,
         "y": 30
       },
@@ -1495,19 +1597,25 @@
       "options": {
         "legend": {
           "calcs": [
-            "sum"
+            "lastNotNull"
           ],
           "displayMode": "table",
-          "placement": "bottom"
+          "placement": "bottom",
+          "showLegend": true
         },
         "tooltip": {
-          "mode": "single"
+          "mode": "single",
+          "sort": "none"
         }
       },
       "pluginVersion": "8.0.5",
       "targets": [
         {
           "alias": "Rain",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "WdCILugRk"
+          },
           "groupBy": [
             {
               "params": [
@@ -1538,25 +1646,32 @@
               {
                 "params": [],
                 "type": "sum"
+              },
+              {
+                "params": [],
+                "type": "cumulative_sum"
               }
             ]
           ],
           "tags": []
         }
       ],
-      "timeFrom": null,
-      "timeShift": null,
       "title": "Rain",
       "type": "timeseries"
     },
     {
-      "datasource": null,
+      "datasource": {
+        "type": "influxdb",
+        "uid": "WdCILugRk"
+      },
       "fieldConfig": {
         "defaults": {
           "color": {
             "mode": "palette-classic"
           },
           "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
@@ -1623,25 +1738,31 @@
       },
       "gridPos": {
         "h": 10,
-        "w": 12,
-        "x": 10,
+        "w": 9,
+        "x": 13,
         "y": 30
       },
       "id": 17,
       "options": {
         "legend": {
           "calcs": [],
-          "displayMode": "hidden",
-          "placement": "bottom"
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": false
         },
         "tooltip": {
-          "mode": "single"
+          "mode": "single",
+          "sort": "none"
         }
       },
       "pluginVersion": "8.0.5",
       "targets": [
         {
           "alias": "Humidity",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "WdCILugRk"
+          },
           "groupBy": [
             {
               "params": [
@@ -1678,13 +1799,14 @@
           "tags": []
         }
       ],
-      "timeFrom": null,
-      "timeShift": null,
       "title": "Humidity",
       "type": "timeseries"
     },
     {
-      "datasource": null,
+      "datasource": {
+        "type": "influxdb",
+        "uid": "WdCILugRk"
+      },
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -1734,10 +1856,14 @@
         "text": {},
         "textMode": "auto"
       },
-      "pluginVersion": "8.1.1",
+      "pluginVersion": "10.0.1",
       "targets": [
         {
           "alias": "Wind Speed",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "WdCILugRk"
+          },
           "groupBy": [],
           "measurement": "weather",
           "orderByTime": "ASC",
@@ -1759,8 +1885,6 @@
           "tags": []
         }
       ],
-      "timeFrom": null,
-      "timeShift": null,
       "transformations": [
         {
           "id": "reduce",
@@ -1779,13 +1903,17 @@
           "options": {
             "valueLabel": "reducer"
           }
+        },
+        {
+          "id": "merge",
+          "options": {}
         }
       ],
       "type": "stat"
     }
   ],
-  "refresh": "5s",
-  "schemaVersion": 30,
+  "refresh": "",
+  "schemaVersion": 38,
   "style": "dark",
   "tags": [],
   "templating": {
@@ -1799,16 +1927,18 @@
           "text": "10m",
           "value": "10m"
         },
-        "description": null,
-        "error": null,
         "hide": 0,
-        "label": null,
         "name": "weather_grouping",
         "options": [
           {
             "selected": true,
             "text": "10m",
             "value": "10m"
+          },
+          {
+            "selected": false,
+            "text": "30m",
+            "value": "30m"
           },
           {
             "selected": false,
@@ -1841,7 +1971,7 @@
             "value": "30d"
           }
         ],
-        "query": "10m,1h,6h,12h,1d,7d,30d",
+        "query": "10m,30m,1h,6h,12h,1d,7d,30d",
         "queryValue": "",
         "refresh": 2,
         "skipUrlSync": false,
@@ -1850,7 +1980,7 @@
     ]
   },
   "time": {
-    "from": "now/d",
+    "from": "now/w",
     "to": "now"
   },
   "timepicker": {
@@ -1870,5 +2000,6 @@
   "timezone": "browser",
   "title": "Weather",
   "uid": "RadSLXRgz",
-  "version": 55
+  "version": 74,
+  "weekStart": ""
 }
