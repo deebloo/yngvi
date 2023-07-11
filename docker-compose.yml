@@ -14,7 +14,7 @@ services:
 
   grafana:
     container_name: grafana
-    image: grafana/grafana-enterprise:10.0.1
+    image: grafana/grafana-enterprise:10.0.2
     restart: always
     ports:
       - 3000:3000
