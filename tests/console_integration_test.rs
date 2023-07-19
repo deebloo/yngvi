@@ -30,6 +30,8 @@ async fn shold_read_and_record_readings() {
     let rain_delta: Vec<Option<f32>> = data.clone().map(|r| r.rain_delta).collect();
     let wind_speed: Vec<Option<f32>> = data.clone().map(|r| r.wind_speed).collect();
     let wind_dir: Vec<Option<f32>> = data.clone().map(|r| r.wind_dir).collect();
+    let wind_dir_cardinal: Vec<Option<&'static str>> =
+        data.clone().map(|r| r.wind_dir_cardinal).collect();
     let out_temp: Vec<Option<f32>> = data.clone().map(|r| r.out_temp).collect();
     let out_humid: Vec<Option<u8>> = data.clone().map(|r| r.out_humid).collect();
     let wind_chill: Vec<Option<f32>> = data.clone().map(|r| r.wind_chill).collect();
@@ -40,6 +42,7 @@ async fn shold_read_and_record_readings() {
     assert_eq!(rain_delta, [None, None, None]);
     assert_eq!(wind_speed, [Some(0.0), Some(0.0), Some(0.0)]);
     assert_eq!(wind_dir, [None, None, None]);
+    assert_eq!(wind_dir_cardinal, [None, None, None]);
     assert_eq!(
         out_temp,
         [Some(31.499998), Some(31.499998), Some(31.499998)]

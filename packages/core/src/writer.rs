@@ -38,8 +38,8 @@ impl fmt::Display for WeatherReading {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         write!(
             f,
-            "#### {:?} #### \nrain: {:?} rain_delta: {:?} \nwind_speed: {:?} wind_dir: {:?} \ntemp: {:?} humidity: {:?} \nwind_chill: {:?} heat_index: {:?} dew_point: {:?} \n###### END ######\n",
-            self.time, self.rain, self.rain_delta, self.wind_speed, self.wind_dir, self.out_temp, self.out_humid, self.wind_chill, self.heat_index, self.dew_point
+            "#### {:?} #### \nrain: {:?} rain_delta: {:?} \nwind_speed: {:?} wind_dir: {:?} \nwind_dir_cardinal: {:?} \ntemp: {:?} humidity: {:?} \nwind_chill: {:?} heat_index: {:?} dew_point: {:?} \n###### END ######\n",
+            self.time, self.rain, self.rain_delta, self.wind_speed, self.wind_dir, self.wind_dir_cardinal, self.out_temp, self.out_humid, self.wind_chill, self.heat_index, self.dew_point
         )
     }
 }
