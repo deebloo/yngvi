@@ -59,7 +59,6 @@ impl Writer for InfluxWriter {
 
         if let Ok(_) = res {
             println!("Succssful write to Influxdb");
-            println!("{}", weather_reading);
 
             Ok(())
         } else {
