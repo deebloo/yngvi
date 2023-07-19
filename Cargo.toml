@@ -16,3 +16,8 @@ acurite_core = { path = "packages/core" }
 acurite_console = { path = "packages/console" }
 acurite_rtl_433 = { path = "packages/rtl_433" }
 acurite_influx = { path = "packages/influx" }
+
+[workspace]
+members = [
+    "packages/*",
+]
