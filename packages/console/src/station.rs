@@ -2,7 +2,7 @@ use chrono::Utc;
 use tokio::time::{sleep, Duration};
 
 use acurite_core::formulas::{calc_dew_point, calc_heat_index, calc_wind_chill};
-use acurite_core::{Reader, RetryManager, WeatherReading, Writer};
+use acurite_core::{wind_dir_to_cardinal, Reader, RetryManager, WeatherReading, Writer};
 
 type Report1 = [u8; 10];
 
@@ -93,7 +93,12 @@ impl Station {
                 }
 
                 self.weather_reading.rain = Some(new_rain_total);
-                self.weather_reading.wind_dir = Some(Self::decode_wind_dir(&data));
+
+                let wind_dir = Self::decode_wind_dir(&data);
+                let wind_dir_cardinal = Self::decode_wind_dir_cardinal(wind_dir);
+
+                self.weather_reading.wind_dir = Some(wind_dir);
+                self.weather_reading.wind_dir_cardinal = Some(wind_dir_cardinal);
             }
             8 => {
                 // 2. Outdoor temp
@@ -148,6 +153,11 @@ impl Station {
         let index = data[5] & 0x0f;
 
         WIND_DIR_BY_IDX[index as usize]
+    }
+
+    // implement
+    fn decode_wind_dir_cardinal(wind_dir: f32) -> &'static str {
+        wind_dir_to_cardinal(wind_dir)
     }
 
     fn validate_r1(data: &Report1) -> bool {
@@ -248,6 +258,7 @@ mod tests {
                 rain_delta: None,
                 wind_speed: Some(0.0),
                 wind_dir: None,
+                wind_dir_cardinal: None,
                 out_temp: Some(31.499998),
                 out_humid: Some(75),
                 wind_chill: Some(31.499998),

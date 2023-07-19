@@ -44,10 +44,12 @@ mod tests {
 
         let reading = WeatherReadingInflux::from_weather_reading(&WeatherReading {
             time,
+            device_id: None,
             rain: Some(1.0),
             rain_delta: Some(0.1),
             wind_speed: Some(1.0),
             wind_dir: Some(270.0),
+            wind_dir_cardinal: None,
             out_temp: Some(80.0),
             out_humid: Some(50),
             wind_chill: Some(70.0),

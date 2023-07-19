@@ -55,6 +55,20 @@ pub fn calc_dew_point(temp: f32, humid: u8) -> f32 {
     res * (9.0 / 5.0) + 32.
 }
 
+pub fn wind_dir_to_cardinal<'a>(wind_dir: f32) -> &'a str {
+    match wind_dir as u32 {
+        271..=359 => "NW",
+        181..=269 => "SW",
+        91..=179 => "SE",
+        1..=89 => "NE",
+        0 => "N",
+        90 => "E",
+        180 => "S",
+        270 => "W",
+        _ => "",
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -102,5 +116,27 @@ mod tests {
     #[test]
     fn calc_dewpoint_should_work() {
         assert_eq!(calc_dew_point(79., 50).round(), 59.0);
+    }
+
+    #[test]
+    fn map_correct_() {
+        // 271..=359 => "NW",
+        // 181..=269 => "SW",
+        // 91..=179 => "SE",
+        // 1..=89 => "NE",
+        // 0 => "N",
+        // 90 => "E",
+        // 180 => "S",
+        // 270 => "W",
+        // _ => "",
+
+        assert_eq!(wind_dir_to_cardinal(0), "N");
+        assert_eq!(wind_dir_to_cardinal(90), "E");
+        assert_eq!(wind_dir_to_cardinal(180), "S");
+        assert_eq!(wind_dir_to_cardinal(270), "W");
+        assert_eq!(wind_dir_to_cardinal(300), "NW");
+        assert_eq!(wind_dir_to_cardinal(200), "SW");
+        assert_eq!(wind_dir_to_cardinal(150), "NW");
+        assert_eq!(wind_dir_to_cardinal(50), "NW");
     }
 }
