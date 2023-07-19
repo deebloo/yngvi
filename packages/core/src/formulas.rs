@@ -119,24 +119,14 @@ mod tests {
     }
 
     #[test]
-    fn map_correct_() {
-        // 271..=359 => "NW",
-        // 181..=269 => "SW",
-        // 91..=179 => "SE",
-        // 1..=89 => "NE",
-        // 0 => "N",
-        // 90 => "E",
-        // 180 => "S",
-        // 270 => "W",
-        // _ => "",
-
-        assert_eq!(wind_dir_to_cardinal(0), "N");
-        assert_eq!(wind_dir_to_cardinal(90), "E");
-        assert_eq!(wind_dir_to_cardinal(180), "S");
-        assert_eq!(wind_dir_to_cardinal(270), "W");
-        assert_eq!(wind_dir_to_cardinal(300), "NW");
-        assert_eq!(wind_dir_to_cardinal(200), "SW");
-        assert_eq!(wind_dir_to_cardinal(150), "NW");
-        assert_eq!(wind_dir_to_cardinal(50), "NW");
+    fn map_correct_deg_to_direction() {
+        assert_eq!(wind_dir_to_cardinal(0.0), "N");
+        assert_eq!(wind_dir_to_cardinal(90.0), "E");
+        assert_eq!(wind_dir_to_cardinal(180.0), "S");
+        assert_eq!(wind_dir_to_cardinal(270.0), "W");
+        assert_eq!(wind_dir_to_cardinal(300.0), "NW");
+        assert_eq!(wind_dir_to_cardinal(200.0), "SW");
+        assert_eq!(wind_dir_to_cardinal(150.0), "SE");
+        assert_eq!(wind_dir_to_cardinal(50.0), "NE");
     }
 }

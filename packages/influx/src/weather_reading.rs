@@ -9,6 +9,7 @@ pub struct WeatherReadingInflux {
     pub rain_delta: Option<f32>,
     pub wind_speed: Option<f32>,
     pub wind_dir: Option<f32>,
+    pub wind_dir_cardinal: Option<&'static str>,
     pub out_temp: Option<f32>,
     pub out_humid: Option<u8>,
     pub wind_chill: Option<f32>,
@@ -24,6 +25,7 @@ impl WeatherReadingInflux {
             rain_delta: weather_reading.rain_delta,
             wind_speed: weather_reading.wind_speed,
             wind_dir: weather_reading.wind_dir,
+            wind_dir_cardinal: weather_reading.wind_dir_cardinal,
             out_temp: weather_reading.out_temp,
             out_humid: weather_reading.out_humid,
             wind_chill: weather_reading.wind_chill,
@@ -65,6 +67,7 @@ mod tests {
                 rain_delta: Some(0.1),
                 wind_speed: Some(1.0),
                 wind_dir: Some(270.0),
+                wind_dir_cardinal: Some("hello")
                 out_temp: Some(80.0),
                 out_humid: Some(50),
                 wind_chill: Some(70.0),

@@ -95,7 +95,7 @@ impl Station {
                 self.weather_reading.rain = Some(new_rain_total);
 
                 let wind_dir = Self::decode_wind_dir(&data);
-                let wind_dir_cardinal = Self::decode_wind_dir_cardinal(wind_dir);
+                let wind_dir_cardinal = wind_dir_to_cardinal(wind_dir);
 
                 self.weather_reading.wind_dir = Some(wind_dir);
                 self.weather_reading.wind_dir_cardinal = Some(wind_dir_cardinal);
@@ -153,11 +153,6 @@ impl Station {
         let index = data[5] & 0x0f;
 
         WIND_DIR_BY_IDX[index as usize]
-    }
-
-    // implement
-    fn decode_wind_dir_cardinal(wind_dir: f32) -> &'static str {
-        wind_dir_to_cardinal(wind_dir)
     }
 
     fn validate_r1(data: &Report1) -> bool {
