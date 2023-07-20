@@ -16,7 +16,7 @@ git clone https://github.com/deebloo/acurite-weather.git
 ### Run integration and unit tests
 
 ```BASH
-cargo test -p acurite -p acurite_core
+cargo test --workspace
 ```
 
 ### Create release build
