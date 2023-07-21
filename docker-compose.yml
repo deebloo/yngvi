@@ -1,12 +1,6 @@
 version: "3.9"
+
 services:
-  acurite:
-    container_name: acurite
-    build: .
-    privileged: true
-    volumes:
-      - /dev/bus/usb:/dev/bus/usb
-    
   influxdb:
     container_name: influxdb
     image: influxdb:1.8.10
