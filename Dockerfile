@@ -1,16 +1,19 @@
-FROM rust:1.67 as builder
+# Use a base image with the desired Linux distribution (e.g., Debian)
+FROM rust as builder
 
 WORKDIR /app
+
+RUN apt-get update -y
+RUN apt-get install -y libusb-1.0-0-dev
+
 COPY Cargo.toml Cargo.toml
 COPY Cargo.lock Cargo.lock
 COPY src src
 COPY packages packages
 
-RUN apt-get install -y libusb-1.0-0-dev
-
 RUN cargo build --release
 
-FROM debian:bullseye-slim
+FROM debian:stable
 
 RUN apt-get update -y
 RUN apt-get install -y libusb-1.0-0-dev
