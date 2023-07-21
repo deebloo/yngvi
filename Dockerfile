@@ -6,11 +6,15 @@ COPY Cargo.lock Cargo.lock
 COPY src src
 COPY packages packages
 
-RUN apt-get update -y
 RUN apt-get install -y libusb-1.0-0-dev
 
 RUN cargo build --release
 
-RUN cp /app/target/release/acurite /usr/local/bin/acurite
+FROM debian:bullseye-slim
+
+RUN apt-get update -y
+RUN apt-get install -y libusb-1.0-0-dev
+
+COPY --from=builder /app/target/release/acurite /usr/local/bin/acurite
 
 CMD ["acurite"]
