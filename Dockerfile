@@ -11,11 +11,6 @@ RUN apt-get install -y libusb-1.0-0-dev
 
 RUN cargo build --release
 
-FROM debian:stable
-
-RUN apt-get update -y
-RUN apt-get install -y libusb-1.0-0-dev
-
-COPY --from=builder /app/target/release/acurite /usr/local/bin/acurite
+RUN cp /app/target/release/acurite /usr/local/bin/acurite
 
 CMD ["acurite"]
