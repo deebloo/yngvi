@@ -22,6 +22,8 @@ async fn main() {
         station: Station::CONSOLE,
     });
 
+    println!("Booking up with config: {:?}", program_config);
+
     let mut writer = InfluxWriter::new();
 
     match program_config.station {
