@@ -1,5 +1,7 @@
 use crate::reading::{BaseReading, FiveInOneReading};
-use acurite_core::formulas::{calc_dew_point, calc_heat_index, calc_wind_chill};
+use acurite_core::formulas::{
+    calc_dew_point, calc_heat_index, calc_wind_chill, wind_dir_to_cardinal,
+};
 use acurite_core::{Reader, RetryManager, WeatherReading, Writer};
 
 pub struct Station {
@@ -86,6 +88,9 @@ impl Station {
         // update wind direction
         if let Some(wind_direction) = data.wind_dir_deg {
             self.weather_reading.wind_dir = Some(wind_direction);
+
+            let wind_dir_cardinal = wind_dir_to_cardinal(wind_direction);
+            self.weather_reading.wind_dir_cardinal = Some(wind_dir_cardinal)
         }
     }
 
