@@ -7,6 +7,12 @@ Dashboard for weather data collected from Acurite 5-1 weather station. In one of
 1) Indoor Acurite console
 2) RTL-433
 
+### Config
+
+Configuration is read from a json file at /etc/acurite/config.json
+The core program and all packages read and parse their config from the same file with prefixed properties.
+
+
 ### Pull latest code
 
 ```BASH

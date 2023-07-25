@@ -1,6 +1,14 @@
 version: "3.9"
 
 services:
+  # acurite:
+  #   container_name: acurite
+  #   build: .
+  #   privileged: true
+  #   volumes:
+  #     - ./config.json:/etc/acurite/config.json
+  #     - /dev/bus/usb:/dev/bus/usb
+
   influxdb:
     container_name: influxdb
     image: influxdb:1.8.10
@@ -25,17 +33,6 @@ services:
       - grafana_data:/var/lib/grafana
     depends_on:
       - influxdb
-
-  # nginx:
-  #   container_name: nginx
-  #   image: nginx:1.21.4
-  #   restart: always
-  #   ports:
-  #     - 80:80
-  #   volumes:
-  #     - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf
-  #   depends_on:
-  #     - grafana
 
 volumes:
   influxdb_data:
