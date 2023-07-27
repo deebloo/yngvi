@@ -8,6 +8,6 @@ edition = "2018"
 
 [dependencies]
 chrono = "0.4.26"
-serde = "1.0.175"
+serde = "1.0.176"
 serde_json = "1.0.103"
 acurite_core = { path = "../core" }
