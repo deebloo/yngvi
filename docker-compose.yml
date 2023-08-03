@@ -5,8 +5,11 @@ services:
   #   container_name: acurite
   #   build: .
   #   privileged: true
+  #   environment:
+  #     - AR_SOURCE=CONSOLE
+  #     - AR_INFLUXDB_URL=influxdb:8089
+  #     - AR_INFLUXDB_DB=weather
   #   volumes:
-  #     - ./config.json:/etc/acurite/config.json
   #     - /dev/bus/usb:/dev/bus/usb
 
   influxdb:

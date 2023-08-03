@@ -1,51 +1,22 @@
-use acurite_core::config;
 use acurite_core::{WeatherReading, Writer};
 use async_trait::async_trait;
 use influxdb::{Client, InfluxDbWriteable};
-use serde::Deserialize;
+use std::env;
 
 use crate::WeatherReadingInflux;
 
-#[derive(Deserialize, Debug, Clone)]
-pub struct InfluxConfig {
-    pub influx_addr: Option<String>,
-    pub influx_db: Option<String>,
-}
-
 pub struct InfluxWriter {
     client: Client,
-
-    #[allow(dead_code)]
-    config: InfluxConfig,
 }
 
 impl InfluxWriter {
     pub fn new() -> Self {
-        let config = Self::read_config();
+        let url = env::var("AR_INFLUXDB_URL").unwrap_or("http://localhos:t8086".to_string());
+        let database = env::var("AR_INFLUXDB_DB").unwrap_or("weather".to_string());
 
-        let client = Client::new(
-            config.influx_addr.as_ref().unwrap(),
-            config.influx_db.as_ref().unwrap(),
-        );
+        let client = Client::new(url, database);
 
-        Self { client, config }
-    }
-
-    fn read_config() -> InfluxConfig {
-        let mut config = config::read_config::<InfluxConfig>().unwrap_or(InfluxConfig {
-            influx_addr: None,
-            influx_db: None,
-        });
-
-        if config.influx_addr.is_none() {
-            config.influx_addr = Some("http://localhost:8086".to_string());
-        }
-
-        if config.influx_db.is_none() {
-            config.influx_db = Some("weather".to_string());
-        }
-
-        config
+        Self { client }
     }
 }
 

@@ -1,5 +1,0 @@
-{
-  "station": "CONSOLE",
-  "influx_db": "weather",
-  "influx_addr": "http://influxdb:8086"
-}
