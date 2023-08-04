@@ -11,14 +11,14 @@ async fn main() {
 
     match source.to_uppercase().as_str() {
         "CONSOLE" => {
-            let mut reader = acurite_core::HidReader::new(0x24c0, 0x003);
             let mut station = acurite_console::Station::new();
+            let mut reader = acurite_core::HidReader::new(0x24c0, 0x003);
 
             station.start(&mut reader, &mut writer).await;
         }
         "RTL433" => {
-            let mut reader = acurite_rtl_433::RTL433Reader::new().unwrap();
             let mut station = acurite_rtl_433::Station::new();
+            let mut reader = acurite_rtl_433::RTL433Reader::new().unwrap();
 
             station.start(&mut reader, &mut writer).await;
         }

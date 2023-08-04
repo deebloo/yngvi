@@ -31,7 +31,8 @@ impl RetryManager {
             }
 
             for r in writes_to_clear {
-                self.failed_writes.retain(|x| x.time != r.time)
+                self.failed_writes
+                    .retain(|x: &WeatherReading| x.time != r.time)
             }
         }
     }
