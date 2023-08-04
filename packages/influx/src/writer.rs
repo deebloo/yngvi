@@ -14,6 +14,8 @@ impl InfluxWriter {
         let url = env::var("AR_INFLUXDB_URL").unwrap_or("http://localhost:8086".to_string());
         let database = env::var("AR_INFLUXDB_DB").unwrap_or("weather".to_string());
 
+        println!("Writing to InfluxDB at {} into {}", url, database);
+
         let client = Client::new(url, database);
 
         Self { client }
