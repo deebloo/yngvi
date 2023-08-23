@@ -12,9 +12,12 @@ async fn main() {
     match source.to_uppercase().as_str() {
         "CONSOLE" => {
             let mut station = acurite_console::Station::new();
-            let mut reader = acurite_core::HidReader::new(0x24c0, 0x003);
 
-            station.start(&mut reader, &mut writer).await;
+            if let Ok(mut reader) = acurite_core::HidReader::new(0x24c0, 0x003) {
+                station.start(&mut reader, &mut writer).await;
+            } else {
+                println!("Could not start HID Reader");
+            }
         }
         "RTL433" => {
             let mut station = acurite_rtl_433::Station::new();

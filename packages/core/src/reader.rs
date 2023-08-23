@@ -36,11 +36,11 @@ pub struct HidReader {
 }
 
 impl HidReader {
-    pub fn new(vid: u16, pid: u16) -> Self {
-        Self {
-            hid: HidApi::new().unwrap(),
-            vid,
-            pid,
+    pub fn new(vid: u16, pid: u16) -> Result<Self, ()> {
+        if let Ok(hid) = HidApi::new() {
+            Ok(Self { hid, vid, pid })
+        } else {
+            Err(())
         }
     }
 }
