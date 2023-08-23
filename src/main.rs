@@ -18,9 +18,12 @@ async fn main() {
         }
         "RTL433" => {
             let mut station = acurite_rtl_433::Station::new();
-            let mut reader = acurite_rtl_433::RTL433Reader::new().unwrap();
 
-            station.start(&mut reader, &mut writer).await;
+            if let Ok(mut reader) = acurite_rtl_433::RTL433Reader::new() {
+                station.start(&mut reader, &mut writer).await;
+            } else {
+                println!("Could not start RTL433 Reader. Make sure it is installed properly");
+            }
         }
         _ => {}
     }
