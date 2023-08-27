@@ -1,8 +1,6 @@
 use crate::reading::{BaseReading, FiveInOneReading};
-use acurite_core::formulas::{
-    calc_dew_point, calc_heat_index, calc_wind_chill, wind_dir_to_cardinal,
-};
-use acurite_core::{Reader, RetryManager, WeatherReading, Writer};
+use weather::formulas::{calc_dew_point, calc_heat_index, calc_wind_chill, wind_dir_to_cardinal};
+use weather::{Reader, RetryManager, WeatherReading, Writer};
 
 pub struct Station {
     pub weather_reading: WeatherReading,
