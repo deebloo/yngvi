@@ -1,5 +1,4 @@
-use crate::WeatherReading;
-use crate::Writer;
+use crate::{WeatherReading, Writer};
 
 pub struct RetryManager {
     pub failed_writes: Vec<WeatherReading>,
