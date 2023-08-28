@@ -14,7 +14,7 @@ RUN cargo build --release
 
 FROM debian:bullseye-slim
 
-RUN apt-get update -y --allow-unauthenticated
+RUN apt-get update --allow-unauthenticated -y
 RUN apt-get install -y libusb-1.0-0-dev rtl-433
 
 COPY --from=builder /app/target/release/weather_station /usr/local/bin/weather_station
