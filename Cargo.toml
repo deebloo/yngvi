@@ -15,6 +15,7 @@ serde_json = "1.0.104"
 weather = { path = "packages/weather" }
 rtl_433 = { path = "packages/rtl_433" }
 display = { path = "packages/display" }
+influx_db = { path = "packages/influx_db" }
 
 [workspace]
 members = [

@@ -1,14 +1,15 @@
 use display::{DisplayReader, HidSource};
+use influx_db::InfluxWriter;
 use rtl_433::{rtl_433_source, RTL433Reader};
 use std::env;
-use weather::{InMemWriter, Station};
+use weather::Station;
 
 #[tokio::main]
 async fn main() {
-    let source = env::var("AR_SOURCE").unwrap_or("CONSOLE".to_string());
+    let source = env::var("WEATHER_SOURCE").unwrap_or("CONSOLE".to_string());
 
     let mut station = Station::new();
-    let mut writer = InMemWriter { readings: vec![] };
+    let mut writer = InfluxWriter::new();
 
     match source.to_uppercase().as_str() {
         "CONSOLE" => {
