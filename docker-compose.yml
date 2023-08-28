@@ -1,19 +1,19 @@
 version: "3.9"
 
 services:
-  weather:
-    container_name: weather
-    build: .
-    privileged: true
-    environment:
-      - WEATHER_SOURCE=RTL433
-      - WEATHER_INFLUXDB_URL=http://influxdb:8086
-      - WEATHER_INFLUXDB_DB=weather
-    volumes:
-      - /dev/bus/usb:/dev/bus/usb
-    depends_on:
-      - influxdb
-      - grafana
+  # weather:
+  #   container_name: weather
+  #   build: .
+  #   privileged: true
+  #   environment:
+  #     - WEATHER_SOURCE=RTL433
+  #     - WEATHER_INFLUXDB_URL=http://influxdb:8086
+  #     - WEATHER_INFLUXDB_DB=weather
+  #   volumes:
+  #     - /dev/bus/usb:/dev/bus/usb
+  #   depends_on:
+  #     - influxdb
+  #     - grafana
 
   influxdb:
     container_name: influxdb
