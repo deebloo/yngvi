@@ -28,12 +28,11 @@ services:
 
   grafana:
     container_name: grafana
-    image: grafana/grafana-enterprise:10.1.0
+    image: grafana/grafana-enterprise:10.0.3
     restart: always
     ports:
       - 3000:3000
     environment:
-      - GF_SERVER_DOMAIN=localhost
       - GF_SERVER_ROOT_URL=%(protocol)s://%(domain)s:%(http_port)s/grafana/
       - GF_SERVER_SERVE_FROM_SUB_PATH=true
     volumes:
