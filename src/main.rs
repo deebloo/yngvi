@@ -23,6 +23,8 @@ async fn main() {
 
             station.start(reader, &mut writer).await;
         }
-        _ => {}
+        _ => {
+            print!("source \"{}\" was not defined", source);
+        }
     }
 }

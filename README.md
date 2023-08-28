@@ -4,14 +4,16 @@
 
 Dashboard for weather data collected from Acurite 5-1 weather station. In one of two ways.
 
-1) Indoor Acurite console
-2) RTL-433
+1. Indoor Acurite console
+2. RTL-433
 
 ### Config
 
-Configuration is read from a json file at /etc/acurite/config.json
-The core program and all packages read and parse their config from the same file with prefixed properties.
-
+| Name                 | Description                                           | Default               |
+| -------------------- | ----------------------------------------------------- | --------------------- |
+| WEATHER_SOURCE       | determines where to pull data from. CONSOLE or RTL433 | CONSOLE               |
+| WEATHER_INFLUXDB_URL | influxdb url                                          | http://localhost:8086 |
+| WEATHER_INFLUXDB_DB  | influxdb database                                     | weather               |
 
 ### Pull latest code
 
@@ -25,22 +27,10 @@ git clone https://github.com/deebloo/acurite-weather.git
 cargo test --workspace
 ```
 
-### Create release build
+### build and start program
 
 ```BASH
-cargo build --release
-```
-
-### Standup infra
-
-```BASH
-docker-compose up -d
-```
-
-### Start program
-
-```BASH
-sudo ./target/release/acurite
+docker compose up --build
 ```
 
 ![alt text](images/dashboard_2.png)

@@ -1,5 +1,5 @@
 [package]
-name = "acurite"
+name = "weather_station"
 version = "0.2.0"
 authors = ["dblue <dannybluedesign@gmail.com>"]
 edition = "2018"

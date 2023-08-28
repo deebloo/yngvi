@@ -1,5 +1,4 @@
-# Use a base image with the desired Linux distribution (e.g., Debian)
-FROM rust as builder
+FROM rust:1.72.0 as builder
 
 WORKDIR /app
 
@@ -13,11 +12,11 @@ COPY packages packages
 
 RUN cargo build --release
 
-FROM debian:bullseye-slim
+FROM debian
 
 RUN apt-get update -y
-RUN apt-get install -y libusb-1.0-0-dev
+RUN apt-get install -y libusb-1.0-0-dev rtl-433
 
-COPY --from=builder /app/target/release/acurite /usr/local/bin/acurite
+COPY --from=builder /app/target/release/weather_station /usr/local/bin/weather_station
 
-CMD ["acurite"]
+CMD ["weather_station"]

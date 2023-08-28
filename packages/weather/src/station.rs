@@ -76,6 +76,8 @@ impl Station {
             let write_result = writer.write(&self.weather_reading).await;
 
             if write_result.is_ok() {
+                println!("{}", self.weather_reading);
+
                 self.retry_manager.replay_failed_writes(writer).await;
             } else {
                 println!("There was a problem when calling writer.write()");
