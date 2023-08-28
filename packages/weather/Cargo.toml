@@ -8,7 +8,7 @@ edition = "2018"
 
 [dependencies]
 tokio = { version = "1.29.1", features = ["full"] }
-async-trait = "0.1.72"
+async-trait = "0.1.73"
 chrono = "0.4.26"
 hidapi = "1.5.0"
 serde = "1.0.181"
