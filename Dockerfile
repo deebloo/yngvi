@@ -1,4 +1,4 @@
-FROM rust:1.72.0 as builder
+FROM rust:1.72.0-bullseye as builder
 
 WORKDIR /app
 
@@ -12,7 +12,7 @@ COPY packages packages
 
 RUN cargo build --release
 
-FROM debian
+FROM debian:bullseye-slim
 
 RUN apt-get update -y
 RUN apt-get install -y libusb-1.0-0-dev rtl-433
