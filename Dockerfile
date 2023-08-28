@@ -2,8 +2,8 @@ FROM rust:1.72.0-bullseye as builder
 
 WORKDIR /app
 
-RUN apt-get --allow-unauthenticate update -y
-RUN apt-get --allow-unauthenticate install -y libusb-1.0-0-dev libudev-dev
+RUN apt-get --allow-unauthenticated update -y
+RUN apt-get --allow-unauthenticated install -y libusb-1.0-0-dev libudev-dev
 
 COPY Cargo.toml Cargo.toml
 COPY Cargo.lock Cargo.lock
