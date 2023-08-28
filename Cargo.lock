@@ -314,9 +314,9 @@ dependencies = [
 
 [[package]]
 name = "hidapi"
-version = "1.5.0"
+version = "2.4.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "798154e4b6570af74899d71155fb0072d5b17e6aa12f39c8ef22c60fb8ec99e7"
+checksum = "723777263b0dcc5730aec947496bd8c3940ba63c15f5633b288cc615f4f6af79"
 dependencies = [
  "cc",
  "libc",

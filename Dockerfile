@@ -3,7 +3,7 @@ FROM rust:1.72.0 as builder
 WORKDIR /app
 
 RUN apt-get update -y
-RUN apt-get install -y libusb-1.0-0-dev
+RUN apt-get install -y libusb-1.0-0-dev libudev-dev
 
 COPY Cargo.toml Cargo.toml
 COPY Cargo.lock Cargo.lock
