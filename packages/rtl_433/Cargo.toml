@@ -10,5 +10,5 @@ edition = "2018"
 async-trait = "0.1.72"
 chrono = { version = "0.4.26", features = ["serde"]}
 serde = { version = "1.0.181", features = ["derive"]}
-serde_json = "1.0.104"
+serde_json = "1.0.105"
 weather = { path = "../weather" }

@@ -11,5 +11,5 @@ async-trait = "0.1.72"
 chrono = "0.4.26"
 influxdb = { version = "0.7.0", features = ["derive"] }
 serde = "1.0.181"
-serde_json = "1.0.104"
+serde_json = "1.0.105"
 weather = { path = "../weather" }
