@@ -2,8 +2,8 @@ FROM rust:1.72.0-bullseye as builder
 
 WORKDIR /app
 
-RUN apt-get update -y
-RUN apt-get install -y libusb-1.0-0-dev libudev-dev
+RUN apt-get --allow-unauthenticate update -y
+RUN apt-get --allow-unauthenticate install -y libusb-1.0-0-dev libudev-dev
 
 COPY Cargo.toml Cargo.toml
 COPY Cargo.lock Cargo.lock
@@ -14,7 +14,7 @@ RUN cargo build --release
 
 # FROM debian:bullseye-slim
 
-# RUN apt-get update -y
+# RUN apt-get update -y --allow-unauthenticated
 # RUN apt-get install -y libusb-1.0-0-dev rtl-433
 
 # COPY --from=builder /app/target/release/weather_station /usr/local/bin/weather_station
