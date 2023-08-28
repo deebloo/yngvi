@@ -12,7 +12,7 @@ COPY packages packages
 
 RUN cargo build --release
 
-FROM debian:bullseye-slim
+FROM debian:bullseye
 
 RUN apt-get update -y
 RUN apt-get install -y libusb-1.0-0-dev rtl-433
