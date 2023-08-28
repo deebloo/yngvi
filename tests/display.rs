@@ -1,26 +1,20 @@
-mod test_reader;
-mod test_writer;
+use display::DisplayReader;
+use weather::InMemWriter;
 
 #[tokio::test]
 async fn shold_read_and_record_readings() {
-    let mut reader = test_reader::TestReader {
-        current_reading: 0,
-        readings: vec![
-            vec![1, 197, 26, 120, 0, 5, 75, 75, 3, 255],
-            vec![1, 197, 26, 120, 0, 5, 75, 75, 3, 255],
-            vec![1, 197, 26, 120, 0, 5, 75, 75, 3, 255],
-            vec![1, 197, 26, 120, 0, 5, 75, 75, 3, 255],
-            vec![1, 197, 26, 120, 0, 5, 75, 75, 3, 255],
-        ],
-    };
+    let source = vec![
+        [1, 197, 26, 120, 0, 5, 75, 75, 3, 255],
+        [1, 197, 26, 120, 0, 5, 75, 75, 3, 255],
+        [1, 197, 26, 120, 0, 5, 75, 75, 3, 255],
+    ]
+    .into_iter();
 
-    let mut writer = test_writer::TestWriter { readings: vec![] };
-    let mut station = acurite_console::Station::new();
+    let reader = DisplayReader::new(source);
+    let mut writer = InMemWriter { readings: vec![] };
+    let mut station = weather::Station::new();
 
-    // generate some readings
-    for _ in 1..=3 {
-        station.run(&mut reader, &mut writer).await;
-    }
+    station.start(reader, &mut writer).await;
 
     // Get stored readings from the writer
     let data = writer.readings.into_iter();
@@ -39,7 +33,7 @@ async fn shold_read_and_record_readings() {
     let dew_point: Vec<Option<f32>> = data.clone().map(|r| r.dew_point).collect();
 
     assert_eq!(rain, [None, None, None]);
-    assert_eq!(rain_delta, [None, None, None]);
+    assert_eq!(rain_delta, [Some(0.0), Some(0.0), Some(0.0)]);
     assert_eq!(wind_speed, [Some(0.0), Some(0.0), Some(0.0)]);
     assert_eq!(wind_dir, [None, None, None]);
     assert_eq!(wind_dir_cardinal, [None, None, None]);
@@ -56,5 +50,6 @@ async fn shold_read_and_record_readings() {
         heat_index,
         [Some(31.499998), Some(31.499998), Some(31.499998)]
     );
+
     assert_eq!(dew_point, [Some(24.52832), Some(24.52832), Some(24.52832)]);
 }

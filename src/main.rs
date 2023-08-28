@@ -1,32 +1,27 @@
-use acurite_influx::InfluxWriter;
+use display::{DisplayReader, HidSource};
+use influx_db::InfluxWriter;
+use rtl_433::{rtl_433_source, RTL433Reader};
 use std::env;
+use weather::Station;
 
 #[tokio::main]
 async fn main() {
-    let source = env::var("AR_SOURCE").unwrap_or("CONSOLE".to_string());
+    let source = env::var("WEATHER_SOURCE").unwrap_or("CONSOLE".to_string());
 
-    println!("Application starting with source {}", source);
-
+    let mut station = Station::new();
     let mut writer = InfluxWriter::new();
 
     match source.to_uppercase().as_str() {
         "CONSOLE" => {
-            let mut station = acurite_console::Station::new();
+            let hid = HidSource::new(0x24c0, 0x003).expect("could not start HID Api");
+            let reader = DisplayReader::new(hid);
 
-            if let Ok(mut reader) = acurite_core::HidReader::new(0x24c0, 0x003) {
-                station.start(&mut reader, &mut writer).await;
-            } else {
-                println!("Could not start HID Reader");
-            }
+            station.start(reader, &mut writer).await;
         }
         "RTL433" => {
-            let mut station = acurite_rtl_433::Station::new();
+            let reader = RTL433Reader::new(rtl_433_source());
 
-            if let Ok(mut reader) = acurite_rtl_433::RTL433Reader::new() {
-                station.start(&mut reader, &mut writer).await;
-            } else {
-                println!("Could not start RTL433 Reader. Make sure it is installed properly");
-            }
+            station.start(reader, &mut writer).await;
         }
         _ => {}
     }

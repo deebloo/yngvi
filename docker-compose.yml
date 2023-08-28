@@ -6,9 +6,9 @@ services:
   #   build: .
   #   privileged: true
   #   environment:
-  #     - AR_SOURCE=CONSOLE
-  #     - AR_INFLUXDB_URL=influxdb:8089
-  #     - AR_INFLUXDB_DB=weather
+  #     - WEATHER_SOURCE=CONSOLE
+  #     - WEATHER_INFLUXDB_URL=influxdb:8089
+  #     - WEATHER_INFLUXDB_DB=weather
   #   volumes:
   #     - /dev/bus/usb:/dev/bus/usb
 
