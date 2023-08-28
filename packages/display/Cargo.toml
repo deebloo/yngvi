@@ -1,13 +1,12 @@
 [package]
 name = "display"
 version = "0.2.0"
-authors = ["dblue <dblue@deloitte.com>"]
+authors = ["deebloo <dannybluedesign@gmail.com>"]
 edition = "2018"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-tokio = { version = "1.29.1", features = ["full"] }
 chrono = "0.4.26"
 hidapi = "1.5.0"
 serde = "1.0.181"

@@ -193,7 +193,6 @@ dependencies = [
  "hidapi",
  "serde",
  "serde_json",
- "tokio",
  "weather",
 ]
 
@@ -1213,10 +1212,8 @@ version = "0.2.0"
 dependencies = [
  "async-trait",
  "chrono",
- "hidapi",
  "serde",
  "serde_json",
- "tokio",
 ]
 
 [[package]]
@@ -1224,12 +1221,9 @@ name = "weather_station"
 version = "0.2.0"
 dependencies = [
  "async-trait",
- "chrono",
  "display",
  "influx_db",
  "rtl_433",
- "serde",
- "serde_json",
  "tokio",
  "weather",
 ]
