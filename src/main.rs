@@ -12,8 +12,8 @@ enum AppWriter {
 
 #[tokio::main]
 async fn main() {
-    let source: String = env::var("WS_SOURCE").unwrap_or("CONSOLE".to_string());
-    let dest: String = env::var("WS_DEST").unwrap_or("INFLUXDB".to_string());
+    let source = env::var("WS_SOURCE").unwrap_or("CONSOLE".to_string());
+    let dest = env::var("WS_DEST").unwrap_or("STDOUT".to_string());
 
     let mut station = Station::new();
     let reader = find_reader(source.to_uppercase().as_str());
