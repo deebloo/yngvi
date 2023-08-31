@@ -7,7 +7,7 @@ mod error_writer;
 async fn should_replay_failed_writes_rtl_433() {
     let mut station = ws_core::Station::new();
 
-    let source = rtl_433_file_source("tests/data/rtl433_data_1.txt");
+    let source = rtl_433_file_source("tests/data/rtl_433_data_1.txt");
     let reader = RTL433Reader::new(source);
 
     let mut writer = error_writer::ErrorWriter {};
