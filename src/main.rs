@@ -16,8 +16,9 @@ async fn main() {
     let dest = env::var("WS_DEST").unwrap_or("STDOUT".to_string());
 
     let mut station = Station::new();
-    let reader = find_reader(source.to_uppercase().as_str());
-    let mut writer = find_writer(dest.to_uppercase().as_str());
+
+    let reader = find_reader(&source);
+    let mut writer = find_writer(&dest);
 
     println!(
         "Starting weather program. Reading from {} and writing to {}",
@@ -31,8 +32,8 @@ async fn main() {
     }
 }
 
-fn find_reader(value: &str) -> Box<dyn Iterator<Item = WeatherReading>> {
-    match value {
+fn find_reader(value: &String) -> Box<dyn Iterator<Item = WeatherReading>> {
+    match value.to_uppercase().as_str() {
         "DISPLAY" => Box::new(DisplayReader::new(
             HidSource::new(0x24c0, 0x003).expect("could not start HID Api"),
         )),
@@ -41,8 +42,8 @@ fn find_reader(value: &str) -> Box<dyn Iterator<Item = WeatherReading>> {
     }
 }
 
-fn find_writer(value: &str) -> AppWriter {
-    match value {
+fn find_writer(value: &String) -> AppWriter {
+    match value.to_uppercase().as_str() {
         "INFLUXDB" => AppWriter::Influx(InfluxWriter::new()),
         "INMEMORY" => AppWriter::InMemory(InMemWriter::new()),
         "STDOUT" => AppWriter::Stdout(StdoutWriter::new()),
