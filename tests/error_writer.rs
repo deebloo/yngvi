@@ -1,4 +1,4 @@
-use weather::{WeatherReading, Writer};
+use ws_core::{WeatherReading, Writer};
 
 pub struct ErrorWriter;
 

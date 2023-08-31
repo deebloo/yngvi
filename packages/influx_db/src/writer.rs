@@ -1,7 +1,7 @@
 use async_trait::async_trait;
 use influxdb::{Client, InfluxDbWriteable};
 use std::env;
-use weather::{WeatherReading, Writer};
+use ws_core::{WeatherReading, Writer};
 
 use crate::WeatherReadingInflux;
 

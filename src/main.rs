@@ -1,8 +1,8 @@
-use display::{DisplayReader, HidSource};
-use influx_db::InfluxWriter;
-use rtl_433::{rtl_433_source, RTL433Reader};
 use std::env;
-use weather::{InMemWriter, Station, StdoutWriter, WeatherReading};
+use ws_core::{InMemWriter, Station, StdoutWriter, WeatherReading};
+use ws_display::{DisplayReader, HidSource};
+use ws_influx_db::InfluxWriter;
+use ws_rtl_433::{rtl_433_source, RTL433Reader};
 
 enum AppWriter {
     Influx(InfluxWriter),

@@ -8,10 +8,10 @@ edition = "2018"
 
 [dependencies]
 tokio = { version = "1.32.0", features = ["full"] }
-weather = { path = "packages/weather" }
-rtl_433 = { path = "packages/rtl_433" }
-display = { path = "packages/display" }
-influx_db = { path = "packages/influx_db" }
+ws_core = { path = "packages/core" }
+ws_rtl_433 = { path = "packages/rtl_433" }
+ws_display = { path = "packages/display" }
+ws_influx_db = { path = "packages/influx_db" }
 
 [dev-dependencies]
 async-trait = "0.1.73"

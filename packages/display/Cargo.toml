@@ -1,5 +1,5 @@
 [package]
-name = "display"
+name = "ws_display"
 version = "0.2.0"
 authors = ["deebloo <dannybluedesign@gmail.com>"]
 edition = "2018"
@@ -11,4 +11,4 @@ chrono = "0.4.26"
 hidapi = "2.4.1"
 serde = "1.0.188"
 serde_json = "1.0.105"
-weather = { path = "../weather" }
+ws_core = { path = "../core" }

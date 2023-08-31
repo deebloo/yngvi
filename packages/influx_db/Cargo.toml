@@ -1,5 +1,5 @@
 [package]
-name = "influx_db"
+name = "ws_influx_db"
 version = "0.2.0"
 authors = ["deebloo <dannybluedesign@gmail.com>"]
 edition = "2018"
@@ -12,4 +12,4 @@ chrono = "0.4.26"
 influxdb = { version = "0.7.0", features = ["derive"] }
 serde = "1.0.188"
 serde_json = "1.0.105"
-weather = { path = "../weather" }
+ws_core = { path = "../core" }

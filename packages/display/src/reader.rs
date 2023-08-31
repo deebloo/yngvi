@@ -1,7 +1,7 @@
 use chrono::Utc;
 use hidapi::HidApi;
 use std::{thread, time};
-use weather::WeatherReading;
+use ws_core::WeatherReading;
 
 use crate::decode::{
     decode_flavor, decode_out_humidity, decode_out_temp, decode_rain, decode_wind_dir,

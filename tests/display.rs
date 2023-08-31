@@ -1,5 +1,5 @@
-use display::DisplayReader;
-use weather::InMemWriter;
+use ws_core::{InMemWriter, Station};
+use ws_display::DisplayReader;
 
 #[tokio::test]
 async fn shold_read_and_record_readings() {
@@ -12,7 +12,7 @@ async fn shold_read_and_record_readings() {
 
     let reader = DisplayReader::new(source);
     let mut writer = InMemWriter::new();
-    let mut station = weather::Station::new();
+    let mut station = Station::new();
 
     station.start(reader, &mut writer).await;
 

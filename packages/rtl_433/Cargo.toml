@@ -1,5 +1,5 @@
 [package]
-name = "rtl_433"
+name = "ws_rtl_433"
 version = "0.2.0"
 authors = ["deebloo <dannybluedesign@gmail.com>"]
 edition = "2018"
@@ -11,4 +11,4 @@ async-trait = "0.1.73"
 chrono = { version = "0.4.26", features = ["serde"]}
 serde = { version = "1.0.188", features = ["derive"]}
 serde_json = "1.0.105"
-weather = { path = "../weather" }
+ws_core = { path = "../core" }

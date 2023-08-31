@@ -1,6 +1,6 @@
 use chrono::{DateTime, Utc};
 use influxdb::{InfluxDbWriteable, Timestamp};
-use weather::WeatherReading;
+use ws_core::WeatherReading;
 
 #[derive(InfluxDbWriteable, Clone, Debug, PartialEq)]
 pub struct WeatherReadingInflux {

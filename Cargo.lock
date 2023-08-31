@@ -186,17 +186,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "display"
-version = "0.2.0"
-dependencies = [
- "chrono",
- "hidapi",
- "serde",
- "serde_json",
- "weather",
-]
-
-[[package]]
 name = "encoding_rs"
 version = "0.8.33"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -438,18 +427,6 @@ checksum = "bd070e393353796e801d209ad339e89596eb4c8d430d18ede6a1cced8fafbd99"
 dependencies = [
  "autocfg",
  "hashbrown",
-]
-
-[[package]]
-name = "influx_db"
-version = "0.2.0"
-dependencies = [
- "async-trait",
- "chrono",
- "influxdb",
- "serde",
- "serde_json",
- "weather",
 ]
 
 [[package]]
@@ -750,17 +727,6 @@ dependencies = [
  "untrusted",
  "web-sys",
  "winapi",
-]
-
-[[package]]
-name = "rtl_433"
-version = "0.2.0"
-dependencies = [
- "async-trait",
- "chrono",
- "serde",
- "serde_json",
- "weather",
 ]
 
 [[package]]
@@ -1216,25 +1182,15 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "6598dd0bd3c7d51095ff6531a5b23e02acdc81804e30d8f07afb77b7215a140a"
 
 [[package]]
-name = "weather"
-version = "0.2.0"
-dependencies = [
- "async-trait",
- "chrono",
- "serde",
- "serde_json",
-]
-
-[[package]]
 name = "weather_station"
 version = "0.2.0"
 dependencies = [
  "async-trait",
- "display",
- "influx_db",
- "rtl_433",
  "tokio",
- "weather",
+ "ws_core",
+ "ws_display",
+ "ws_influx_db",
+ "ws_rtl_433",
 ]
 
 [[package]]
@@ -1401,4 +1357,48 @@ checksum = "524e57b2c537c0f9b1e69f1965311ec12182b4122e45035b1508cd24d2adadb1"
 dependencies = [
  "cfg-if",
  "windows-sys 0.48.0",
+]
+
+[[package]]
+name = "ws_core"
+version = "0.2.0"
+dependencies = [
+ "async-trait",
+ "chrono",
+ "serde",
+ "serde_json",
+]
+
+[[package]]
+name = "ws_display"
+version = "0.2.0"
+dependencies = [
+ "chrono",
+ "hidapi",
+ "serde",
+ "serde_json",
+ "ws_core",
+]
+
+[[package]]
+name = "ws_influx_db"
+version = "0.2.0"
+dependencies = [
+ "async-trait",
+ "chrono",
+ "influxdb",
+ "serde",
+ "serde_json",
+ "ws_core",
+]
+
+[[package]]
+name = "ws_rtl_433"
+version = "0.2.0"
+dependencies = [
+ "async-trait",
+ "chrono",
+ "serde",
+ "serde_json",
+ "ws_core",
 ]

@@ -2,7 +2,7 @@ use std::{
     io::{BufRead, BufReader, Result},
     process::{Command, Stdio},
 };
-use weather::WeatherReading;
+use ws_core::WeatherReading;
 
 use crate::{BaseReading, FiveInOneReading};
 

@@ -1,5 +1,5 @@
-use rtl_433::RTL433Reader;
-use weather::InMemWriter;
+use ws_core::InMemWriter;
+use ws_rtl_433::RTL433Reader;
 
 #[tokio::test]
 async fn shold_read_and_record_readings() {
@@ -11,7 +11,7 @@ async fn shold_read_and_record_readings() {
         Ok(String::from("{\"time\" : \"2021-12-15T20:49:33Z\", \"model\" : \"Acurite-5n1\", \"message_type\" : 56, \"id\" : 1306, \"channel\" : \"A\", \"sequence_num\" : 0, \"battery_ok\" : 1, \"wind_avg_mi_h\" : 2.679, \"temperature_F\" : 55.800, \"humidity\" : 70, \"mic\" : \"CHECKSUM\"}"))
     ];
 
-    let mut station = weather::Station::new();
+    let mut station = ws_core::Station::new();
 
     let reader = RTL433Reader::new(source.into_iter());
     let mut writer = InMemWriter::new();
