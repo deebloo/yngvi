@@ -5,7 +5,7 @@ use ws_rtl_433::{rtl_433_file_source, RTL433Reader};
 async fn shold_read_and_record_readings() {
     let mut station = ws_core::Station::new();
 
-    let source = rtl_433_file_source("tests/data/rtl433_data_1.txt");
+    let source = rtl_433_file_source("tests/data/rtl_433_data_1.txt");
     let reader = RTL433Reader::new(source);
     let mut writer = InMemWriter::new();
 
