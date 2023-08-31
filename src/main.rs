@@ -16,7 +16,7 @@ async fn main() {
     let dest = env::var("WS_DEST").unwrap_or("STDOUT".to_string());
 
     let mut station = Station::new();
-    let mut reader = find_reader(source.to_uppercase().as_str());
+    let reader = find_reader(source.to_uppercase().as_str());
     let mut writer = find_writer(dest.to_uppercase().as_str());
 
     println!(
@@ -25,9 +25,9 @@ async fn main() {
     );
 
     match &mut writer {
-        AppWriter::Influx(writer) => station.start(&mut reader, writer).await,
-        AppWriter::InMemory(writer) => station.start(&mut reader, writer).await,
-        AppWriter::Stdout(writer) => station.start(&mut reader, writer).await,
+        AppWriter::Influx(writer) => station.start(reader, writer).await,
+        AppWriter::InMemory(writer) => station.start(reader, writer).await,
+        AppWriter::Stdout(writer) => station.start(reader, writer).await,
     }
 }
 
