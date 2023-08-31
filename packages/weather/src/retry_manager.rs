@@ -15,7 +15,7 @@ impl RetryManager {
         self.failed_writes.push(reading);
     }
 
-    pub async fn replay_failed_writes(&mut self, writer: &mut impl Writer) {
+    pub async fn replay_failed_writes<T: Writer>(&mut self, writer: &mut T) {
         if self.failed_writes.len() > 0 {
             println!("Replaying previously failed writes");
 

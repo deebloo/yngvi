@@ -1,4 +1,5 @@
 use rtl_433::RTL433Reader;
+use weather::InMemWriter;
 
 #[tokio::test]
 async fn shold_read_and_record_readings() {
@@ -13,7 +14,7 @@ async fn shold_read_and_record_readings() {
     let mut station = weather::Station::new();
 
     let reader = RTL433Reader::new(source.into_iter());
-    let mut writer = weather::InMemWriter { readings: vec![] };
+    let mut writer = InMemWriter::new();
 
     station.start(reader, &mut writer).await;
 

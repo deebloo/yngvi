@@ -9,10 +9,18 @@ pub trait Writer {
 
 pub struct StdoutWriter;
 
+impl StdoutWriter {
+    pub fn new() -> Self {
+        Self {}
+    }
+}
+
 #[async_trait]
 impl Writer for StdoutWriter {
     async fn write(&mut self, weather_reading: &WeatherReading) -> Result<(), ()> {
-        println!("{}", weather_reading);
+        if let Ok(json) = serde_json::to_string(weather_reading) {
+            println!("{}", json);
+        }
 
         Ok(())
     }
@@ -20,6 +28,12 @@ impl Writer for StdoutWriter {
 
 pub struct InMemWriter {
     pub readings: Vec<WeatherReading>,
+}
+
+impl InMemWriter {
+    pub fn new() -> Self {
+        Self { readings: vec![] }
+    }
 }
 
 #[async_trait]

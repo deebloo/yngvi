@@ -1,8 +1,8 @@
-use core::fmt;
-
 use chrono::{DateTime, Utc};
+use core::fmt;
+use serde::{Deserialize, Serialize};
 
-#[derive(Clone, Copy, Debug, PartialEq)]
+#[derive(Clone, Copy, Debug, PartialEq, Deserialize, Serialize)]
 pub struct WeatherReading {
     pub time: DateTime<Utc>,
     pub device_id: Option<u32>,

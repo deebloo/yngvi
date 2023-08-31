@@ -11,7 +11,7 @@ async fn shold_read_and_record_readings() {
     .into_iter();
 
     let reader = DisplayReader::new(source);
-    let mut writer = InMemWriter { readings: vec![] };
+    let mut writer = InMemWriter::new();
     let mut station = weather::Station::new();
 
     station.start(reader, &mut writer).await;

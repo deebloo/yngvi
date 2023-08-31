@@ -23,7 +23,7 @@ async fn should_replay_failed_writes_rtl_433() {
         Ok(String::from("{\"time\" : \"2021-12-15T20:48:18Z\", \"model\" : \"Acurite-5n1\", \"message_type\" : 56, \"id\" : 1306, \"channel\" : \"A\", \"sequence_num\" : 0, \"battery_ok\" : 1, \"wind_avg_mi_h\" : 3.193, \"temperature_F\" : 55.800, \"humidity\" : 70, \"mic\" : \"CHECKSUM\"}")),
     ].into_iter());
 
-    let mut writer = InMemWriter { readings: vec![] };
+    let mut writer = InMemWriter::new();
 
     station.start(reader, &mut writer).await;
 
