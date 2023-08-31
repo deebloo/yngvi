@@ -37,7 +37,7 @@ fn find_reader(value: &str) -> Box<dyn Iterator<Item = WeatherReading>> {
             HidSource::new(0x24c0, 0x003).expect("could not start HID Api"),
         )),
         "RTL433" => Box::new(RTL433Reader::new(rtl_433_source())),
-        _ => panic!("no reader defined"),
+        _ => panic!("no reader defined. found {}", value),
     }
 }
 
@@ -46,6 +46,6 @@ fn find_writer(value: &str) -> AppWriter {
         "INFLUXDB" => AppWriter::Influx(InfluxWriter::new()),
         "INMEMORY" => AppWriter::InMemory(InMemWriter::new()),
         "STDOUT" => AppWriter::Stdout(StdoutWriter::new()),
-        _ => panic!("no writer defined"),
+        _ => panic!("no writer defined. found {}", value),
     }
 }
