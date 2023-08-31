@@ -4,14 +4,14 @@ Dashboard for weather data collected from Acurite 5-1 weather station. In one of
 
 1. Indoor Acurite console
    HUGE THANKS TO [WEEWX](http://weewx.com/) FOR DECODING THE VARIOUS MESSAGES FROM THE ACURITE DISPLAY
-3. RTL-433
+2. RTL-433
 
 ### Config
 
 | Name            | Description                                           | Default               |
-| --------------- | ----------------------------------------------------- | --------------------- | ------ |
+| --------------- | ----------------------------------------------------- | --------------------- |
 | WS_SOURCE       | determines where to pull data from. CONSOLE or RTL433 | CONSOLE               |
-| WS_DEST         | INFLUXDB, STDOUT, or INMEMORY                         | STDOUT                | STDOUT |
+| WS_DEST         | INFLUXDB, STDOUT, or INMEMORY                         | STDOUT                |
 | WS_INFLUXDB_URL | influxdb url                                          | http://localhost:8086 |
 | WS_INFLUXDB_DB  | influxdb database                                     | weather               |
 
