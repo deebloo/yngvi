@@ -1,11 +1,10 @@
 # acurite-weather
 
-HUGE THANKS TO [WEEWX](http://weewx.com/) FOR DECODING THE VARIOUS MESSAGES FROM THE ACURITE DISPLAY
-
 Dashboard for weather data collected from Acurite 5-1 weather station. In one of two ways.
 
 1. Indoor Acurite console
-2. RTL-433
+   HUGE THANKS TO [WEEWX](http://weewx.com/) FOR DECODING THE VARIOUS MESSAGES FROM THE ACURITE DISPLAY
+3. RTL-433
 
 ### Config
 
