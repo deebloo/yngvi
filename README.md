@@ -12,6 +12,7 @@ Dashboard for weather data collected from Acurite 5-1 weather station. In one of
 | Name                 | Description                                           | Default               |
 | -------------------- | ----------------------------------------------------- | --------------------- |
 | WEATHER_SOURCE       | determines where to pull data from. CONSOLE or RTL433 | CONSOLE               |
+| WEATHER_DEST         | INFLUXDB, STDOUT, or INMEMORY | STDOUT                | STDOUT                |
 | WEATHER_INFLUXDB_URL | influxdb url                                          | http://localhost:8086 |
 | WEATHER_INFLUXDB_DB  | influxdb database                                     | weather               |
 
