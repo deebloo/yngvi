@@ -11,8 +11,8 @@ pub struct InfluxWriter {
 
 impl InfluxWriter {
     pub fn new() -> Self {
-        let url = env::var("WEATHER_INFLUXDB_URL").unwrap_or("http://localhost:8086".to_string());
-        let database = env::var("WEATHER_INFLUXDB_DB").unwrap_or("weather".to_string());
+        let url = env::var("WS_INFLUXDB_URL").unwrap_or("http://localhost:8086".to_string());
+        let database = env::var("WS_INFLUXDB_DB").unwrap_or("weather".to_string());
 
         println!("Writing to InfluxDB at {} into {}", url, database);
 

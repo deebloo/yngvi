@@ -6,9 +6,9 @@ services:
   #   build: .
   #   privileged: true
   #   environment:
-  #     - WEATHER_SOURCE=RTL433
-  #     - WEATHER_INFLUXDB_URL=http://influxdb:8086
-  #     - WEATHER_INFLUXDB_DB=weather
+  #     - WS_SOURCE=RTL433
+  #     - WS_INFLUXDB_URL=http://influxdb:8086
+  #     - WS_INFLUXDB_DB=weather
   #   volumes:
   #     - /dev/bus/usb:/dev/bus/usb
   #   depends_on:
