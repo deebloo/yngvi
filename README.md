@@ -1,6 +1,6 @@
 # acurite-weather
 
-### HUGE THANKS TO [WEEWX](http://weewx.com/) FOR DECODING THE VARIOUS MESSAGES FROM THE ACURITE DISPLAY
+HUGE THANKS TO [WEEWX](http://weewx.com/) FOR DECODING THE VARIOUS MESSAGES FROM THE ACURITE DISPLAY
 
 Dashboard for weather data collected from Acurite 5-1 weather station. In one of two ways.
 
