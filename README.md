@@ -1,10 +1,8 @@
 # Weather Station
 
-Dashboard for weather data collected from Acurite 5-1 weather station. In one of two ways.
+Program for collecting and processing weather data.
 
-1. Indoor Acurite console
-   HUGE THANKS TO [WEEWX](http://weewx.com/) FOR DECODING THE VARIOUS MESSAGES FROM THE ACURITE DISPLAY
-2. RTL-433
+HUGE THANKS TO [WEEWX](http://weewx.com/) FOR DECODING THE VARIOUS MESSAGES FROM THE ACURITE DISPLAY
 
 ### Config
 
