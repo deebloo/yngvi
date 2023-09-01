@@ -41,8 +41,9 @@ fn find_reader(value: &String) -> Box<dyn Iterator<Item = WeatherReadingSource>>
         )),
         "RTL_433" => Box::new(RTL433Reader::new(rtl_433_source())),
         "FILE" => {
-            let path = env::var("WS_SOURCE_FILE_PATH")
-                .expect("WS_SOURCE_FILE_PATH is required when using the FILE source");
+            let key = "WS_SOURCE_FILE_PATH";
+            let path = env::var(key)
+                .expect(format!("{} is required when using the FILE source", key).as_str());
 
             Box::new(FileReader::new(path.as_str()))
         }
@@ -53,9 +54,11 @@ fn find_reader(value: &String) -> Box<dyn Iterator<Item = WeatherReadingSource>>
 fn find_writer(value: &String) -> AppWriter {
     match value.to_uppercase().as_str() {
         "INFLUXDB" => {
-            let url =
-                env::var("WS_SOURCE_INFLUXDB_URL").unwrap_or("http://localhost:8086".to_string());
-            let database = env::var("WS_SOURCE_INFLUXDB_DB").unwrap_or("weather".to_string());
+            let url_key = "WS_SOURCE_INFLUXDB_URL";
+            let db_key = "WS_SOURCE_INFLUXDB_DB";
+
+            let url = env::var(url_key).unwrap_or("http://localhost:8086".to_string());
+            let database = env::var(db_key).unwrap_or("weather".to_string());
 
             AppWriter::Influx(InfluxWriter::new(url, database))
         }
