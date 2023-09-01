@@ -48,8 +48,6 @@ impl RTL433Reader {
                             weather_reading.out_humid = data.humidity;
                             weather_reading.wind_dir = data.wind_dir_deg;
 
-                            println!("{}", serde_json::to_string(&weather_reading).unwrap());
-
                             return Some(weather_reading);
                         }
                     }
