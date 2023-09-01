@@ -36,16 +36,20 @@ docker compose up --build
 ## Create your own
 
 ```rust
-use ws_core::{InMemWriter, Station, StdoutWriter, WeatherReading, file_reader};
+use ws_core::{InMemWriter, Station, StdoutWriter, WeatherReading, FileReader};
 
 #[tokio::main]
 async fn main() {
+    // create a new weather station
     let mut station = Station::new();
 
-    let reader = file_reader("path/to/source/readings.txt");
+    // define where your source data will come from
+    let reader = FileReader::new("path/to/source/readings.txt");
 
+    // define where your calculated data will be written to
     let mut writer = StdoutWriter::new();
 
+    // start your station!
     station.start(reader, writer).await
 }
 
