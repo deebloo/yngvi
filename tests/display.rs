@@ -24,7 +24,7 @@ async fn shold_read_and_record_readings() {
     let rain_delta: Vec<Option<f32>> = data.clone().map(|r| r.rain_delta).collect();
     let wind_speed: Vec<Option<f32>> = data.clone().map(|r| r.wind_speed).collect();
     let wind_dir: Vec<Option<f32>> = data.clone().map(|r| r.wind_dir).collect();
-    let wind_dir_cardinal: Vec<Option<&'static str>> =
+    let wind_dir_cardinal: Vec<Option<String>> =
         data.clone().map(|r| r.wind_dir_cardinal).collect();
     let out_temp: Vec<Option<f32>> = data.clone().map(|r| r.out_temp).collect();
     let out_humid: Vec<Option<u8>> = data.clone().map(|r| r.out_humid).collect();

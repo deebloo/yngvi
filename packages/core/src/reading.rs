@@ -2,7 +2,36 @@ use chrono::{DateTime, Utc};
 use core::fmt;
 use serde::{Deserialize, Serialize};
 
-#[derive(Clone, Copy, Debug, PartialEq, Deserialize, Serialize)]
+#[derive(Serialize, Deserialize, Clone, Debug, PartialEq)]
+pub struct WeatherReadingSource {
+    pub time: DateTime<Utc>,
+    pub device_id: Option<u32>,
+    pub rain: Option<f32>,
+    pub wind_speed: Option<f32>,
+    pub wind_dir: Option<f32>,
+    pub out_temp: Option<f32>,
+    pub out_humid: Option<u8>,
+}
+
+impl WeatherReadingSource {
+    pub fn new() -> Self {
+        Self {
+            device_id: None,
+            time: Utc::now(),
+            rain: None,
+            wind_speed: None,
+            wind_dir: None,
+            out_temp: None,
+            out_humid: None,
+        }
+    }
+
+    pub fn from_str(buf: &String) -> Result<WeatherReading, serde_json::Error> {
+        serde_json::from_str::<WeatherReading>(buf.as_str())
+    }
+}
+
+#[derive(Serialize, Deserialize, Clone, Debug, PartialEq)]
 pub struct WeatherReading {
     pub time: DateTime<Utc>,
     pub device_id: Option<u32>,
@@ -10,7 +39,7 @@ pub struct WeatherReading {
     pub rain_delta: Option<f32>,
     pub wind_speed: Option<f32>,
     pub wind_dir: Option<f32>,
-    pub wind_dir_cardinal: Option<&'static str>,
+    pub wind_dir_cardinal: Option<String>,
     pub out_temp: Option<f32>,
     pub out_humid: Option<u8>,
     pub wind_chill: Option<f32>,

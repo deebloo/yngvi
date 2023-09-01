@@ -33,4 +33,20 @@ cargo test --workspace
 docker compose up --build
 ```
 
-![alt text](images/dashboard_2.png)
+## Create your own
+
+```rust
+use ws_core::{InMemWriter, Station, StdoutWriter, WeatherReading, file_reader};
+
+#[tokio::main]
+async fn main() {
+    let mut station = Station::new();
+
+    let reader = file_reader("path/to/source/readings.txt");
+
+    let mut writer = StdoutWriter::new();
+
+    station.start(reader, writer).await
+}
+
+```

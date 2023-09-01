@@ -1,7 +1,7 @@
 use chrono::Utc;
 use hidapi::HidApi;
 use std::{thread, time};
-use ws_core::WeatherReading;
+use ws_core::WeatherReadingSource;
 
 use crate::decode::{
     decode_flavor, decode_out_humidity, decode_out_temp, decode_rain, decode_wind_dir,
@@ -47,9 +47,11 @@ impl Iterator for HidSource {
 pub struct DisplayReader {}
 
 impl DisplayReader {
-    pub fn new<T: Iterator<Item = [u8; 10]>>(source: T) -> impl Iterator<Item = WeatherReading> {
+    pub fn new<T: Iterator<Item = [u8; 10]>>(
+        source: T,
+    ) -> impl Iterator<Item = WeatherReadingSource> {
         source.into_iter().map(|data| {
-            let mut weather_reading = WeatherReading::new();
+            let mut weather_reading = WeatherReadingSource::new();
 
             let report_flavor = decode_flavor(&data);
 

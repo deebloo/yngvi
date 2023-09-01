@@ -3,7 +3,7 @@ use std::{
     io::{BufRead, BufReader, Result},
     process::{Command, Stdio},
 };
-use ws_core::WeatherReading;
+use ws_core::WeatherReadingSource;
 
 use crate::{BaseReading, FiveInOneReading};
 
@@ -31,14 +31,14 @@ pub struct RTL433Reader {}
 impl RTL433Reader {
     pub fn new<T: Iterator<Item = Result<String>>>(
         source: T,
-    ) -> impl Iterator<Item = WeatherReading> {
+    ) -> impl Iterator<Item = WeatherReadingSource> {
         source.filter_map(|line| line.ok()).filter_map(|line| {
             if let Ok(reading) = BaseReading::from_string(&line) {
                 if reading.model == "Acurite-5n1" {
                     // parse the full 5n1 message
                     if let Ok(data) = FiveInOneReading::from_string(&line) {
                         if data.sequence_num == 0 {
-                            let mut weather_reading = WeatherReading::new();
+                            let mut weather_reading = WeatherReadingSource::new();
 
                             weather_reading.device_id = Some(data.id);
                             weather_reading.time = data.time;

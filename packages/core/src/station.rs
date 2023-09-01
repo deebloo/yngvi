@@ -1,6 +1,6 @@
 use crate::{
     calc_dew_point, calc_heat_index, calc_wind_chill, wind_dir_to_cardinal, RetryManager,
-    WeatherReading, Writer,
+    WeatherReading, WeatherReadingSource, Writer,
 };
 
 pub struct Station {
@@ -16,7 +16,7 @@ impl Station {
         }
     }
 
-    pub async fn start<R: Iterator<Item = WeatherReading>, W: Writer>(
+    pub async fn start<R: Iterator<Item = WeatherReadingSource>, W: Writer>(
         &mut self,
         reader: R,
         writer: &mut W,
@@ -69,7 +69,7 @@ impl Station {
                 self.weather_reading.wind_dir = Some(wind_direction);
 
                 let wind_dir_cardinal = wind_dir_to_cardinal(wind_direction);
-                self.weather_reading.wind_dir_cardinal = Some(wind_dir_cardinal)
+                self.weather_reading.wind_dir_cardinal = Some(wind_dir_cardinal.to_string())
             }
 
             // write the result to the database

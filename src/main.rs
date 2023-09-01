@@ -1,5 +1,5 @@
 use std::env;
-use ws_core::{InMemWriter, Station, StdoutWriter, WeatherReading};
+use ws_core::{InMemWriter, Station, StdoutWriter, WeatherReadingSource};
 use ws_display::{DisplayReader, HidSource};
 use ws_influx_db::InfluxWriter;
 use ws_rtl_433::{rtl_433_source, RTL433Reader};
@@ -32,7 +32,7 @@ async fn main() {
     }
 }
 
-fn find_reader(value: &String) -> Box<dyn Iterator<Item = WeatherReading>> {
+fn find_reader(value: &String) -> Box<dyn Iterator<Item = WeatherReadingSource>> {
     match value.to_uppercase().as_str() {
         "DISPLAY" => Box::new(DisplayReader::new(
             HidSource::new(0x24c0, 0x003).expect("could not start HID Api"),
