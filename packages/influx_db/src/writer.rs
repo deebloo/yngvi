@@ -1,6 +1,5 @@
 use async_trait::async_trait;
 use influxdb::{Client, InfluxDbWriteable};
-use std::env;
 use ws_core::{WeatherReading, Writer};
 
 use crate::WeatherReadingInflux;
@@ -10,10 +9,7 @@ pub struct InfluxWriter {
 }
 
 impl InfluxWriter {
-    pub fn new() -> Self {
-        let url = env::var("WS_INFLUXDB_URL").unwrap_or("http://localhost:8086".to_string());
-        let database = env::var("WS_INFLUXDB_DB").unwrap_or("weather".to_string());
-
+    pub fn new(url: String, database: String) -> Self {
         println!("Writing to InfluxDB at {} into {}", url, database);
 
         let client = Client::new(url, database);
@@ -32,6 +28,7 @@ impl Writer for InfluxWriter {
 
         if let Ok(_) = res {
             println!("Succssful write to Influxdb");
+            println!("{}", weather_reading);
 
             Ok(())
         } else {

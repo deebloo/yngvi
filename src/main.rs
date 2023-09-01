@@ -39,7 +39,7 @@ fn find_reader(value: &String) -> Box<dyn Iterator<Item = WeatherReadingSource>>
         "DISPLAY" => Box::new(DisplayReader::new(
             HidSource::new(0x24c0, 0x003).expect("could not start HID Api"),
         )),
-        "RTL433" => Box::new(RTL433Reader::new(rtl_433_source())),
+        "RTL_433" => Box::new(RTL433Reader::new(rtl_433_source())),
         "FILE" => {
             let path = env::var("WS_SOURCE_FILE_PATH")
                 .expect("WS_FILE_PATH is required when using the FILE source");
@@ -52,7 +52,12 @@ fn find_reader(value: &String) -> Box<dyn Iterator<Item = WeatherReadingSource>>
 
 fn find_writer(value: &String) -> AppWriter {
     match value.to_uppercase().as_str() {
-        "INFLUXDB" => AppWriter::Influx(InfluxWriter::new()),
+        "INFLUXDB" => {
+            let url = env::var("WS_INFLUXDB_URL").unwrap_or("http://localhost:8086".to_string());
+            let database = env::var("WS_INFLUXDB_DB").unwrap_or("weather".to_string());
+
+            AppWriter::Influx(InfluxWriter::new(url, database))
+        }
         "INMEMORY" => AppWriter::InMemory(InMemWriter::new()),
         "STDOUT" => AppWriter::Stdout(StdoutWriter::new()),
         "NOOP" => AppWriter::Noop(NoopWriter::new()),
