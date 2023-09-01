@@ -41,7 +41,7 @@ fn find_reader(value: &String) -> Box<dyn Iterator<Item = WeatherReadingSource>>
         )),
         "RTL433" => Box::new(RTL433Reader::new(rtl_433_source())),
         "FILE" => {
-            let path = env::var("WS_FILE_PATH")
+            let path = env::var("WS_SOURCE_FILE_PATH")
                 .expect("WS_FILE_PATH is required when using the FILE source");
 
             Box::new(FileReader::new(path.as_str()))
