@@ -44,7 +44,7 @@ async fn main() {
     let mut station = Station::new();
 
     // define where your source data will come from
-    let reader = FileReader::new("path/to/source/readings.txt");
+    let reader = FileReader::new("data/source.txt");
 
     // define where your calculated data will be written to
     let mut writer = StdoutWriter::new();
