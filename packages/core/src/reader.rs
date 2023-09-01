@@ -8,7 +8,7 @@ use crate::WeatherReadingSource;
 pub struct FileReader {}
 
 impl FileReader {
-    pub fn file_reader(path: &str) -> impl Iterator<Item = WeatherReadingSource> {
+    pub fn new(path: &str) -> impl Iterator<Item = WeatherReadingSource> {
         let f = File::open(path).expect(format!("could not find file at {}", path).as_str());
 
         BufReader::new(f)

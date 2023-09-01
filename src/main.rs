@@ -1,5 +1,5 @@
 use std::env;
-use ws_core::{InMemWriter, NoopWriter, Station, StdoutWriter, WeatherReadingSource};
+use ws_core::{FileReader, InMemWriter, NoopWriter, Station, StdoutWriter, WeatherReadingSource};
 use ws_display::{DisplayReader, HidSource};
 use ws_influx_db::InfluxWriter;
 use ws_rtl_433::{rtl_433_source, RTL433Reader};
@@ -40,6 +40,12 @@ fn find_reader(value: &String) -> Box<dyn Iterator<Item = WeatherReadingSource>>
             HidSource::new(0x24c0, 0x003).expect("could not start HID Api"),
         )),
         "RTL433" => Box::new(RTL433Reader::new(rtl_433_source())),
+        "FILE" => {
+            let path = env::var("WS_FILE_PATH")
+                .expect("WS_FILE_PATH is required when using the FILE source");
+
+            Box::new(FileReader::new(path.as_str()))
+        }
         _ => panic!("no reader defined. found {}", value),
     }
 }
