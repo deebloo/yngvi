@@ -1,4 +1,4 @@
-# acurite-weather
+# Weather Station
 
 Dashboard for weather data collected from Acurite 5-1 weather station. In one of two ways.
 
@@ -52,5 +52,4 @@ async fn main() {
     // start your station!
     station.start(reader, writer).await
 }
-
 ```
