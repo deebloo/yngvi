@@ -1,5 +1,5 @@
 use std::env;
-use ws_core::{InMemWriter, Station, StdoutWriter, WeatherReadingSource};
+use ws_core::{InMemWriter, NoopWriter, Station, StdoutWriter, WeatherReadingSource};
 use ws_display::{DisplayReader, HidSource};
 use ws_influx_db::InfluxWriter;
 use ws_rtl_433::{rtl_433_source, RTL433Reader};
@@ -8,6 +8,7 @@ enum AppWriter {
     Influx(InfluxWriter),
     Stdout(StdoutWriter),
     InMemory(InMemWriter),
+    Noop(NoopWriter),
 }
 
 #[tokio::main]
@@ -29,6 +30,7 @@ async fn main() {
         AppWriter::Influx(writer) => station.start(reader, writer).await,
         AppWriter::InMemory(writer) => station.start(reader, writer).await,
         AppWriter::Stdout(writer) => station.start(reader, writer).await,
+        AppWriter::Noop(writer) => station.start(reader, writer).await,
     }
 }
 
@@ -47,6 +49,7 @@ fn find_writer(value: &String) -> AppWriter {
         "INFLUXDB" => AppWriter::Influx(InfluxWriter::new()),
         "INMEMORY" => AppWriter::InMemory(InMemWriter::new()),
         "STDOUT" => AppWriter::Stdout(StdoutWriter::new()),
+        "NOOP" => AppWriter::Noop(NoopWriter::new()),
         _ => panic!("no writer defined. found {}", value),
     }
 }

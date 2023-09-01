@@ -44,3 +44,18 @@ impl Writer for InMemWriter {
         Ok(())
     }
 }
+
+pub struct NoopWriter {}
+
+impl NoopWriter {
+    pub fn new() -> Self {
+        Self {}
+    }
+}
+
+#[async_trait]
+impl Writer for NoopWriter {
+    async fn write(&mut self, _: &WeatherReading) -> Result<(), ()> {
+        Ok(())
+    }
+}
