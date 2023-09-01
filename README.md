@@ -16,12 +16,6 @@ Dashboard for weather data collected from Acurite 5-1 weather station. In one of
 | WS_SOURCE_FILE_PATH    | path to file with source readings                            |                       |
 | WS_DEST                | INFLUXDB, STDOUT, or INMEMORY                                | STDOUT                |
 
-### Pull latest code
-
-```BASH
-git clone https://github.com/deebloo/acurite-weather.git
-```
-
 ### Run integration and unit tests
 
 ```BASH
