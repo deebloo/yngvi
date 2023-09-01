@@ -13,7 +13,7 @@ enum AppWriter {
 
 #[tokio::main]
 async fn main() {
-    let source = env::var("WS_SOURCE").unwrap_or("DISPLAY".to_string());
+    let source = env::var("WS_SOURCE").unwrap_or("ACURITE_DISPLAY".to_string());
     let dest = env::var("WS_DEST").unwrap_or("STDOUT".to_string());
 
     let mut station = Station::new();
@@ -36,10 +36,16 @@ async fn main() {
 
 fn find_reader(value: &String) -> Box<dyn Iterator<Item = WeatherReadingSource>> {
     match value.to_uppercase().as_str() {
-        "DISPLAY" => Box::new(DisplayReader::new(
-            HidSource::new(0x24c0, 0x003).expect("could not start HID Api"),
-        )),
-        "RTL_433" => Box::new(RTL433Reader::new(rtl_433_source())),
+        "ACURITE_DISPLAY" => {
+            let source = HidSource::new(0x24c0, 0x003).expect("could not start HID Api");
+
+            Box::new(DisplayReader::new(source))
+        }
+        "RTL_433" => {
+            let source = rtl_433_source();
+
+            Box::new(RTL433Reader::new(source))
+        }
         "FILE" => {
             let key = "WS_SOURCE_FILE_PATH";
             let path = env::var(key)
