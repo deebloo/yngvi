@@ -34,10 +34,11 @@ impl Writer for InfluxWriter {
             .send()
             .await;
 
-        if let Ok(result) = request {
-            println!("{:?}", result);
-            println!("Succssful write to Influxdb");
-            println!("{}", weather_reading);
+        if let Ok(response) = request {
+            if response.status() == 204 {
+                println!("Write to InfluxDB Successful");
+                println!("{}", weather_reading);
+            }
 
             Ok(())
         } else {
