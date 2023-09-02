@@ -72,4 +72,16 @@ mod tests {
 
         assert_eq!(reading.to_line_protocol(), format!("weather device_id=100i,rain=100,rain_delta=0.5,wind_speed=4,wind_dir=180,wind_dir_cardinal=\"S\",out_temp=60.5,out_humid=50,wind_chill=50,heat_index=60,dew_point=90 {}", reading.time.timestamp_nanos()));
     }
+
+    #[test]
+    fn should_handle_empty_values() {
+        let mut reading = WeatherReading::new();
+
+        reading.out_temp = Some(60.);
+
+        assert_eq!(
+            reading.to_line_protocol(),
+            format!("weather out_temp=60 {}", reading.time.timestamp_nanos())
+        );
+    }
 }
