@@ -1,32 +1,41 @@
 use async_trait::async_trait;
-use influxdb::{Client, InfluxDbWriteable};
+use reqwest::Client;
 use ws_core::{WeatherReading, Writer};
 
-use crate::WeatherReadingInflux;
+use crate::line_protocol::LineProtocol;
 
 pub struct InfluxWriter {
+    url: String,
+    database: String,
     client: Client,
 }
 
 impl InfluxWriter {
     pub fn new(url: String, database: String) -> Self {
-        println!("Writing to InfluxDB at {} into {}", url, database);
-
-        let client = Client::new(url, database);
-
-        Self { client }
+        Self {
+            url,
+            database,
+            client: Client::new(),
+        }
     }
 }
 
 #[async_trait]
 impl Writer for InfluxWriter {
     async fn write(&mut self, weather_reading: &WeatherReading) -> Result<(), ()> {
-        let weather_reading_influx = WeatherReadingInflux::from_weather_reading(&weather_reading);
-        let query = weather_reading_influx.into_query("weather");
+        let query = weather_reading.to_line_protocol();
 
-        let res = self.client.query(&query).await;
+        let url = format!("{}/write", self.url);
+        let request = self
+            .client
+            .post(url)
+            .query(&[("db", &self.database)])
+            .body(query)
+            .send()
+            .await;
 
-        if let Ok(_) = res {
+        if let Ok(result) = request {
+            println!("{:?}", result);
             println!("Succssful write to Influxdb");
             println!("{}", weather_reading);
 

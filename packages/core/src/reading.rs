@@ -2,7 +2,7 @@ use chrono::{DateTime, Utc};
 use core::fmt;
 use serde::{Deserialize, Serialize};
 
-#[derive(Serialize, Deserialize, Clone, Debug, PartialEq)]
+#[derive(Debug, Serialize, Deserialize)]
 pub struct WeatherReadingSource {
     pub time: DateTime<Utc>,
     pub device_id: Option<u32>,
