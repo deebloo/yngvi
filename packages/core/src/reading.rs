@@ -1,8 +1,7 @@
 use chrono::{DateTime, Utc};
-use core::fmt;
 use serde::{Deserialize, Serialize};
 
-#[derive(Serialize, Deserialize, Clone, Debug, PartialEq)]
+#[derive(Debug, Serialize, Deserialize)]
 pub struct WeatherReadingSource {
     pub time: DateTime<Utc>,
     pub device_id: Option<u32>,
@@ -45,16 +44,6 @@ pub struct WeatherReading {
     pub wind_chill: Option<f32>,
     pub heat_index: Option<f32>,
     pub dew_point: Option<f32>,
-}
-
-impl fmt::Display for WeatherReading {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(
-            f,
-            "#### {:?} #### \nrain: {:?} rain_delta: {:?} \nwind_speed: {:?} wind_dir: {:?} \nwind_dir_cardinal: {:?} \ntemp: {:?} humidity: {:?} \nwind_chill: {:?} heat_index: {:?} dew_point: {:?} \n###### END ######\n",
-            self.time, self.rain, self.rain_delta, self.wind_speed, self.wind_dir, self.wind_dir_cardinal, self.out_temp, self.out_humid, self.wind_chill, self.heat_index, self.dew_point
-        )
-    }
 }
 
 impl WeatherReading {

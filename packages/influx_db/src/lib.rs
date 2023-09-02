@@ -1,5 +1,5 @@
-pub mod weather_reading;
+pub mod line_protocol;
 pub mod writer;
 
-pub use weather_reading::*;
+pub use line_protocol::*;
 pub use writer::*;
