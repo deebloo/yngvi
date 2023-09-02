@@ -38,9 +38,11 @@ impl Writer for InfluxWriter {
             if response.status() == 204 {
                 println!("Write to InfluxDB Successful");
                 println!("{}", weather_reading);
-            }
 
-            Ok(())
+                Ok(())
+            } else {
+                Err(())
+            }
         } else {
             Err(())
         }
