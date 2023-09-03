@@ -37,7 +37,7 @@ impl LineProtocol for WeatherReading {
         }
 
         if let Some(value) = self.out_humid {
-            fields.push(format!("out_humid={}", value));
+            fields.push(format!("out_humid={}i", value));
         }
 
         if let Some(value) = self.wind_chill {
