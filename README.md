@@ -28,6 +28,8 @@ docker compose up --build
 
 ## Create your own
 
+Any data source can be defined as `Iterator<Item = WeatherReading>` and all destinations are defined with the `Writer` trait. This means that it is straight forward to define new data sources and new destination without touching any of the core station logic. Give it a try!
+
 ```rust
 use ws_core::{InMemWriter, Station, StdoutWriter, WeatherReading, FileReader};
 
