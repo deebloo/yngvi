@@ -60,8 +60,8 @@ fn find_reader(value: &String) -> Box<dyn Iterator<Item = WeatherReadingSource>>
 fn find_writer(value: &String) -> AppWriter {
     match value.to_uppercase().as_str() {
         "INFLUXDB" => {
-            let url_key = "WS_SOURCE_INFLUXDB_URL";
-            let db_key = "WS_SOURCE_INFLUXDB_DB";
+            let url_key = "WS_DEST_INFLUXDB_URL";
+            let db_key = "WS_DEST_INFLUXDB_DB";
 
             let url = env::var(url_key).unwrap_or("http://localhost:8086".to_string());
             let database = env::var(db_key).unwrap_or("weather".to_string());
