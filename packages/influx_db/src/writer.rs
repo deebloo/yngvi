@@ -72,7 +72,7 @@ mod tests {
             dew_point: Some(90.),
         };
 
-        assert_eq!(reading.to_line_protocol(), format!("weather device_id=100i,rain=100,rain_delta=0.5,wind_speed=4,wind_dir=180,wind_dir_cardinal=\"S\",out_temp=60.5,out_humid=50,wind_chill=50,heat_index=60,dew_point=90 {}", reading.time.timestamp_nanos()));
+        assert_eq!(reading.to_line_protocol(), format!("weather device_id=100i,rain=100,rain_delta=0.5,wind_speed=4,wind_dir=180,wind_dir_cardinal=\"S\",out_temp=60.5,out_humid=50i,wind_chill=50,heat_index=60,dew_point=90 {}", reading.time.timestamp_nanos()));
     }
 
     #[test]
