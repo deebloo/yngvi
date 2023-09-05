@@ -6,13 +6,13 @@ HUGE THANKS TO [WEEWX](http://weewx.com/) FOR DECODING THE VARIOUS MESSAGES FROM
 
 ### Config
 
-| Name                 | Description                                                          | Default               |
-| -------------------- | -------------------------------------------------------------------- | --------------------- |
-| WS_SOURCE            | determines where to pull data from. ACURITE_DISPLAY, RTL433, or FILE | DISPLAY               |
-| WS_SOURCE_FILE_PATH  | path to file with source readings                                    |                       |
-| WS_DEST              | INFLUXDB, STDOUT, or INMEMORY                                        | STDOUT                |
-| WS_DEST_INFLUXDB_URL | influxdb url                                                         | http://localhost:8086 |
-| WS_DEST_INFLUXDB_DB  | influxdb database                                                    | weather               |
+| Name                 | Description                                                           | Default               |
+| -------------------- | --------------------------------------------------------------------- | --------------------- |
+| WS_SRC               | determines where to pull data from. ACURITE_DISPLAY, RTL_433, or FILE | DISPLAY               |
+| WS_SRC_FILE_PATH     | path to file with source readings                                     |                       |
+| WS_DEST              | INFLUXDB, STDOUT, or INMEMORY                                         | STDOUT                |
+| WS_DEST_INFLUXDB_URL | influxdb url                                                          | http://localhost:8086 |
+| WS_DEST_INFLUXDB_DB  | influxdb database                                                     | weather               |
 
 ### Run integration and unit tests
 

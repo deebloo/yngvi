@@ -13,7 +13,7 @@ enum AppWriter {
 
 #[tokio::main]
 async fn main() {
-    let source = env::var("WS_SOURCE").unwrap_or("ACURITE_DISPLAY".to_string());
+    let source = env::var("WS_SRC").unwrap_or("ACURITE_DISPLAY".to_string());
     let dest = env::var("WS_DEST").unwrap_or("STDOUT".to_string());
 
     let mut station = Station::new();
@@ -47,7 +47,7 @@ fn find_reader(value: &String) -> Box<dyn Iterator<Item = WeatherReadingSource>>
             Box::new(RTL433Reader::new(source))
         }
         "FILE" => {
-            let key = "WS_SOURCE_FILE_PATH";
+            let key = "WS_SRC_FILE_PATH";
             let path = env::var(key)
                 .expect(format!("{} is required when using the FILE source", key).as_str());
 
