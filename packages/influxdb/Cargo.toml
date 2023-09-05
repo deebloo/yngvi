@@ -1,5 +1,5 @@
 [package]
-name = "ws_influx_db"
+name = "ws_influxdb"
 version = "0.2.0"
 authors = ["deebloo <dannybluedesign@gmail.com>"]
 edition = "2018"

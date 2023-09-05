@@ -1,7 +1,7 @@
 use std::env;
 use ws_core::{FileReader, InMemWriter, NoopWriter, Station, StdoutWriter, WeatherReadingSource};
 use ws_display::{DisplayReader, HidSource};
-use ws_influx_db::InfluxWriter;
+use ws_influxdb::InfluxWriter;
 use ws_rtl_433::{rtl_433_source, RTL433Reader};
 
 enum AppWriter {

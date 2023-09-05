@@ -1122,7 +1122,7 @@ dependencies = [
  "tokio",
  "ws_core",
  "ws_display",
- "ws_influx_db",
+ "ws_influxdb",
  "ws_rtl_433",
 ]
 
@@ -1265,7 +1265,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "ws_influx_db"
+name = "ws_influxdb"
 version = "0.2.0"
 dependencies = [
  "async-trait",
