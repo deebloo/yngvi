@@ -14,8 +14,8 @@ enum AppWriter {
 
 #[tokio::main]
 async fn main() {
-    let source = env::var("WS_SRC").unwrap_or("ACURITE_DISPLAY".to_string());
-    let dest = env::var("WS_DEST").unwrap_or("STDOUT".to_string());
+    let source = var("SRC").unwrap_or("ACURITE_DISPLAY".to_string());
+    let dest = var("DEST").unwrap_or("STDOUT".to_string());
 
     let mut station = Station::new();
 
@@ -69,25 +69,21 @@ fn find_writer(value: &String) -> AppWriter {
 }
 
 fn create_influx_writer() -> InfluxWriter {
-    let url_key = "WS_DEST_INFLUXDB_URL";
-    let db_key = "WS_DEST_INFLUXDB_DB";
-
-    let url = env::var(url_key).unwrap_or("http://localhost:8086".to_string());
-    let database = env::var(db_key).unwrap_or("weather".to_string());
+    let url = var("DEST_INFLUXDB_URL").unwrap_or("http://localhost:8086".to_string());
+    let database = var("DEST_INFLUXDB_DB").unwrap_or("weather".to_string());
 
     InfluxWriter::new(url, database)
 }
 
 fn create_influx2_writer() -> Influx2Writer {
-    let url_key = "WS_DEST_INFLUXDB_URL";
-    let org_key = "WS_DEST_INFLUXDB2_ORG";
-    let bucket_key = "WS_DEST_INFLUXDB2_BUCKET";
-    let token_key = "WS_DEST_INFLUXDB2_TOKEN";
-
-    let url = env::var(url_key).unwrap_or("http://localhost:8086".to_string());
-    let org = env::var(org_key).expect("ORG not provided");
-    let bucket = env::var(bucket_key).expect("BUCKET not provided");
-    let token = env::var(token_key).expect("TOKEN not provided");
+    let url = var("DEST_INFLUXDB_URL").unwrap_or("http://localhost:8086".to_string());
+    let org = var("DEST_INFLUXDB2_ORG").expect("ORG not provided");
+    let bucket = var("DEST_INFLUXDB2_BUCKET").expect("BUCKET not provided");
+    let token = var("DEST_INFLUXDB2_TOKEN").expect("TOKEN not provided");
 
     Influx2Writer::new(url, org, bucket, token)
+}
+
+fn var(key: &str) -> Result<String, env::VarError> {
+    env::var(format!("WS_{}", key))
 }
