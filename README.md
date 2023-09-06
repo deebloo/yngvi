@@ -27,7 +27,7 @@ cargo test --workspace
 ### build and start program
 
 ```BASH
-docker compose up --build
+WS_SRC=file WS_SRC_FILE_PATH=data/source.txt cargo run
 ```
 
 ## Create your own
