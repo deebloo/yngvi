@@ -12,6 +12,7 @@ ws_core = { path = "packages/core" }
 ws_rtl_433 = { path = "packages/rtl_433" }
 ws_display = { path = "packages/display" }
 ws_influxdb = { path = "packages/influxdb" }
+dotenv = "0.15.0"
 
 [dev-dependencies]
 async-trait = "0.1.73"

@@ -1,3 +1,4 @@
+use dotenv::dotenv;
 use std::env;
 use ws_core::{FileReader, InMemWriter, NoopWriter, Station, StdoutWriter, WeatherReadingSource};
 use ws_display::{DisplayReader, HidSource};
@@ -14,6 +15,8 @@ enum AppWriter {
 
 #[tokio::main]
 async fn main() {
+    dotenv().ok();
+
     let source = var("SRC").unwrap_or("ACURITE_DISPLAY".to_string());
     let dest = var("DEST").unwrap_or("STDOUT".to_string());
 

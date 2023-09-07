@@ -1,3 +1,4 @@
 
 /target
 /nginx/ssl
+.env
