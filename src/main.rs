@@ -1,17 +1,11 @@
 use dotenv::dotenv;
 use std::env;
-use ws_core::{FileReader, InMemWriter, NoopWriter, Station, StdoutWriter, WeatherReadingSource};
+use ws_core::{
+    FileReader, InMemWriter, NoopWriter, Station, StdoutWriter, WeatherReadingSource, Writer,
+};
 use ws_display::{DisplayReader, HidSource};
 use ws_influxdb::{Influx2Writer, InfluxWriter};
 use ws_rtl_433::{rtl_433_source, RTL433Reader};
-
-enum AppWriter {
-    Influx(InfluxWriter),
-    Influx2(Influx2Writer),
-    Stdout(StdoutWriter),
-    InMemory(InMemWriter),
-    Noop(NoopWriter),
-}
 
 #[tokio::main]
 async fn main() {
@@ -21,7 +15,6 @@ async fn main() {
     let dest = var("DEST").unwrap_or("STDOUT".to_string());
 
     let mut station = Station::new();
-
     let reader = find_reader(&source);
     let mut writer = find_writer(&dest);
 
@@ -30,13 +23,7 @@ async fn main() {
         source, dest
     );
 
-    match &mut writer {
-        AppWriter::Influx(writer) => station.start(reader, writer).await,
-        AppWriter::Influx2(writer) => station.start(reader, writer).await,
-        AppWriter::InMemory(writer) => station.start(reader, writer).await,
-        AppWriter::Stdout(writer) => station.start(reader, writer).await,
-        AppWriter::Noop(writer) => station.start(reader, writer).await,
-    }
+    station.start(reader, &mut writer).await;
 }
 
 fn find_reader(value: &String) -> Box<dyn Iterator<Item = WeatherReadingSource>> {
@@ -60,13 +47,13 @@ fn find_reader(value: &String) -> Box<dyn Iterator<Item = WeatherReadingSource>>
     }
 }
 
-fn find_writer(value: &String) -> AppWriter {
+fn find_writer(value: &String) -> Box<dyn Writer + Send> {
     match value.to_uppercase().as_str() {
-        "INFLUXDB" => AppWriter::Influx(create_influx_writer()),
-        "INFLUXDB2" => AppWriter::Influx2(create_influx2_writer()),
-        "INMEMORY" => AppWriter::InMemory(InMemWriter::new()),
-        "STDOUT" => AppWriter::Stdout(StdoutWriter::new()),
-        "NOOP" => AppWriter::Noop(NoopWriter::new()),
+        "INFLUXDB" => Box::new(create_influx_writer()),
+        "INFLUXDB2" => Box::new(create_influx2_writer()),
+        "INMEMORY" => Box::new(InMemWriter::new()),
+        "STDOUT" => Box::new(StdoutWriter::new()),
+        "NOOP" => Box::new(NoopWriter::new()),
         _ => panic!("no writer defined. found {}", value),
     }
 }

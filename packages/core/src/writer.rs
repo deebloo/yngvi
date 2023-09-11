@@ -7,6 +7,13 @@ pub trait Writer {
     async fn write(&mut self, weather_reading: &WeatherReading) -> Result<(), ()>;
 }
 
+#[async_trait]
+impl<T: Writer + ?Sized + Send> Writer for Box<T> {
+    async fn write(&mut self, weather_reading: &WeatherReading) -> Result<(), ()> {
+        (**self).write(&weather_reading).await
+    }
+}
+
 pub struct StdoutWriter;
 
 impl StdoutWriter {
