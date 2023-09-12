@@ -1,5 +1,5 @@
 [package]
-name = "weather_station"
+name = "ws"
 version = "0.2.0"
 authors = ["deebloo <dannybluedesign@gmail.com>"]
 edition = "2018"

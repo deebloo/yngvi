@@ -5,7 +5,7 @@ use std::{
 
 use crate::WeatherReadingSource;
 
-pub struct FileReader {}
+pub struct FileReader;
 
 impl FileReader {
     pub fn new(path: &str) -> impl Iterator<Item = WeatherReadingSource> {

@@ -44,7 +44,7 @@ impl Iterator for HidSource {
     }
 }
 
-pub struct DisplayReader {}
+pub struct DisplayReader;
 
 impl DisplayReader {
     pub fn new<T: Iterator<Item = [u8; 10]>>(

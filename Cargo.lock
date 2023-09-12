@@ -1103,19 +1103,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "ca6ad05a4870b2bf5fe995117d3728437bd27d7cd5f06f13c17443ef369775a1"
 
 [[package]]
-name = "weather_station"
-version = "0.2.0"
-dependencies = [
- "async-trait",
- "dotenv",
- "tokio",
- "ws_core",
- "ws_display",
- "ws_influxdb",
- "ws_rtl_433",
-]
-
-[[package]]
 name = "web-sys"
 version = "0.3.64"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1230,6 +1217,19 @@ checksum = "524e57b2c537c0f9b1e69f1965311ec12182b4122e45035b1508cd24d2adadb1"
 dependencies = [
  "cfg-if",
  "windows-sys",
+]
+
+[[package]]
+name = "ws"
+version = "0.2.0"
+dependencies = [
+ "async-trait",
+ "dotenv",
+ "tokio",
+ "ws_core",
+ "ws_display",
+ "ws_influxdb",
+ "ws_rtl_433",
 ]
 
 [[package]]
