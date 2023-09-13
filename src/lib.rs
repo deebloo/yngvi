@@ -43,7 +43,7 @@ pub fn create_influx_writer() -> InfluxWriter {
 }
 
 pub fn create_influx2_writer() -> Influx2Writer {
-    let url = var("DEST_INFLUXDB_URL").unwrap_or("http://localhost:8086".to_string());
+    let url = var("DEST_INFLUXDB2_URL").unwrap_or("http://localhost:8086".to_string());
     let org = var("DEST_INFLUXDB2_ORG").expect("ORG not provided");
     let bucket = var("DEST_INFLUXDB2_BUCKET").expect("BUCKET not provided");
     let token = var("DEST_INFLUXDB2_TOKEN").expect("TOKEN not provided");

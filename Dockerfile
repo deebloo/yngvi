@@ -1,4 +1,4 @@
-FROM rust:1.72.0-bookworm as builder
+FROM rust:1.72.0 as builder
 
 WORKDIR /app
 
@@ -12,11 +12,11 @@ COPY packages packages
 
 RUN cargo build --release
 
-FROM debian:bookworm-slim
+FROM debian:bookworm
 
 RUN apt-get update -y
 RUN apt-get install -y libusb-1.0-0-dev rtl-433
 
-COPY --from=builder /app/target/release/weather_station /usr/local/bin/weather_station
+COPY --from=builder /app/target/release/ws /usr/local/bin/ws
 
-CMD ["weather_station"]
+CMD ["ws"]
