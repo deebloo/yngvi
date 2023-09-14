@@ -10,5 +10,5 @@ edition = "2018"
 async-trait = "0.1.73"
 chrono = "0.4.30"
 serde = "1.0.188"
-serde_json = "1.0.106"
+serde_json = "1.0.107"
 ws_core = { path = "../core" }
