@@ -1,44 +1,60 @@
+use crate::temp::Temp;
+
 // Calculated based on formula from the National Weather Service
 // https://www.weather.gov/media/epz/wxcalc/windChill.pdf
-pub fn calc_wind_chill(wind_speed: f32, out_temp: f32) -> f32 {
-    if wind_speed < 3. || out_temp >= 50. {
+pub fn calc_wind_chill(wind_speed: f32, out_temp: Temp) -> Temp {
+    // formula only works in F
+    let start_temp = out_temp.to_f();
+
+    if wind_speed < 3. || start_temp >= Temp::F(50.) {
         return out_temp;
     }
 
+    let raw_temp: f32 = out_temp.into();
     let speed = wind_speed.powf(0.16);
-    let raw = 35.74 + 0.6215 * out_temp - 35.75 * speed + 0.4275 * out_temp * speed;
+    let raw = 35.74 + 0.6215 * raw_temp - 35.75 * speed + 0.4275 * raw_temp * speed;
 
-    raw
+    match out_temp {
+        Temp::C(_) => Temp::C((raw - 32.) * (5. / 9.)),
+        Temp::F(_) => Temp::F(raw),
+    }
 }
 
 // Calculated based on formula from the National Weather Service
 // https://www.wpc.ncep.noaa.gov/html/heatindex_equation.shtml
-pub fn calc_heat_index(temp: f32, humid: u8) -> f32 {
-    if temp <= 40. {
-        return temp;
+pub fn calc_heat_index(out_temp: Temp, humid: u8) -> Temp {
+    // formula only works in F
+    let start_temp = out_temp.to_f();
+
+    if start_temp <= Temp::F(40.) {
+        return start_temp;
     }
 
     let rh = humid as f32;
+    let raw_temp: f32 = start_temp.into();
 
-    let mut hi = 0.5 * (temp + 61.0 + ((temp - 68.0) * 1.2) + (rh * 0.094));
+    let mut hi = 0.5 * (raw_temp + 61.0 + ((raw_temp - 68.0) * 1.2) + (rh * 0.094));
 
     if hi > 79.0 {
-        hi = -42.379 + 2.04901523 * temp + 10.14333127 * rh
-            - 0.22475541 * temp * rh
-            - 0.00683783 * temp * temp
+        hi = -42.379 + 2.04901523 * raw_temp + 10.14333127 * rh
+            - 0.22475541 * raw_temp * rh
+            - 0.00683783 * raw_temp * raw_temp
             - 0.05481717 * rh * rh
-            + 0.00122874 * temp * temp * rh
-            + 0.00085282 * temp * rh * rh
-            - 0.00000199 * temp * temp * rh * rh;
+            + 0.00122874 * raw_temp * raw_temp * rh
+            + 0.00085282 * raw_temp * rh * rh
+            - 0.00000199 * raw_temp * raw_temp * rh * rh;
 
-        if rh <= 13. && temp >= 80. && temp <= 112. {
-            hi = hi - ((13. - rh) / 4.) * ((17. - (temp - 95.).abs()) / 17.).sqrt();
-        } else if rh > 85. && temp >= 80. && temp <= 87. {
-            hi = hi - ((rh - 85.) / 10.) * ((87. - temp) / 5.);
+        if rh <= 13. && out_temp >= Temp::F(80.) && out_temp <= Temp::F(112.) {
+            hi = hi - ((13. - rh) / 4.) * ((17. - (raw_temp - 95.).abs()) / 17.).sqrt();
+        } else if rh > 85. && out_temp >= Temp::F(80.) && out_temp <= Temp::F(87.) {
+            hi = hi - ((rh - 85.) / 10.) * ((87. - raw_temp) / 5.);
         }
     }
 
-    hi
+    match out_temp {
+        Temp::C(_) => Temp::C((raw_temp - 32.) * (5. / 9.)),
+        Temp::F(_) => Temp::F(raw_temp),
+    }
 }
 
 // Based on simple Dew Point calculation
