@@ -3,7 +3,6 @@ pub mod reader;
 pub mod reading;
 pub mod retry_manager;
 pub mod station;
-pub mod temp;
 pub mod writer;
 
 pub use formulas::*;

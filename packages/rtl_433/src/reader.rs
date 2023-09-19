@@ -44,7 +44,11 @@ impl RTL433Reader {
                             weather_reading.time = data.time;
                             weather_reading.rain = data.rain_in;
                             weather_reading.wind_speed = Some(data.wind_avg_mi_h);
-                            weather_reading.out_temp = data.temperature_f;
+                            weather_reading.out_temp = if let Some(temp) = data.temperature_f {
+                                Some(degrees::Temp::F(temp))
+                            } else {
+                                None
+                            };
                             weather_reading.out_humid = data.humidity;
                             weather_reading.wind_dir = data.wind_dir_deg;
 

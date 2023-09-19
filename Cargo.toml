@@ -13,6 +13,7 @@ ws_rtl_433 = { path = "packages/rtl_433" }
 ws_display = { path = "packages/display" }
 ws_influxdb = { path = "packages/influxdb" }
 dotenv = "0.15.0"
+degrees = { version = "0.4.0", features = ["serde"]}
 
 [dev-dependencies]
 async-trait = "0.1.73"

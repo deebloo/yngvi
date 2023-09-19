@@ -33,7 +33,9 @@ impl LineProtocol for WeatherReading {
         }
 
         if let Some(value) = self.out_temp {
-            fields.push(format!("out_temp={}", value));
+            let res: f32 = value.into();
+
+            fields.push(format!("out_temp={}", res));
         }
 
         if let Some(value) = self.out_humid {
@@ -41,27 +43,35 @@ impl LineProtocol for WeatherReading {
         }
 
         if let Some(value) = self.wind_chill {
-            fields.push(format!("wind_chill={}", value));
+            let res: f32 = value.into();
+
+            fields.push(format!("wind_chill={}", res));
         }
 
         if let Some(value) = self.heat_index {
-            fields.push(format!("heat_index={}", value));
+            let res: f32 = value.into();
+
+            fields.push(format!("heat_index={}", res));
         }
 
         if let Some(value) = self.dew_point {
-            fields.push(format!("dew_point={}", value));
+            let res: f32 = value.into();
+
+            fields.push(format!("dew_point={}", res));
         }
 
         format!(
             "weather {} {}",
             fields.join(","),
-            self.time.timestamp_nanos()
+            self.time.timestamp_subsec_nanos()
         )
     }
 }
 
 #[cfg(test)]
 mod tests {
+    use degrees::Temp;
+
     use super::*;
 
     #[test]
@@ -74,25 +84,28 @@ mod tests {
             wind_speed: Some(4.),
             wind_dir: Some(180.),
             wind_dir_cardinal: Some("S".to_string()),
-            out_temp: Some(60.5),
+            out_temp: Some(Temp::F(60.5)),
             out_humid: Some(50),
-            wind_chill: Some(50.),
-            heat_index: Some(60.),
-            dew_point: Some(90.),
+            wind_chill: Some(Temp::F(50.)),
+            heat_index: Some(Temp::F(60.)),
+            dew_point: Some(Temp::F(90.)),
         };
 
-        assert_eq!(reading.to_line_protocol(), format!("weather device_id=100i,rain=100,rain_delta=0.5,wind_speed=4,wind_dir=180,wind_dir_cardinal=\"S\",out_temp=60.5,out_humid=50i,wind_chill=50,heat_index=60,dew_point=90 {}", reading.time.timestamp_nanos()));
+        assert_eq!(reading.to_line_protocol(), format!("weather device_id=100i,rain=100,rain_delta=0.5,wind_speed=4,wind_dir=180,wind_dir_cardinal=\"S\",out_temp=60.5,out_humid=50i,wind_chill=50,heat_index=60,dew_point=90 {}", reading.time.timestamp_subsec_nanos()));
     }
 
     #[test]
     fn should_handle_empty_values() {
         let mut reading = WeatherReading::new();
 
-        reading.out_temp = Some(60.);
+        reading.out_temp = Some(Temp::F(60.));
 
         assert_eq!(
             reading.to_line_protocol(),
-            format!("weather out_temp=60 {}", reading.time.timestamp_nanos())
+            format!(
+                "weather out_temp=60 {}",
+                reading.time.timestamp_subsec_nanos()
+            )
         );
     }
 }
