@@ -15,20 +15,20 @@ services:
   #     - influxdb
   #     - grafana
 
-  influxdb2:
-    container_name: influxdb2
-    image: influxdb:2.7.1
-    restart: always
-    ports:
-      - 8087:8086
+  # influxdb2:
+  #   container_name: influxdb2
+  #   image: influxdb:2.7.1
+  #   restart: always
+  #   ports:
+  #     - 8087:8086
     # environment:
       # DOCKER_INFLUXDB_INIT_MODE=upgrade
       # DOCKER_INFLUXDB_INIT_USERNAME=my-user
       # DOCKER_INFLUXDB_INIT_PASSWORD=my-password
       # DOCKER_INFLUXDB_INIT_ORG=my-org
       # DOCKER_INFLUXDB_INIT_BUCKET=my-bucket
-    volumes:
-      - influxdb2_data:/var/lib/influxdb2
+    # volumes:
+    #   - influxdb2_data:/var/lib/influxdb2
 
   influxdb:
     container_name: influxdb

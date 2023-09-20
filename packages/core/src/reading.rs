@@ -1,4 +1,5 @@
 use chrono::{DateTime, Utc};
+use degrees::Temp;
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -8,7 +9,7 @@ pub struct WeatherReadingSource {
     pub rain: Option<f32>,
     pub wind_speed: Option<f32>,
     pub wind_dir: Option<f32>,
-    pub out_temp: Option<f32>,
+    pub out_temp: Option<Temp>,
     pub out_humid: Option<u8>,
 }
 
@@ -39,11 +40,11 @@ pub struct WeatherReading {
     pub wind_speed: Option<f32>,
     pub wind_dir: Option<f32>,
     pub wind_dir_cardinal: Option<String>,
-    pub out_temp: Option<f32>,
+    pub out_temp: Option<Temp>,
     pub out_humid: Option<u8>,
-    pub wind_chill: Option<f32>,
-    pub heat_index: Option<f32>,
-    pub dew_point: Option<f32>,
+    pub wind_chill: Option<Temp>,
+    pub heat_index: Option<Temp>,
+    pub dew_point: Option<Temp>,
 }
 
 impl WeatherReading {

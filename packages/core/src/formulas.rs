@@ -1,50 +1,61 @@
+use degrees::Temp;
+
 // Calculated based on formula from the National Weather Service
 // https://www.weather.gov/media/epz/wxcalc/windChill.pdf
-pub fn calc_wind_chill(wind_speed: f32, out_temp: f32) -> f32 {
-    if wind_speed < 3. || out_temp >= 50. {
+pub fn calc_wind_chill(wind_speed: f32, out_temp: Temp) -> Temp {
+    // formula only works in F
+    let start_temp = out_temp.as_f();
+
+    if wind_speed < 3. || start_temp >= Temp::F(50.) {
         return out_temp;
     }
 
+    let raw_temp: f32 = out_temp.into();
     let speed = wind_speed.powf(0.16);
-    let raw = 35.74 + 0.6215 * out_temp - 35.75 * speed + 0.4275 * out_temp * speed;
+    let raw = 35.74 + 0.6215 * raw_temp - 35.75 * speed + 0.4275 * raw_temp * speed;
 
-    raw
+    Temp::F(raw).round()
 }
 
 // Calculated based on formula from the National Weather Service
 // https://www.wpc.ncep.noaa.gov/html/heatindex_equation.shtml
-pub fn calc_heat_index(temp: f32, humid: u8) -> f32 {
-    if temp <= 40. {
-        return temp;
+pub fn calc_heat_index(out_temp: Temp, humid: u8) -> Temp {
+    // formula only works in F
+    let start_temp = out_temp.as_f();
+
+    if start_temp <= Temp::F(40.) {
+        return start_temp;
     }
 
     let rh = humid as f32;
+    let raw_temp: f32 = start_temp.into();
 
-    let mut hi = 0.5 * (temp + 61.0 + ((temp - 68.0) * 1.2) + (rh * 0.094));
+    let mut hi = 0.5 * (raw_temp + 61.0 + ((raw_temp - 68.0) * 1.2) + (rh * 0.094));
 
     if hi > 79.0 {
-        hi = -42.379 + 2.04901523 * temp + 10.14333127 * rh
-            - 0.22475541 * temp * rh
-            - 0.00683783 * temp * temp
+        hi = -42.379 + 2.04901523 * raw_temp + 10.14333127 * rh
+            - 0.22475541 * raw_temp * rh
+            - 0.00683783 * raw_temp * raw_temp
             - 0.05481717 * rh * rh
-            + 0.00122874 * temp * temp * rh
-            + 0.00085282 * temp * rh * rh
-            - 0.00000199 * temp * temp * rh * rh;
+            + 0.00122874 * raw_temp * raw_temp * rh
+            + 0.00085282 * raw_temp * rh * rh
+            - 0.00000199 * raw_temp * raw_temp * rh * rh;
 
-        if rh <= 13. && temp >= 80. && temp <= 112. {
-            hi = hi - ((13. - rh) / 4.) * ((17. - (temp - 95.).abs()) / 17.).sqrt();
-        } else if rh > 85. && temp >= 80. && temp <= 87. {
-            hi = hi - ((rh - 85.) / 10.) * ((87. - temp) / 5.);
+        if rh <= 13. && start_temp >= Temp::F(80.) && start_temp <= Temp::F(112.) {
+            hi = hi - ((13. - rh) / 4.) * ((17. - (raw_temp - 95.).abs()) / 17.).sqrt();
+        } else if rh > 85. && start_temp >= Temp::F(80.) && start_temp <= Temp::F(87.) {
+            hi = hi - ((rh - 85.) / 10.) * ((87. - raw_temp) / 5.);
         }
     }
 
-    hi
+    Temp::F(hi).round()
 }
 
 // Based on simple Dew Point calculation
 // https://iridl.ldeo.columbia.edu/dochelp/QA/Basic/dewpoint.html
-pub fn calc_dew_point(temp: f32, humid: u8) -> f32 {
-    let temp_c = (temp - 32.) / 1.8;
+pub fn calc_dew_point(temp: Temp, humid: u8) -> Temp {
+    let temp_c: f32 = temp.as_c().into();
+
     let rh = humid as f32;
 
     let res = temp_c
@@ -52,7 +63,7 @@ pub fn calc_dew_point(temp: f32, humid: u8) -> f32 {
         - ((2.5 + 0.007 * temp_c) * (1. - (0.01 * rh))).powf(3.)
         - (15.9 + 0.117 * temp_c) * (1. - (0.01 * rh)).powf(14.);
 
-    res * (9.0 / 5.0) + 32.
+    Temp::C(res).as_f()
 }
 
 pub fn wind_dir_to_cardinal<'a>(wind_dir: f32) -> &'a str {
@@ -75,47 +86,49 @@ mod tests {
 
     #[test]
     fn test_calc_wind_chill_at_least_3() {
-        assert_eq!(calc_wind_chill(3., 38.), 36.10366);
+        println!("{:?}", calc_wind_chill(3., Temp::F(38.)));
+
+        assert_eq!(calc_wind_chill(3., Temp::F(38.)), Temp::F(36.104));
     }
 
     #[test]
     fn test_calc_wind_chill_below_3() {
-        assert_eq!(calc_wind_chill(2., 38.), 38.);
+        assert_eq!(calc_wind_chill(2., Temp::F(38.)), Temp::F(38.));
     }
 
     #[test]
     fn test_calc_wind_chill_temp_above_50() {
-        assert_eq!(calc_wind_chill(2., 51.), 51.);
+        assert_eq!(calc_wind_chill(2., Temp::F(51.)), Temp::F(51.));
     }
 
     #[test]
     fn test_calc_hi_should_be_temp() {
-        assert_eq!(calc_heat_index(26., 50), 26.);
+        assert_eq!(calc_heat_index(Temp::F(26.), 50), Temp::F(26.));
     }
 
     #[test]
     fn test_calc_hi_should_be_correct_simple() {
-        assert_eq!(calc_heat_index(75., 100), 76.899994);
+        assert_eq!(calc_heat_index(Temp::F(75.), 100), Temp::F(76.9));
     }
 
     #[test]
     fn test_calc_hi_should_be_correct_no_adjustment() {
-        assert_eq!(calc_heat_index(80., 65), 82.36536);
+        assert_eq!(calc_heat_index(Temp::F(80.), 65), Temp::F(82.365));
     }
 
     #[test]
     fn test_calc_hi_should_be_correct_adjustment_1() {
-        assert_eq!(calc_heat_index(85., 10), 81.39988);
+        assert_eq!(calc_heat_index(Temp::F(85.), 10), Temp::F(81.4));
     }
 
     #[test]
     fn test_calc_hi_should_be_correct_adjustment_2() {
-        assert_eq!(calc_heat_index(85., 90), 101.38081);
+        assert_eq!(calc_heat_index(Temp::F(85.), 90), Temp::F(101.381));
     }
 
     #[test]
     fn calc_dewpoint_should_work() {
-        assert_eq!(calc_dew_point(79., 50).round(), 59.0);
+        assert_eq!(calc_dew_point(Temp::F(79.), 50), Temp::F(58.88));
     }
 
     #[test]

@@ -1,3 +1,4 @@
+use degrees::Temp;
 use ws_core::InMemWriter;
 use ws_rtl_433::{rtl_433_file_source, RTL433Reader};
 
@@ -19,11 +20,11 @@ async fn shold_read_and_record_readings() {
     let rain_delta: Vec<Option<f32>> = data.clone().map(|r| r.rain_delta).collect();
     let wind_speed: Vec<Option<f32>> = data.clone().map(|r| r.wind_speed).collect();
     let wind_dir: Vec<Option<f32>> = data.clone().map(|r| r.wind_dir).collect();
-    let out_temp: Vec<Option<f32>> = data.clone().map(|r| r.out_temp).collect();
+    let out_temp: Vec<Option<Temp>> = data.clone().map(|r| r.out_temp).collect();
     let out_humid: Vec<Option<u8>> = data.clone().map(|r| r.out_humid).collect();
-    let wind_chill: Vec<Option<f32>> = data.clone().map(|r| r.wind_chill).collect();
-    let heat_index: Vec<Option<f32>> = data.clone().map(|r| r.heat_index).collect();
-    let dew_point: Vec<Option<f32>> = data.clone().map(|r| r.dew_point).collect();
+    let wind_chill: Vec<Option<Temp>> = data.clone().map(|r| r.wind_chill).collect();
+    let heat_index: Vec<Option<Temp>> = data.clone().map(|r| r.heat_index).collect();
+    let dew_point: Vec<Option<Temp>> = data.clone().map(|r| r.dew_point).collect();
 
     assert_eq!(
         rain,
@@ -49,7 +50,13 @@ async fn shold_read_and_record_readings() {
     );
     assert_eq!(
         out_temp,
-        [Some(55.8), Some(55.8), Some(55.8), Some(55.8), Some(55.8)]
+        [
+            Some(Temp::F(55.8)),
+            Some(Temp::F(55.8)),
+            Some(Temp::F(55.8)),
+            Some(Temp::F(55.8)),
+            Some(Temp::F(55.8)),
+        ]
     );
     assert_eq!(
         out_humid,
@@ -57,26 +64,32 @@ async fn shold_read_and_record_readings() {
     );
     assert_eq!(
         wind_chill,
-        [Some(55.8), Some(55.8), Some(55.8), Some(55.8), Some(55.8)]
+        [
+            Some(Temp::F(55.8)),
+            Some(Temp::F(55.8)),
+            Some(Temp::F(55.8)),
+            Some(Temp::F(55.8)),
+            Some(Temp::F(55.8)),
+        ]
     );
     assert_eq!(
         heat_index,
         [
-            Some(54.370003),
-            Some(54.370003),
-            Some(54.370003),
-            Some(54.370003),
-            Some(54.370003)
+            Some(Temp::F(54.37)),
+            Some(Temp::F(54.37)),
+            Some(Temp::F(54.37)),
+            Some(Temp::F(54.37)),
+            Some(Temp::F(54.37)),
         ]
     );
     assert_eq!(
         dew_point,
         [
-            Some(46.282158),
-            Some(46.282158),
-            Some(46.282158),
-            Some(46.282158),
-            Some(46.282158)
+            Some(Temp::F(46.282)),
+            Some(Temp::F(46.282)),
+            Some(Temp::F(46.282)),
+            Some(Temp::F(46.282)),
+            Some(Temp::F(46.282)),
         ]
     );
 }
