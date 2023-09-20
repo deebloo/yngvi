@@ -142,9 +142,9 @@ checksum = "e496a50fda8aacccc86d7529e2c1e0892dbd0f898a6b5645b5561b89c3210efa"
 
 [[package]]
 name = "degrees"
-version = "0.4.0"
+version = "0.6.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "2cf4b8d8ce3ef927a67322cdb06b58b9299644c365981969266d946610b5737e"
+checksum = "1698717652dbcd1fe8fc8873771cee89c977e500b498695eac538bc7440a60a7"
 dependencies = [
  "serde",
 ]
