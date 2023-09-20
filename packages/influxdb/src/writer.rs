@@ -29,7 +29,7 @@ impl Writer for InfluxWriter {
         let request = self
             .client
             .post(url)
-            .query(&[("db", &self.database)])
+            .query(&[("db", &self.database), ("precision", &String::from("ms"))])
             .body(query)
             .send()
             .await;
