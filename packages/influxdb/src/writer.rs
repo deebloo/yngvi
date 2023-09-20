@@ -30,11 +30,9 @@ impl Writer for InfluxWriter {
             .client
             .post(url)
             .query(&[("db", &self.database), ("precision", &String::from("ms"))])
-            .body(query)
-            .send()
-            .await;
+            .body(query);
 
-        if let Ok(response) = request {
+        if let Ok(response) = request.send().await {
             if response.status() == 204 {
                 Ok(())
             } else {

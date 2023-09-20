@@ -41,11 +41,9 @@ impl Writer for Influx2Writer {
                 ("precision", &String::from("ms")),
             ])
             .header("Authorization", format!("Token {}", self.token))
-            .body(query)
-            .send()
-            .await;
+            .body(query);
 
-        if let Ok(response) = request {
+        if let Ok(response) = request.send().await {
             if response.status() == 204 {
                 Ok(())
             } else {
