@@ -57,5 +57,5 @@ services:
 
 volumes:
   influxdb_data:
-  influxdb2_data:
+  # influxdb2_data:
   grafana_data:
