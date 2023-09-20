@@ -1,3 +1,4 @@
+use degrees::Temp;
 use std::{
     fs::File,
     io::{BufRead, BufReader, Result},
@@ -45,7 +46,7 @@ impl RTL433Reader {
                             weather_reading.rain = data.rain_in;
                             weather_reading.wind_speed = Some(data.wind_avg_mi_h);
                             weather_reading.out_temp = if let Some(temp) = data.temperature_f {
-                                Some(degrees::Temp::F(temp))
+                                Some(Temp::F(temp))
                             } else {
                                 None
                             };

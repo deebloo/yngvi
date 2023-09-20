@@ -63,7 +63,7 @@ impl LineProtocol for WeatherReading {
         format!(
             "weather {} {}",
             fields.join(","),
-            self.time.timestamp_subsec_nanos()
+            self.time.timestamp_millis()
         )
     }
 }
@@ -102,10 +102,7 @@ mod tests {
 
         assert_eq!(
             reading.to_line_protocol(),
-            format!(
-                "weather out_temp=60 {}",
-                reading.time.timestamp_subsec_nanos()
-            )
+            format!("weather out_temp=60 {}", reading.time.timestamp_millis())
         );
     }
 }

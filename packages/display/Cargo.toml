@@ -11,5 +11,5 @@ chrono = "0.4.31"
 hidapi = "2.4.1"
 serde = "1.0.188"
 serde_json = "1.0.107"
-degrees = { version = "0.4.0", features = ["serde"]}
+degrees = { version = "0.4.0", features = ["serde"] }
 ws_core = { path = "../core" }

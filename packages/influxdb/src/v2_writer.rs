@@ -29,11 +29,17 @@ impl Writer for Influx2Writer {
     async fn write(&mut self, weather_reading: &WeatherReading) -> Result<(), ()> {
         let query = weather_reading.to_line_protocol();
 
+        println!("{}", &query);
+
         let url = format!("{}/api/v2/write", self.url);
         let request = self
             .client
             .post(url)
-            .query(&[("org", &self.org), ("bucket", &self.bucket)])
+            .query(&[
+                ("org", &self.org),
+                ("bucket", &self.bucket),
+                ("precision", &String::from("ms")),
+            ])
             .header("Authorization", format!("Token {}", self.token))
             .body(query)
             .send()
