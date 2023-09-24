@@ -1,4 +1,4 @@
-use degrees::Temp;
+use metrum::Temp;
 use std::{
     fs::File,
     io::{BufRead, BufReader, Result},

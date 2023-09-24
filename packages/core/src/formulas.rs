@@ -1,4 +1,4 @@
-use degrees::Temp;
+use metrum::Temp;
 
 // Calculated based on formula from the National Weather Service
 // https://www.weather.gov/media/epz/wxcalc/windChill.pdf

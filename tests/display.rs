@@ -1,4 +1,4 @@
-use degrees::Temp;
+use metrum::Temp;
 use ws_core::{InMemWriter, Station};
 use ws_display::DisplayReader;
 

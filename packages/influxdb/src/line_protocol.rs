@@ -70,7 +70,7 @@ impl LineProtocol for WeatherReading {
 
 #[cfg(test)]
 mod tests {
-    use degrees::Temp;
+    use metrum::Temp;
 
     use super::*;
 

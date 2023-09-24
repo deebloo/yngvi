@@ -1,4 +1,4 @@
-use degrees::Temp;
+use metrum::Temp;
 
 pub type Report1 = [u8; 10];
 

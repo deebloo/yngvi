@@ -141,15 +141,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "e496a50fda8aacccc86d7529e2c1e0892dbd0f898a6b5645b5561b89c3210efa"
 
 [[package]]
-name = "degrees"
-version = "0.6.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "1698717652dbcd1fe8fc8873771cee89c977e500b498695eac538bc7440a60a7"
-dependencies = [
- "serde",
-]
-
-[[package]]
 name = "dotenv"
 version = "0.15.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -485,6 +476,15 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "8f232d6ef707e1956a43342693d2a31e72989554d58299d7a88738cc95b0d35c"
 
 [[package]]
+name = "metrum"
+version = "0.2.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "97f4bd475966bfbb5f4d8cd4bbe489ebb780c3035c42414700c0e740d1d5e05d"
+dependencies = [
+ "serde",
+]
+
+[[package]]
 name = "mime"
 version = "0.3.17"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -725,9 +725,9 @@ checksum = "d626bb9dae77e28219937af045c257c28bfd3f69333c512553507f5f9798cb76"
 
 [[package]]
 name = "rustix"
-version = "0.38.13"
+version = "0.38.14"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "d7db8590df6dfcd144d22afd1b83b36c21a18d7cbc1dc4bb5295a8712e9eb662"
+checksum = "747c788e9ce8e92b12cd485c49ddf90723550b654b32508f979b71a7b1ecda4f"
 dependencies = [
  "bitflags 2.4.0",
  "errno",
@@ -843,9 +843,9 @@ dependencies = [
 
 [[package]]
 name = "smallvec"
-version = "1.11.0"
+version = "1.11.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "62bb4feee49fdd9f707ef802e22365a35de4b7b299de4763d44bfea899442ff9"
+checksum = "942b4a808e05215192e39f4ab80813e599068285906cc91aa64f923db842bd5a"
 
 [[package]]
 name = "socket2"
@@ -948,9 +948,9 @@ dependencies = [
 
 [[package]]
 name = "tokio-util"
-version = "0.7.8"
+version = "0.7.9"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "806fe8c2c87eccc8b3267cbae29ed3ab2d0bd37fca70ab622e46aaa9375ddb7d"
+checksum = "1d68074620f57a0b21594d9735eb2e98ab38b17f80d3fcb189fca266771ca60d"
 dependencies = [
  "bytes",
  "futures-core",
@@ -1233,8 +1233,8 @@ name = "ws"
 version = "0.2.0"
 dependencies = [
  "async-trait",
- "degrees",
  "dotenv",
+ "metrum",
  "tokio",
  "ws_core",
  "ws_display",
@@ -1248,7 +1248,7 @@ version = "0.2.0"
 dependencies = [
  "async-trait",
  "chrono",
- "degrees",
+ "metrum",
  "serde",
  "serde_json",
 ]
@@ -1258,8 +1258,8 @@ name = "ws_display"
 version = "0.2.0"
 dependencies = [
  "chrono",
- "degrees",
  "hidapi",
+ "metrum",
  "serde",
  "serde_json",
  "ws_core",
@@ -1271,7 +1271,7 @@ version = "0.2.0"
 dependencies = [
  "async-trait",
  "chrono",
- "degrees",
+ "metrum",
  "reqwest",
  "serde",
  "serde_json",
@@ -1284,7 +1284,7 @@ version = "0.2.0"
 dependencies = [
  "async-trait",
  "chrono",
- "degrees",
+ "metrum",
  "serde",
  "serde_json",
  "ws_core",

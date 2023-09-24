@@ -1,4 +1,4 @@
-use degrees::Temp;
+use metrum::Temp;
 use ws_core::InMemWriter;
 use ws_rtl_433::{rtl_433_file_source, RTL433Reader};
 

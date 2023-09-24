@@ -1,5 +1,5 @@
 use chrono::{DateTime, Utc};
-use degrees::Temp;
+use metrum::Temp;
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Serialize, Deserialize)]
