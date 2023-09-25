@@ -31,7 +31,6 @@ services:
     #   - influxdb2_data:/var/lib/influxdb2
 
   influxdb:
-    container_name: influxdb
     image: influxdb:1.8.10
     restart: always
     ports:
@@ -42,8 +41,7 @@ services:
       - influxdb_data:/var/lib/influxdb
 
   grafana:
-    container_name: grafana
-    image: grafana/grafana-enterprise:10.0.3
+    image: grafana/grafana-oss:10.0.3
     restart: always
     ports:
       - 3000:3000
