@@ -33,7 +33,7 @@ impl LineProtocol for WeatherReading {
         }
 
         if let Some(value) = self.out_temp {
-            let res: f32 = value.into();
+            let res: f64 = value.into();
 
             fields.push(format!("out_temp={}", res));
         }
@@ -43,19 +43,19 @@ impl LineProtocol for WeatherReading {
         }
 
         if let Some(value) = self.wind_chill {
-            let res: f32 = value.into();
+            let res: f64 = value.into();
 
             fields.push(format!("wind_chill={}", res));
         }
 
         if let Some(value) = self.heat_index {
-            let res: f32 = value.into();
+            let res: f64 = value.into();
 
             fields.push(format!("heat_index={}", res));
         }
 
         if let Some(value) = self.dew_point {
-            let res: f32 = value.into();
+            let res: f64 = value.into();
 
             fields.push(format!("dew_point={}", res));
         }

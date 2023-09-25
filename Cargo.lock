@@ -477,9 +477,9 @@ checksum = "8f232d6ef707e1956a43342693d2a31e72989554d58299d7a88738cc95b0d35c"
 
 [[package]]
 name = "metrum"
-version = "0.2.0"
+version = "0.3.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "97f4bd475966bfbb5f4d8cd4bbe489ebb780c3035c42414700c0e740d1d5e05d"
+checksum = "267c42d52dd85a73c8c6e80c3e80800956550858f35e151c04dc26849f82ca1e"
 dependencies = [
  "serde",
 ]
