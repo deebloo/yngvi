@@ -22,12 +22,12 @@ pub struct FiveInOneReading {
     pub sequence_num: u8,
     pub battery_ok: u8,
     pub mic: String,
-    pub wind_avg_mi_h: f32,
+    pub wind_avg_mi_h: f64,
     #[serde(rename(deserialize = "temperature_F"))]
-    pub temperature_f: Option<f32>,
+    pub temperature_f: Option<f64>,
     pub humidity: Option<u8>,
-    pub wind_dir_deg: Option<f32>,
-    pub rain_in: Option<f32>,
+    pub wind_dir_deg: Option<f64>,
+    pub rain_in: Option<f64>,
 }
 
 impl FiveInOneReading {
