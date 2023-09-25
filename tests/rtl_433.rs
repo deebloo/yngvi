@@ -3,7 +3,7 @@ use ws_core::InMemWriter;
 use ws_rtl_433::{rtl_433_file_source, RTL433Reader};
 
 #[tokio::test]
-async fn shold_read_and_record_readings() {
+async fn shold_read_and_record_rtl433_readings() {
     let mut station = ws_core::Station::new();
 
     let source = rtl_433_file_source("data/rtl_433.txt").take(5);
@@ -85,11 +85,11 @@ async fn shold_read_and_record_readings() {
     assert_eq!(
         dew_point,
         [
-            Some(Temp::F(46.282)),
-            Some(Temp::F(46.282)),
-            Some(Temp::F(46.282)),
-            Some(Temp::F(46.282)),
-            Some(Temp::F(46.282)),
+            Some(Temp::F(46.282161213458586)),
+            Some(Temp::F(46.282161213458586)),
+            Some(Temp::F(46.282161213458586)),
+            Some(Temp::F(46.282161213458586)),
+            Some(Temp::F(46.282161213458586)),
         ]
     );
 }

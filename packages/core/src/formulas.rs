@@ -128,7 +128,7 @@ mod tests {
 
     #[test]
     fn calc_dewpoint_should_work() {
-        assert_eq!(calc_dew_point(Temp::F(79.), 50), Temp::F(58.88));
+        assert_eq!(calc_dew_point(Temp::F(79.), 50), Temp::F(58.87944937834804));
     }
 
     #[test]

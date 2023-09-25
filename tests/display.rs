@@ -41,35 +41,35 @@ async fn shold_read_and_record_readings() {
     assert_eq!(
         out_temp,
         [
-            Some(Temp::F(31.499998)),
-            Some(Temp::F(31.499998)),
-            Some(Temp::F(31.499998))
+            Some(Temp::F(31.5)),
+            Some(Temp::F(31.5)),
+            Some(Temp::F(31.5))
         ]
     );
     assert_eq!(out_humid, [Some(75), Some(75), Some(75)]);
     assert_eq!(
         wind_chill,
         [
-            Some(Temp::F(31.499998)),
-            Some(Temp::F(31.499998)),
-            Some(Temp::F(31.499998)),
+            Some(Temp::F(31.5)),
+            Some(Temp::F(31.5)),
+            Some(Temp::F(31.5))
         ]
     );
     assert_eq!(
         heat_index,
         [
-            Some(Temp::F(31.499998)),
-            Some(Temp::F(31.499998)),
-            Some(Temp::F(31.499998))
+            Some(Temp::F(31.5)),
+            Some(Temp::F(31.5)),
+            Some(Temp::F(31.5))
         ]
     );
 
     assert_eq!(
         dew_point,
         [
-            Some(Temp::F(24.52832)),
-            Some(Temp::F(24.52832)),
-            Some(Temp::F(24.52832))
+            Some(Temp::F(24.528321361905846)),
+            Some(Temp::F(24.528321361905846)),
+            Some(Temp::F(24.528321361905846))
         ]
     );
 }

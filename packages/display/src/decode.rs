@@ -116,7 +116,7 @@ mod tests {
         let report: Report1 = [1, 197, 26, 120, 0, 5, 75, 75, 3, 255];
         let out_temp = decode_out_temp(&report);
 
-        assert_eq!(out_temp, Temp::F(31.499998));
+        assert_eq!(out_temp, Temp::F(31.5));
     }
 
     #[test]
