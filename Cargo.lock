@@ -1229,63 +1229,17 @@ dependencies = [
 ]
 
 [[package]]
-name = "ws"
-version = "0.2.0"
+name = "yngvi"
+version = "0.1.0"
 dependencies = [
  "async-trait",
+ "chrono",
  "dotenv",
- "metrum",
- "tokio",
- "ws_core",
- "ws_display",
- "ws_influxdb",
- "ws_rtl_433",
-]
-
-[[package]]
-name = "ws_core"
-version = "0.2.0"
-dependencies = [
- "async-trait",
- "chrono",
- "metrum",
- "serde",
- "serde_json",
-]
-
-[[package]]
-name = "ws_display"
-version = "0.2.0"
-dependencies = [
- "chrono",
  "hidapi",
- "metrum",
- "serde",
- "serde_json",
- "ws_core",
-]
-
-[[package]]
-name = "ws_influxdb"
-version = "0.2.0"
-dependencies = [
- "async-trait",
- "chrono",
  "metrum",
  "reqwest",
  "serde",
  "serde_json",
- "ws_core",
-]
-
-[[package]]
-name = "ws_rtl_433"
-version = "0.2.0"
-dependencies = [
- "async-trait",
- "chrono",
- "metrum",
- "serde",
- "serde_json",
- "ws_core",
+ "tokio",
+ "yngvi",
 ]

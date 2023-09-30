@@ -1,12 +1,13 @@
+use crate::{
+    core::WeatherReadingSource,
+    display::decode::{
+        decode_flavor, decode_out_humidity, decode_out_temp, decode_rain, decode_wind_dir,
+        decode_wind_speed, Report1,
+    },
+};
 use chrono::Utc;
 use hidapi::HidApi;
 use std::{thread, time};
-use ws_core::WeatherReadingSource;
-
-use crate::decode::{
-    decode_flavor, decode_out_humidity, decode_out_temp, decode_rain, decode_wind_dir,
-    decode_wind_speed, Report1,
-};
 
 pub struct HidSource {
     hid: HidApi,

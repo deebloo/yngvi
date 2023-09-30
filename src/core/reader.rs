@@ -1,9 +1,8 @@
+use crate::core::WeatherReadingSource;
 use std::{
     fs::File,
     io::{BufRead, BufReader},
 };
-
-use crate::WeatherReadingSource;
 
 pub struct FileReader;
 

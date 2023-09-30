@@ -1,6 +1,5 @@
+use crate::core::WeatherReading;
 use async_trait::async_trait;
-
-use crate::WeatherReading;
 
 #[async_trait]
 pub trait Writer {

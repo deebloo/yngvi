@@ -1,11 +1,11 @@
-use ws_core::InMemWriter;
-use ws_rtl_433::{rtl_433_file_source, RTL433Reader};
+use yngvi::core::{InMemWriter, Station};
+use yngvi::rtl_433::{rtl_433_file_source, RTL433Reader};
 
 mod error_writer;
 
 #[tokio::test]
 async fn should_replay_failed_writes_rtl_433() {
-    let mut station = ws_core::Station::new();
+    let mut station = Station::new();
 
     let source = rtl_433_file_source("data/rtl_433.txt").take(5);
     let reader = RTL433Reader::new(source);

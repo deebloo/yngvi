@@ -1,8 +1,9 @@
+use crate::{
+    core::{WeatherReading, Writer},
+    influxdb::line_protocol::LineProtocol,
+};
 use async_trait::async_trait;
 use reqwest::Client;
-use ws_core::{WeatherReading, Writer};
-
-use crate::line_protocol::LineProtocol;
 
 pub struct Influx2Writer {
     url: String,

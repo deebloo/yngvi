@@ -1,4 +1,4 @@
-use ws_core::{WeatherReading, Writer};
+use yngvi::core::{WeatherReading, Writer};
 
 pub struct ErrorWriter;
 

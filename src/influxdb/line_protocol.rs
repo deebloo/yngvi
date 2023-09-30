@@ -1,4 +1,4 @@
-use ws_core::WeatherReading;
+use crate::core::WeatherReading;
 
 pub trait LineProtocol {
     fn to_line_protocol(&self) -> String;

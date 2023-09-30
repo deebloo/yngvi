@@ -1,6 +1,8 @@
+mod program;
+
+use crate::program::{find_reader, find_writer, var};
 use dotenv::dotenv;
-use ws::{find_reader, find_writer, var};
-use ws_core::Station;
+use yngvi::core::Station;
 
 #[tokio::main]
 async fn main() {

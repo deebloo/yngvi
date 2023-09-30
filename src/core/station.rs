@@ -1,4 +1,4 @@
-use crate::{
+use crate::core::{
     calc_dew_point, calc_heat_index, calc_wind_chill, wind_dir_to_cardinal, RetryManager,
     WeatherReading, WeatherReadingSource, Writer,
 };

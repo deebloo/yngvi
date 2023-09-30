@@ -1,6 +1,6 @@
 use metrum::Temp;
-use ws_core::{InMemWriter, Station};
-use ws_display::DisplayReader;
+use yngvi::core::{InMemWriter, Station};
+use yngvi::display::DisplayReader;
 
 #[tokio::test]
 async fn shold_read_and_record_readings() {
