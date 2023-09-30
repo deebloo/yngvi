@@ -18,9 +18,6 @@ dotenv = { version = "0.15.0", optional = true }
 hidapi = { version = "2.4.1", optional = true }
 reqwest = { version = "0.11.20", optional = true }
 
-[lib]
-name = "yngvi"
-
 [features]
 standalone = ["dep:dotenv", "dep:tokio", "display", "influxdb", "rtl_433"]
 display = ["dep:hidapi"]
@@ -29,3 +26,10 @@ rtl_433 = []
 
 [dev-dependencies]
 yngvi = { path = ".", features = ["standalone"]}
+
+[lib]
+name = "yngvi"
+
+[[bin]]         
+name = "yngvi"    
+required-features = ["standalone"] 
