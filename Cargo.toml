@@ -10,11 +10,12 @@ async-trait = "0.1.73"
 chrono = { version = "0.4.31", features = ["serde"] }
 metrum = { version = "0.5.0", features = ["serde"] }
 serde = { version = "1.0.188", features = ["derive"] }
+serde_json = "1.0.107"
+
 
 # feature dependencies
 tokio = { version = "1.32.0", features = ["full"], optional = true}
 dotenv = { version = "0.15.0", optional = true }
-serde_json = { version = "1.0.107", optional = true }
 hidapi = { version = "2.4.1", optional = true }
 reqwest = { version = "0.11.20", optional = true }
 
@@ -22,7 +23,7 @@ reqwest = { version = "0.11.20", optional = true }
 standalone = ["dep:dotenv", "dep:tokio", "display", "influxdb", "rtl_433"]
 display = ["dep:hidapi"]
 influxdb = ["dep:reqwest"]
-rtl_433 = ["dep:serde_json"]
+rtl_433 = []
 
 [dev-dependencies]
 yngvi = { path = ".", features = ["standalone"]}
