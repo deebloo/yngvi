@@ -27,7 +27,7 @@ influxdb = ["dep:reqwest"]
 rtl_433 = []
 
 [dev-dependencies]
-yngvi = { path = ".", features = ["standalone"]}
+yngvi = { path = ".", features = ["standalone"] }
 
 [lib]
 name = "yngvi"
