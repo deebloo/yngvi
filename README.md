@@ -7,7 +7,7 @@ HUGE THANKS TO [WEEWX](http://weewx.com/) FOR DECODING THE VARIOUS MESSAGES FROM
 ### Install program
 
 ```bash
-cargo install yngvi
+cargo install yngvi --features standalone
 ```
 
 ### Config
