@@ -4,6 +4,12 @@ Program for collecting and processing weather data.
 
 HUGE THANKS TO [WEEWX](http://weewx.com/) FOR DECODING THE VARIOUS MESSAGES FROM THE ACURITE DISPLAY
 
+### Install program
+
+```bash
+cargo install yngvi
+```
+
 ### Config
 
 | Name                     | Description                                                           | Default               |
@@ -18,24 +24,16 @@ HUGE THANKS TO [WEEWX](http://weewx.com/) FOR DECODING THE VARIOUS MESSAGES FROM
 | WS_DEST_INFLUXDB2_BUCKET | influxdb bucket                                                       |                       |
 | WS_DEST_INFLUXDB2_TOKEN  | auth token for influxdb                                               |                       |
 
-### Run integration and unit tests
-
-```BASH
-cargo test --workspace
-```
-
-### build and start program
-
-```BASH
-WS_SRC=file WS_SRC_FILE_PATH=data/source.txt cargo run
-```
-
 ## Create your own
 
 Any data source can be defined as `Iterator<Item = WeatherReading>` and all destinations are defined with the `Writer` trait. WS comes with some prebuilt readers and writers but it should be straight forward to define new data sources and new destination without touching any of the core station logic. Give it a try!
 
+```bash
+cargo add yngvi
+```
+
 ```rust
-use ws_core::{InMemWriter, Station, StdoutWriter, WeatherReading, FileReader};
+use yngvi::core::{InMemWriter, Station, StdoutWriter, WeatherReading, FileReader};
 
 #[tokio::main]
 async fn main() {
