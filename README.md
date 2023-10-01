@@ -33,7 +33,7 @@ cargo add yngvi
 ```
 
 ```rust
-use yngvi::core::{InMemWriter, Station, StdoutWriter, WeatherReading, FileReader};
+use yngvi::core::{InMemWriter, Station, StdoutWriter, FileReader};
 
 #[tokio::main]
 async fn main() {
