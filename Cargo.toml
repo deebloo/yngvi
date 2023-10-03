@@ -20,7 +20,7 @@ serde_json = "1.0.107"
 tokio = { version = "1.32.0", features = ["full"], optional = true}
 dotenv = { version = "0.15.0", optional = true }
 hidapi = { version = "2.4.1", optional = true }
-reqwest = { version = "0.11.21", optional = true }
+reqwest = { version = "0.11.22", optional = true }
 
 [features]
 standalone = ["dep:dotenv", "dep:tokio", "display", "influxdb", "rtl_433"]
