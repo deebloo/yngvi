@@ -20,5 +20,9 @@ async fn main() {
         source, dest
     );
 
-    station.start(reader, &mut writer).await;
+    let res = station.start(reader, &mut writer).await;
+
+    if res.is_ok() {
+        println!("Station no longer recieving readings. Shutting down");
+    }
 }

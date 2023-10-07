@@ -10,7 +10,7 @@ async fn shold_read_and_record_rtl433_readings() {
     let reader = RTL433Reader::new(source);
     let mut writer = InMemWriter::new();
 
-    station.start(reader, &mut writer).await;
+    let _ = station.start(reader, &mut writer).await;
 
     // Get stored readings from the writer
     let data = writer.readings.into_iter();

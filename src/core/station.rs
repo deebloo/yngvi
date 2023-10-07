@@ -20,7 +20,7 @@ impl Station {
         &mut self,
         reader: R,
         writer: &mut W,
-    ) {
+    ) -> Result<&WeatherReading, ()> {
         for reading in reader {
             self.weather_reading.device_id = reading.device_id;
             self.weather_reading.time = reading.time;
@@ -83,5 +83,7 @@ impl Station {
                 self.retry_manager.add(self.weather_reading.clone());
             }
         }
+
+        Result::Ok(&self.weather_reading)
     }
 }

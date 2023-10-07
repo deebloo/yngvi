@@ -15,7 +15,7 @@ async fn shold_read_and_record_readings() {
     let mut writer = InMemWriter::new();
     let mut station = Station::new();
 
-    station.start(reader, &mut writer).await;
+    let _res = station.start(reader, &mut writer).await;
 
     // Get stored readings from the writer
     let data = writer.readings.into_iter();

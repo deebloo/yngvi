@@ -12,7 +12,7 @@ async fn should_replay_failed_writes_rtl_433() {
 
     let mut writer = error_writer::ErrorWriter {};
 
-    station.start(reader, &mut writer).await;
+    let _ = station.start(reader, &mut writer).await;
 
     assert_eq!(station.retry_manager.failed_writes.len(), 5);
 
@@ -21,7 +21,7 @@ async fn should_replay_failed_writes_rtl_433() {
 
     let mut writer = InMemWriter::new();
 
-    station.start(reader, &mut writer).await;
+    let _ = station.start(reader, &mut writer).await;
 
     assert_eq!(writer.readings.len(), 6);
     assert_eq!(station.retry_manager.failed_writes.len(), 0);
