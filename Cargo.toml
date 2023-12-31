@@ -10,7 +10,7 @@ documentation = "https://docs.rs/yngvi/0.2.0"
 
 [dependencies]
 # standard dependencies
-async-trait = "0.1.74"
+async-trait = "0.1.76"
 chrono = { version = "0.4.31", features = ["serde"] }
 metrum = { version = "0.5.0", features = ["serde"] }
 serde = { version = "1.0.193", features = ["derive"] }
