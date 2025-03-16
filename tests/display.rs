@@ -21,10 +21,10 @@ async fn shold_read_and_record_readings() {
     let data = writer.readings.into_iter();
 
     // Check writers stored weahter properties
-    let rain: Vec<Option<f64>> = data.clone().map(|r| r.rain).collect();
-    let rain_delta: Vec<Option<f64>> = data.clone().map(|r| r.rain_delta).collect();
-    let wind_speed: Vec<Option<f64>> = data.clone().map(|r| r.wind_speed).collect();
-    let wind_dir: Vec<Option<f64>> = data.clone().map(|r| r.wind_dir).collect();
+    let rain: Vec<Option<f32>> = data.clone().map(|r| r.rain).collect();
+    let rain_delta: Vec<Option<f32>> = data.clone().map(|r| r.rain_delta).collect();
+    let wind_speed: Vec<Option<f32>> = data.clone().map(|r| r.wind_speed).collect();
+    let wind_dir: Vec<Option<f32>> = data.clone().map(|r| r.wind_dir).collect();
     let wind_dir_cardinal: Vec<Option<String>> =
         data.clone().map(|r| r.wind_dir_cardinal).collect();
     let out_temp: Vec<Option<Temp>> = data.clone().map(|r| r.out_temp).collect();

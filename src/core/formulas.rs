@@ -2,7 +2,7 @@ use metrum::Temp;
 
 // Calculated based on formula from the National Weather Service
 // https://www.weather.gov/media/epz/wxcalc/windChill.pdf
-pub fn calc_wind_chill(wind_speed: f64, out_temp: Temp) -> Temp {
+pub fn calc_wind_chill(wind_speed: f32, out_temp: Temp) -> Temp {
     // formula only works in F
     let start_temp = out_temp.as_f();
 
@@ -10,7 +10,7 @@ pub fn calc_wind_chill(wind_speed: f64, out_temp: Temp) -> Temp {
         return out_temp;
     }
 
-    let raw_temp: f64 = out_temp.into();
+    let raw_temp: f32 = out_temp.into();
     let speed = wind_speed.powf(0.16);
     let raw = 35.74 + 0.6215 * raw_temp - 35.75 * speed + 0.4275 * raw_temp * speed;
 
@@ -27,8 +27,8 @@ pub fn calc_heat_index(out_temp: Temp, humid: u8) -> Temp {
         return start_temp;
     }
 
-    let rh = humid as f64;
-    let raw_temp: f64 = start_temp.into();
+    let rh = humid as f32;
+    let raw_temp: f32 = start_temp.into();
 
     let mut hi = 0.5 * (raw_temp + 61.0 + ((raw_temp - 68.0) * 1.2) + (rh * 0.094));
 
@@ -54,9 +54,9 @@ pub fn calc_heat_index(out_temp: Temp, humid: u8) -> Temp {
 // Based on simple Dew Point calculation
 // https://iridl.ldeo.columbia.edu/dochelp/QA/Basic/dewpoint.html
 pub fn calc_dew_point(temp: Temp, humid: u8) -> Temp {
-    let temp_c: f64 = temp.as_c().into();
+    let temp_c: f32 = temp.as_c().into();
 
-    let rh = humid as f64;
+    let rh = humid as f32;
 
     let res = temp_c
         - (14.55 + 0.114 * temp_c) * (1. - (0.01 * rh))
@@ -66,7 +66,7 @@ pub fn calc_dew_point(temp: Temp, humid: u8) -> Temp {
     Temp::C(res).as_f()
 }
 
-pub fn wind_dir_to_cardinal<'a>(wind_dir: f64) -> &'a str {
+pub fn wind_dir_to_cardinal<'a>(wind_dir: f32) -> &'a str {
     match wind_dir as u32 {
         271..=359 => "NW",
         181..=269 => "SW",
@@ -88,7 +88,7 @@ mod tests {
     fn test_calc_wind_chill_at_least_3() {
         println!("{:?}", calc_wind_chill(3., Temp::F(38.)));
 
-        assert_eq!(calc_wind_chill(3., Temp::F(38.)), Temp::F(36.104));
+        assert_eq!(calc_wind_chill(3., Temp::F(38.)), Temp::F(36.1));
     }
 
     #[test]
@@ -113,7 +113,7 @@ mod tests {
 
     #[test]
     fn test_calc_hi_should_be_correct_no_adjustment() {
-        assert_eq!(calc_heat_index(Temp::F(80.), 65), Temp::F(82.365));
+        assert_eq!(calc_heat_index(Temp::F(80.), 65), Temp::F(82.4));
     }
 
     #[test]
@@ -123,7 +123,7 @@ mod tests {
 
     #[test]
     fn test_calc_hi_should_be_correct_adjustment_2() {
-        assert_eq!(calc_heat_index(Temp::F(85.), 90), Temp::F(101.381));
+        assert_eq!(calc_heat_index(Temp::F(85.), 90), Temp::F(101.4));
     }
 
     #[test]
