@@ -1,6 +1,6 @@
 [package]
 name = "yngvi"
-version = "0.2.1"
+version = "0.3.1"
 description = "Read, calculate and write weather data"
 authors = ["deebloo <dannybluedesign@gmail.com>"]
 edition = "2018"
