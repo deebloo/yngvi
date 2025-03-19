@@ -100,7 +100,7 @@ mod tests {
         let report: Report1 = [1, 197, 26, 113, 0, 200, 0, 108, 3, 255];
         let wind_speed = decode_wind_speed(&report);
 
-        assert_eq!(wind_speed, 2.6794283);
+        assert_eq!(wind_speed, 2.6794282162834056);
     }
 
     #[test]

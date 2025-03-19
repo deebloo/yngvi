@@ -10,14 +10,11 @@ impl Sub for Temp {
     type Output = TempDelta;
 
     fn sub(self, rhs: Self) -> Self::Output {
-        // Convert both temperatures to Kelvin and subtract
         let k1 = self.as_k();
         let k2 = rhs.as_k();
 
-        if k1 > k2 {
-            TempDelta { value: k1 - k2 }
-        } else {
-            TempDelta { value: k2 - k1 }
+        TempDelta {
+            value: (k1 - k2).abs(),
         }
     }
 }
