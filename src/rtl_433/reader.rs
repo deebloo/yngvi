@@ -47,7 +47,7 @@ impl RTL433Reader {
                             weather_reading.rain = data.rain_in;
                             weather_reading.wind_speed = Some(data.wind_avg_mi_h);
                             weather_reading.out_temp = if let Some(temp) = data.temperature_f {
-                                Some(Temp::F(temp))
+                                Some(Temp::from_f(temp))
                             } else {
                                 None
                             };

@@ -6,9 +6,9 @@ use serde::{Deserialize, Serialize};
 pub struct WeatherReadingSource {
     pub time: DateTime<Utc>,
     pub device_id: Option<u32>,
-    pub rain: Option<f32>,
-    pub wind_speed: Option<f32>,
-    pub wind_dir: Option<f32>,
+    pub rain: Option<f64>,
+    pub wind_speed: Option<f64>,
+    pub wind_dir: Option<f64>,
     pub out_temp: Option<Temp>,
     pub out_humid: Option<u8>,
 }
@@ -35,10 +35,10 @@ impl WeatherReadingSource {
 pub struct WeatherReading {
     pub time: DateTime<Utc>,
     pub device_id: Option<u32>,
-    pub rain: Option<f32>,
-    pub rain_delta: Option<f32>,
-    pub wind_speed: Option<f32>,
-    pub wind_dir: Option<f32>,
+    pub rain: Option<f64>,
+    pub rain_delta: Option<f64>,
+    pub wind_speed: Option<f64>,
+    pub wind_dir: Option<f64>,
     pub wind_dir_cardinal: Option<String>,
     pub out_temp: Option<Temp>,
     pub out_humid: Option<u8>,
