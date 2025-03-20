@@ -6,6 +6,20 @@ pub struct TempDelta {
     value: f64,
 }
 
+impl TempDelta {
+    pub fn as_f(&self) -> f64 {
+        self.value * (9. / 5.)
+    }
+
+    pub fn as_c(&self) -> f64 {
+        self.value
+    }
+
+    pub fn as_k(&self) -> f64 {
+        self.value
+    }
+}
+
 impl Sub for Temp {
     type Output = TempDelta;
 
@@ -22,6 +36,13 @@ impl Sub for Temp {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn foo() {
+        let cc = Temp::from_f(50.) - Temp::from_f(25.);
+
+        assert_eq!(cc.as_f(), 25.000000000000046);
+    }
 
     #[test]
     fn should_sub_from_c() {
