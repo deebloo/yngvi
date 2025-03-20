@@ -79,16 +79,16 @@ async fn shold_read_and_record_rtl433_readings() {
         ]
     );
 
-    // assert_eq!(
-    //     heat_index,
-    //     [
-    //         Some(Temp::from_f(54.4)),
-    //         Some(Temp::from_f(54.4)),
-    //         Some(Temp::from_f(54.4)),
-    //         Some(Temp::from_f(54.4)),
-    //         Some(Temp::from_f(54.4)),
-    //     ]
-    // );
+    assert_eq!(
+        heat_index,
+        [
+            Some(Temp::from_f(54.37)),
+            Some(Temp::from_f(54.37)),
+            Some(Temp::from_f(54.37)),
+            Some(Temp::from_f(54.37)),
+            Some(Temp::from_f(54.37)),
+        ]
+    );
 
     assert_eq!(
         dew_point,
