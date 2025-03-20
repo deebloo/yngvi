@@ -6,7 +6,7 @@ pub fn calc_wind_chill(wind_speed: f64, out_temp: Temp) -> Temp {
     // formula only works in F
     let start_temp = out_temp.as_f();
 
-    if wind_speed < 3. || out_temp >= Temp::from_f(50.) {
+    if wind_speed < 3. || start_temp >= 50. {
         return out_temp;
     }
 
