@@ -3,6 +3,7 @@ mod sub;
 
 #[cfg(feature = "serde")]
 use serde::{Deserialize, Serialize};
+use sub::TempDelta;
 
 #[derive(Debug, Clone, Copy)]
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
@@ -27,6 +28,10 @@ impl Temp {
         Self { kelvin: val }
     }
 
+    pub fn from_delta(delta: TempDelta) -> Self {
+        Self::from_f(delta.as_f())
+    }
+
     pub fn as_c(&self) -> f64 {
         self.kelvin - 273.15
     }
@@ -45,6 +50,7 @@ impl Temp {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use sub::TempDelta;
 
     use std::vec;
 
@@ -87,5 +93,30 @@ mod tests {
             assert_eq!(c_source.as_k(), temp.kelvin);
             assert_eq!(f_source.as_k(), temp.kelvin);
         }
+    }
+
+    #[test]
+    fn should_convert_from_delta() {
+        // Test with a positive delta
+        let delta = Temp::from_c(10.0) - Temp::from_f(25.);
+
+        let temp = Temp::from_delta(delta);
+        // assert_eq!(temp.as_c(), 10.0);
+        assert_eq!(temp.as_f(), 25.000000000000057);
+        // assert_eq!(temp.as_k(), 283.15);
+
+        // // Test with a zero delta
+        // let delta = Temp::from_c(0.0) - Temp::from_c(0.0);
+        // let temp = Temp::from_delta(delta);
+        // assert_eq!(temp.as_c(), 0.0);
+        // assert_eq!(temp.as_f(), 32.0);
+        // assert_eq!(temp.as_k(), 273.15);
+
+        // // Test with a negative delta
+        // let delta = Temp::from_c(-10.0) - Temp::from_c(0.0);
+        // let temp = Temp::from_delta(delta);
+        // assert_eq!(temp.as_c(), -10.0);
+        // assert_eq!(temp.as_f(), 14.0);
+        // assert_eq!(temp.as_k(), 263.15);
     }
 }

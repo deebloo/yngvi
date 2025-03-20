@@ -39,7 +39,7 @@ mod tests {
 
     #[test]
     fn foo() {
-        let cc = Temp::from_f(50.) - Temp::from_f(25.);
+        let cc = Temp::from_c(10.) - Temp::from_f(25.);
 
         assert_eq!(cc.as_f(), 25.000000000000046);
     }
