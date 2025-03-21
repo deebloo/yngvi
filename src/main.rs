@@ -1,9 +1,33 @@
-mod program;
-mod writers;
-
-use crate::program::{find_reader, find_writer, var};
 use dotenv::dotenv;
-use yngvi::core::Station;
+
+use yngvi::{
+    core::{
+        FileReader, InMemWriter, NoopWriter, Station, StdoutWriter, WeatherReadingSource, Writer,
+    },
+    display::{DisplayReader, HidSource},
+    influxdb::{Influx2Writer, InfluxWriter},
+    rtl_433::{rtl_433_source, RTL433Reader},
+};
+
+pub enum AppWriter {
+    InfluxDB(InfluxWriter),
+    InfluxDB2(Influx2Writer),
+    InMemory(InMemWriter),
+    Stdout(StdoutWriter),
+    Noop(NoopWriter),
+}
+
+impl Writer for AppWriter {
+    async fn write(&mut self, weather_reading: &yngvi::core::WeatherReading) -> Result<(), ()> {
+        match self {
+            AppWriter::InfluxDB(writer) => writer.write(weather_reading).await,
+            AppWriter::InfluxDB2(writer) => writer.write(weather_reading).await,
+            AppWriter::InMemory(writer) => writer.write(weather_reading).await,
+            AppWriter::Stdout(writer) => writer.write(weather_reading).await,
+            AppWriter::Noop(writer) => writer.write(weather_reading).await,
+        }
+    }
+}
 
 #[tokio::main]
 async fn main() {
@@ -25,5 +49,65 @@ async fn main() {
 
     if res.is_ok() {
         println!("Station no longer recieving readings. Shutting down");
+    }
+}
+
+fn var(key: &str) -> Result<String, std::env::VarError> {
+    std::env::var(format!("WS_{}", key))
+}
+
+pub fn find_writer(value: &String) -> AppWriter {
+    match value.to_uppercase().as_str() {
+        "INFLUXDB" => {
+            let url = var("DEST_INFLUXDB_URL").unwrap_or("http://localhost:8086".to_string());
+            let database = var("DEST_INFLUXDB_DB").unwrap_or("weather".to_string());
+
+            AppWriter::InfluxDB(InfluxWriter::new(url, database))
+        }
+        "INFLUXDB2" => {
+            let url = var("DEST_INFLUXDB2_URL").unwrap_or("http://localhost:8086".to_string());
+            let org = var("DEST_INFLUXDB2_ORG").expect("ORG not provided");
+            let bucket = var("DEST_INFLUXDB2_BUCKET").expect("BUCKET not provided");
+            let token = var("DEST_INFLUXDB2_TOKEN").expect("TOKEN not provided");
+
+            AppWriter::InfluxDB2(Influx2Writer::new(url, org, bucket, token))
+        }
+        "INMEMORY" => {
+            let mem = InMemWriter::new();
+
+            AppWriter::InMemory(mem)
+        }
+        "STDOUT" => {
+            let stdout = StdoutWriter::new();
+
+            AppWriter::Stdout(stdout)
+        }
+        "NOOP" => {
+            let noop = NoopWriter::new();
+
+            AppWriter::Noop(noop)
+        }
+        _ => panic!("no writer defined. found {}", value),
+    }
+}
+
+pub fn find_reader(value: &String) -> Box<dyn Iterator<Item = WeatherReadingSource>> {
+    match value.to_uppercase().as_str() {
+        "ACURITE_DISPLAY" => {
+            let source = HidSource::new(0x24c0, 0x003).expect("could not start HID Api");
+
+            Box::new(DisplayReader::new(source))
+        }
+        "RTL_433" => {
+            let source = rtl_433_source();
+
+            Box::new(RTL433Reader::new(source))
+        }
+        "FILE" => {
+            let path = var("SRC_FILE_PATH").expect("PATH not provided");
+
+            Box::new(FileReader::new(path.as_str()))
+        }
+        _ => panic!("no reader defined. found {}", value),
     }
 }
