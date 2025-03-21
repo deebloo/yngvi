@@ -3,10 +3,7 @@ use std::future::Future;
 use crate::core::WeatherReading;
 
 pub trait Writer {
-    fn write(
-        &mut self,
-        weather_reading: &WeatherReading,
-    ) -> impl Future<Output = Result<(), ()>> + Sized;
+    fn write(&mut self, weather_reading: &WeatherReading) -> impl Future<Output = Result<(), ()>>;
 }
 
 impl<T: Writer + ?Sized + Send> Writer for Box<T> {
