@@ -1,6 +1,6 @@
 [package]
 name = "yngvi"
-version = "0.3.2"
+version = "0.3.3"
 description = "Read, calculate and write weather data"
 authors = ["deebloo <dannybluedesign@gmail.com>"]
 edition = "2018"
@@ -14,7 +14,6 @@ members = []
 
 [dependencies]
 # standard dependencies
-async-trait = "0.1.80"
 chrono = { version = "0.4.34", features = ["serde"] }
 metrum = { version = "1.0.0", features = ["serde"] }
 serde = { version = "1.0.200", features = ["derive"] }

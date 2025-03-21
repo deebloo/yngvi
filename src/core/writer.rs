@@ -1,12 +1,14 @@
-use crate::core::WeatherReading;
-use async_trait::async_trait;
+use std::future::Future;
 
-#[async_trait]
+use crate::core::WeatherReading;
+
 pub trait Writer {
-    async fn write(&mut self, weather_reading: &WeatherReading) -> Result<(), ()>;
+    fn write(
+        &mut self,
+        weather_reading: &WeatherReading,
+    ) -> impl Future<Output = Result<(), ()>> + Sized;
 }
 
-#[async_trait]
 impl<T: Writer + ?Sized + Send> Writer for Box<T> {
     async fn write(&mut self, weather_reading: &WeatherReading) -> Result<(), ()> {
         (**self).write(&weather_reading).await
@@ -21,7 +23,6 @@ impl StdoutWriter {
     }
 }
 
-#[async_trait]
 impl Writer for StdoutWriter {
     async fn write(&mut self, weather_reading: &WeatherReading) -> Result<(), ()> {
         if let Ok(json) = serde_json::to_string(weather_reading) {
@@ -42,7 +43,6 @@ impl InMemWriter {
     }
 }
 
-#[async_trait]
 impl Writer for InMemWriter {
     async fn write(&mut self, weather_reading: &WeatherReading) -> Result<(), ()> {
         self.readings.push(weather_reading.clone());
@@ -59,7 +59,6 @@ impl NoopWriter {
     }
 }
 
-#[async_trait]
 impl Writer for NoopWriter {
     async fn write(&mut self, _: &WeatherReading) -> Result<(), ()> {
         Ok(())

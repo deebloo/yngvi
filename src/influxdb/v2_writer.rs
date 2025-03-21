@@ -2,7 +2,6 @@ use crate::{
     core::{WeatherReading, Writer},
     influxdb::line_protocol::LineProtocol,
 };
-use async_trait::async_trait;
 use reqwest::Client;
 
 pub struct Influx2Writer {
@@ -25,7 +24,6 @@ impl Influx2Writer {
     }
 }
 
-#[async_trait]
 impl Writer for Influx2Writer {
     async fn write(&mut self, weather_reading: &WeatherReading) -> Result<(), ()> {
         let query = weather_reading.to_line_protocol();

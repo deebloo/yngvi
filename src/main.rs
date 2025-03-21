@@ -1,4 +1,5 @@
 mod program;
+mod writers;
 
 use crate::program::{find_reader, find_writer, var};
 use dotenv::dotenv;

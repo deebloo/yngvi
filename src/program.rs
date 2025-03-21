@@ -1,9 +1,11 @@
 use yngvi::{
-    core::{FileReader, InMemWriter, NoopWriter, StdoutWriter, WeatherReadingSource, Writer},
+    core::{FileReader, InMemWriter, NoopWriter, StdoutWriter, WeatherReadingSource},
     display::{DisplayReader, HidSource},
     influxdb::{Influx2Writer, InfluxWriter},
     rtl_433::{rtl_433_source, RTL433Reader},
 };
+
+use crate::writers::AppWriter;
 
 pub fn find_reader(value: &String) -> Box<dyn Iterator<Item = WeatherReadingSource>> {
     match value.to_uppercase().as_str() {
@@ -26,13 +28,13 @@ pub fn find_reader(value: &String) -> Box<dyn Iterator<Item = WeatherReadingSour
     }
 }
 
-pub fn find_writer(value: &String) -> Box<dyn Writer + Send> {
+pub fn find_writer(value: &String) -> AppWriter {
     match value.to_uppercase().as_str() {
-        "INFLUXDB" => Box::new(create_influx_writer()),
-        "INFLUXDB2" => Box::new(create_influx2_writer()),
-        "INMEMORY" => Box::new(InMemWriter::new()),
-        "STDOUT" => Box::new(StdoutWriter::new()),
-        "NOOP" => Box::new(NoopWriter::new()),
+        "INFLUXDB" => AppWriter::InfluxDB(create_influx_writer()),
+        "INFLUXDB2" => AppWriter::InfluxDB2(create_influx2_writer()),
+        "INMEMORY" => AppWriter::InMemory(InMemWriter::new()),
+        "STDOUT" => AppWriter::Stdout(StdoutWriter::new()),
+        "NOOP" => AppWriter::Noop(NoopWriter::new()),
         _ => panic!("no writer defined. found {}", value),
     }
 }
