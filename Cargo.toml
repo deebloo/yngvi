@@ -12,7 +12,7 @@ documentation = "https://docs.rs/yngvi/0.2.0"
 # standard dependencies
 async-trait = "0.1.80"
 chrono = { version = "0.4.34", features = ["serde"] }
-metrum = { version = "0.6.1", features = ["serde"] }
+metrum = { version = "1.0.0", features = ["serde"] }
 serde = { version = "1.0.200", features = ["derive"] }
 serde_json = "1.0.115"
 
