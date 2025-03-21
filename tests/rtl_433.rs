@@ -7,7 +7,7 @@ async fn shold_read_and_record_rtl433_readings() {
     let mut station = Station::new();
 
     let source = rtl_433_file_source("data/rtl_433.txt").take(5);
-    let reader = RTL433Reader::new(source);
+    let reader = RTL433Reader::read_from(source);
     let mut writer = InMemWriter::new();
 
     let _ = station.start(reader, &mut writer).await;

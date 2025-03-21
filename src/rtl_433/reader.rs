@@ -31,7 +31,7 @@ pub fn rtl_433_file_source(path: &str) -> impl Iterator<Item = Result<String>> {
 pub struct RTL433Reader {}
 
 impl RTL433Reader {
-    pub fn new<T: Iterator<Item = Result<String>>>(
+    pub fn read_from<T: Iterator<Item = Result<String>>>(
         source: T,
     ) -> impl Iterator<Item = WeatherReadingSource> {
         source.filter_map(|line| line.ok()).filter_map(|line| {

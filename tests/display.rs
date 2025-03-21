@@ -11,7 +11,7 @@ async fn shold_read_and_record_readings() {
     ]
     .into_iter();
 
-    let reader = DisplayReader::new(source);
+    let reader = DisplayReader::read_from(source);
     let mut writer = InMemWriter::new();
     let mut station = Station::new();
 

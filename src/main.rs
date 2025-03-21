@@ -96,12 +96,12 @@ pub fn find_reader(value: &String) -> Box<dyn Iterator<Item = WeatherReadingSour
         "ACURITE_DISPLAY" => {
             let source = HidSource::new(0x24c0, 0x003).expect("could not start HID Api");
 
-            Box::new(DisplayReader::new(source))
+            Box::new(DisplayReader::read_from(source))
         }
         "RTL_433" => {
             let source = rtl_433_source();
 
-            Box::new(RTL433Reader::new(source))
+            Box::new(RTL433Reader::read_from(source))
         }
         "FILE" => {
             let path = var("SRC_FILE_PATH").expect("PATH not provided");

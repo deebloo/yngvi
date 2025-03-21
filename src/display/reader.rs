@@ -48,7 +48,7 @@ impl Iterator for HidSource {
 pub struct DisplayReader;
 
 impl DisplayReader {
-    pub fn new<T: Iterator<Item = [u8; 10]>>(
+    pub fn read_from<T: Iterator<Item = [u8; 10]>>(
         source: T,
     ) -> impl Iterator<Item = WeatherReadingSource> {
         source.map(|data| {
