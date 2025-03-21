@@ -51,7 +51,7 @@ impl DisplayReader {
     pub fn new<T: Iterator<Item = [u8; 10]>>(
         source: T,
     ) -> impl Iterator<Item = WeatherReadingSource> {
-        source.into_iter().map(|data| {
+        source.map(|data| {
             let mut weather_reading = WeatherReadingSource::new();
 
             let report_flavor = decode_flavor(&data);
