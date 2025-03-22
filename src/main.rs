@@ -2,32 +2,13 @@ use dotenv::dotenv;
 
 use yngvi::{
     core::{
-        FileReader, InMemWriter, NoopWriter, Station, StdoutWriter, WeatherReadingSource, Writer,
+        FileReader, InMemWriter, NoopWriter, Station, StdinReader, StdoutWriter,
+        WeatherReadingSource, Writer,
     },
     display::{DisplayReader, HidSource},
     influxdb::{Influx2Writer, InfluxWriter},
     rtl_433::{rtl_433_source, RTL433Reader},
 };
-
-pub enum AppWriter {
-    InfluxDB(InfluxWriter),
-    InfluxDB2(Influx2Writer),
-    InMemory(InMemWriter),
-    Stdout(StdoutWriter),
-    Noop(NoopWriter),
-}
-
-impl Writer for AppWriter {
-    async fn write(&mut self, weather_reading: &yngvi::core::WeatherReading) -> Result<(), ()> {
-        match self {
-            AppWriter::InfluxDB(writer) => writer.write(weather_reading).await,
-            AppWriter::InfluxDB2(writer) => writer.write(weather_reading).await,
-            AppWriter::InMemory(writer) => writer.write(weather_reading).await,
-            AppWriter::Stdout(writer) => writer.write(weather_reading).await,
-            AppWriter::Noop(writer) => writer.write(weather_reading).await,
-        }
-    }
-}
 
 #[tokio::main]
 async fn main() {
@@ -49,6 +30,26 @@ async fn main() {
 
     if res.is_ok() {
         println!("Station no longer recieving readings. Shutting down");
+    }
+}
+
+pub enum AppWriter {
+    InfluxDB(InfluxWriter),
+    InfluxDB2(Influx2Writer),
+    InMemory(InMemWriter),
+    Stdout(StdoutWriter),
+    Noop(NoopWriter),
+}
+
+impl Writer for AppWriter {
+    async fn write(&mut self, weather_reading: &yngvi::core::WeatherReading) -> Result<(), ()> {
+        match self {
+            AppWriter::InfluxDB(writer) => writer.write(weather_reading).await,
+            AppWriter::InfluxDB2(writer) => writer.write(weather_reading).await,
+            AppWriter::InMemory(writer) => writer.write(weather_reading).await,
+            AppWriter::Stdout(writer) => writer.write(weather_reading).await,
+            AppWriter::Noop(writer) => writer.write(weather_reading).await,
+        }
     }
 }
 
@@ -106,7 +107,12 @@ pub fn find_reader(value: &String) -> Box<dyn Iterator<Item = WeatherReadingSour
         "FILE" => {
             let path = var("SRC_FILE_PATH").expect("PATH not provided");
 
-            Box::new(FileReader::new(path.as_str()))
+            Box::new(FileReader::read_from(path.as_str()))
+        }
+        "STDIN" => {
+            let reader = StdinReader::read();
+
+            Box::new(reader)
         }
         _ => panic!("no reader defined. found {}", value),
     }
