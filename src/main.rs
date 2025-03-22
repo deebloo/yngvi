@@ -1,29 +1,59 @@
+use clap::Parser;
 use dotenv::dotenv;
-
 use yngvi::{
     core::{
         FileReader, InMemWriter, NoopWriter, Station, StdinReader, StdoutWriter,
         WeatherReadingSource, WebhookWriter, Writer,
     },
     display::{DisplayReader, HidSource},
-    influxdb::{Influx2Writer, InfluxWriter},
+    influxdb::InfluxWriter,
     rtl_433::{rtl_433_source, RTL433Reader},
 };
+
+#[derive(clap::Parser, Debug)]
+#[command(version, about, long_about = None)]
+struct Program {
+    #[arg(long, default_value_t = String::from("acurite_display"))]
+    src: String,
+
+    #[arg(long, default_value_t = String::from("stdout"))]
+    dest: String,
+
+    #[arg(long, default_value_t = String::from("http://localhost:8086"))]
+    influx_db_url: String,
+
+    #[arg(long)]
+    influx_db_org: Option<String>,
+
+    #[arg(long)]
+    influx_db_bucket: Option<String>,
+
+    #[arg(long)]
+    influx_db_token: Option<String>,
+
+    #[arg(long)]
+    webhook_url: Option<String>,
+
+    #[arg(long)]
+    webhook_headers: Option<String>,
+
+    #[arg(long)]
+    src_file_path: Option<String>,
+}
 
 #[tokio::main]
 async fn main() {
     dotenv().ok();
 
-    let source = var("SRC").unwrap_or("ACURITE_DISPLAY".to_string());
-    let dest = var("DEST").unwrap_or("STDOUT".to_string());
+    let program = Program::parse();
 
     let mut station = Station::new();
-    let reader = find_reader(&source);
-    let mut writer = find_writer(&dest);
+    let reader = find_reader(&program);
+    let mut writer = find_writer(&program);
 
     println!(
         "Starting weather program. Reading from {} and writing to {}",
-        source, dest
+        program.src, program.dest
     );
 
     let res = station.start(reader, &mut writer).await;
@@ -35,7 +65,6 @@ async fn main() {
 
 pub enum AppWriter {
     InfluxDB(InfluxWriter),
-    InfluxDB2(Influx2Writer),
     InMemory(InMemWriter),
     Stdout(StdoutWriter),
     Webhook(WebhookWriter),
@@ -46,7 +75,6 @@ impl Writer for AppWriter {
     async fn write(&mut self, weather_reading: &yngvi::core::WeatherReading) -> Result<(), ()> {
         match self {
             AppWriter::InfluxDB(writer) => writer.write(weather_reading).await,
-            AppWriter::InfluxDB2(writer) => writer.write(weather_reading).await,
             AppWriter::InMemory(writer) => writer.write(weather_reading).await,
             AppWriter::Stdout(writer) => writer.write(weather_reading).await,
             AppWriter::Webhook(writer) => writer.write(weather_reading).await,
@@ -55,25 +83,30 @@ impl Writer for AppWriter {
     }
 }
 
-fn var(key: &str) -> Result<String, std::env::VarError> {
-    std::env::var(format!("WS_{}", key))
-}
-
-pub fn find_writer(value: &String) -> AppWriter {
-    match value.to_uppercase().as_str() {
+fn find_writer(value: &Program) -> AppWriter {
+    match value.dest.to_uppercase().as_str() {
         "INFLUXDB" => {
-            let url = var("DEST_INFLUXDB_URL").unwrap_or("http://localhost:8086".to_string());
-            let database = var("DEST_INFLUXDB_DB").unwrap_or("weather".to_string());
+            let org = value
+                .influx_db_org
+                .clone()
+                .expect("no influxdb org defined");
 
-            AppWriter::InfluxDB(InfluxWriter::new(url, database))
-        }
-        "INFLUXDB2" => {
-            let url = var("DEST_INFLUXDB2_URL").unwrap_or("http://localhost:8086".to_string());
-            let org = var("DEST_INFLUXDB2_ORG").expect("ORG not provided");
-            let bucket = var("DEST_INFLUXDB2_BUCKET").expect("BUCKET not provided");
-            let token = var("DEST_INFLUXDB2_TOKEN").expect("TOKEN not provided");
+            let bucket = value
+                .influx_db_bucket
+                .clone()
+                .expect("no influxdb bucket defined");
 
-            AppWriter::InfluxDB2(Influx2Writer::new(url, org, bucket, token))
+            let token = value
+                .influx_db_bucket
+                .clone()
+                .expect("no influxdb token defined");
+
+            AppWriter::InfluxDB(InfluxWriter::new(
+                value.influx_db_url.clone(),
+                org,
+                bucket,
+                token,
+            ))
         }
         "INMEMORY" => {
             let mem = InMemWriter::new();
@@ -86,8 +119,12 @@ pub fn find_writer(value: &String) -> AppWriter {
             AppWriter::Stdout(stdout)
         }
         "WEBHOOK" => {
-            let url = var("DEST_WEBHOOK_URL").expect("No url defined for webhook");
-            let raw_headers = var("DEST_WEBHOOK_HEADERS").unwrap_or("".to_string());
+            let url = value
+                .webhook_url
+                .clone()
+                .expect("No url defined for webhook");
+
+            let raw_headers = value.webhook_headers.clone().unwrap_or("".to_string());
 
             let mut headers: Vec<(String, String)> = vec![];
 
@@ -108,12 +145,12 @@ pub fn find_writer(value: &String) -> AppWriter {
 
             AppWriter::Noop(noop)
         }
-        _ => panic!("no writer defined. found {}", value),
+        _ => panic!("no writer defined. found {}", value.dest),
     }
 }
 
-pub fn find_reader(value: &String) -> Box<dyn Iterator<Item = WeatherReadingSource>> {
-    match value.to_uppercase().as_str() {
+fn find_reader(value: &Program) -> Box<dyn Iterator<Item = WeatherReadingSource>> {
+    match value.src.to_uppercase().as_str() {
         "ACURITE_DISPLAY" => {
             let source = HidSource::new(0x24c0, 0x003).expect("could not start HID Api");
 
@@ -125,7 +162,7 @@ pub fn find_reader(value: &String) -> Box<dyn Iterator<Item = WeatherReadingSour
             Box::new(RTL433Reader::read_from(source))
         }
         "FILE" => {
-            let path = var("SRC_FILE_PATH").expect("PATH not provided");
+            let path = value.src_file_path.clone().expect("PATH not provided");
 
             Box::new(FileReader::read_from(path.as_str()))
         }
@@ -134,6 +171,6 @@ pub fn find_reader(value: &String) -> Box<dyn Iterator<Item = WeatherReadingSour
 
             Box::new(reader)
         }
-        _ => panic!("no reader defined. found {}", value),
+        _ => panic!("no reader defined. found {}", value.src),
     }
 }

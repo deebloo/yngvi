@@ -6,15 +6,19 @@ use reqwest::Client;
 
 pub struct InfluxWriter {
     url: String,
-    database: String,
+    org: String,
+    bucket: String,
+    token: String,
     client: Client,
 }
 
 impl InfluxWriter {
-    pub fn new(url: String, database: String) -> Self {
+    pub fn new(url: String, org: String, bucket: String, token: String) -> Self {
         Self {
             url,
-            database,
+            org,
+            bucket,
+            token,
             client: Client::new(),
         }
     }
@@ -24,11 +28,18 @@ impl Writer for InfluxWriter {
     async fn write(&mut self, weather_reading: &WeatherReading) -> Result<(), ()> {
         let query = weather_reading.to_line_protocol();
 
-        let url = format!("{}/write", self.url);
+        println!("{}", &query);
+
+        let url = format!("{}/api/v2/write", self.url);
         let request = self
             .client
             .post(url)
-            .query(&[("db", &self.database), ("precision", &String::from("ms"))])
+            .query(&[
+                ("org", &self.org),
+                ("bucket", &self.bucket),
+                ("precision", &String::from("ms")),
+            ])
+            .header("Authorization", format!("Token {}", self.token))
             .body(query);
 
         if let Ok(response) = request.send().await {
