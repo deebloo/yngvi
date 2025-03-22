@@ -13,10 +13,10 @@ use yngvi::{
 #[derive(clap::Parser, Debug)]
 #[command(version, about, long_about = None)]
 struct Program {
-    #[arg(long, default_value_t = String::from("acurite_display"))]
+    #[arg(long, env = "WS_SRC", default_value_t = String::from("acurite_display"))]
     src: String,
 
-    #[arg(long, default_value_t = String::from("stdout"))]
+    #[arg(long, env = "WS_DEST", default_value_t = String::from("stdout"))]
     dest: String,
 
     #[arg(long, default_value_t = String::from("http://localhost:8086"))]
