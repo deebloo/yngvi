@@ -12,17 +12,19 @@ cargo install yngvi --features standalone
 
 ### Config
 
-| Name                     | Description                                                           | Default               |
-| ------------------------ | --------------------------------------------------------------------- | --------------------- |
-| WS_SRC                   | determines where to pull data from. ACURITE_DISPLAY, RTL_433, or FILE | DISPLAY               |
-| WS_SRC_FILE_PATH         | path to file with source readings                                     |                       |
-| WS_DEST                  | INFLUXDB, INFLUXDB2, STDOUT, or INMEMORY                              | STDOUT                |
-| WS_DEST_INFLUXDB_URL     | influxdb url                                                          | http://localhost:8086 |
-| WS_DEST_INFLUXDB_DB      | influxdb database                                                     | weather               |
-| WS_DEST_INFLUXDB2_URL    | influxdb url                                                          |                       |
-| WS_DEST_INFLUXDB2_ORG    | influxdb org                                                          |                       |
-| WS_DEST_INFLUXDB2_BUCKET | influxdb bucket                                                       |                       |
-| WS_DEST_INFLUXDB2_TOKEN  | auth token for influxdb                                               |                       |
+| Name                     | Description                                                                                   | Default               |
+| ------------------------ | --------------------------------------------------------------------------------------------- | --------------------- |
+| WS_SRC                   | determines where to pull data from. ACURITE_DISPLAY, RTL_433, or FILE                         | DISPLAY               |
+| WS_SRC_FILE_PATH         | path to file with source readings                                                             |                       |
+| WS_DEST                  | INFLUXDB, INFLUXDB2, STDOUT, WEBHOOK, or INMEMORY                                             | STDOUT                |
+| WS_DEST_INFLUXDB_URL     | influxdb url                                                                                  | http://localhost:8086 |
+| WS_DEST_INFLUXDB_DB      | influxdb database                                                                             | weather               |
+| WS_DEST_INFLUXDB2_URL    | influxdb url                                                                                  |                       |
+| WS_DEST_INFLUXDB2_ORG    | influxdb org                                                                                  |                       |
+| WS_DEST_INFLUXDB2_BUCKET | influxdb bucket                                                                               |                       |
+| WS_DEST_INFLUXDB2_TOKEN  | auth token for influxdb                                                                       |                       |
+| WS_DEST_WEBHOOK_URL      | url for the webhook                                                                           |                       |
+| WS_DEST_WEBHOOK_HEADERS  | headers to add to the webhook request. Ex: WS_DEST_WEBHOOK_HEADERS=Authorization:Bearer 12342 |                       |
 
 ## Create your own
 

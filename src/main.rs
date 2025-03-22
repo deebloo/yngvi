@@ -3,7 +3,7 @@ use dotenv::dotenv;
 use yngvi::{
     core::{
         FileReader, InMemWriter, NoopWriter, Station, StdinReader, StdoutWriter,
-        WeatherReadingSource, Writer,
+        WeatherReadingSource, WebhookWriter, Writer,
     },
     display::{DisplayReader, HidSource},
     influxdb::{Influx2Writer, InfluxWriter},
@@ -38,6 +38,7 @@ pub enum AppWriter {
     InfluxDB2(Influx2Writer),
     InMemory(InMemWriter),
     Stdout(StdoutWriter),
+    Webhook(WebhookWriter),
     Noop(NoopWriter),
 }
 
@@ -48,6 +49,7 @@ impl Writer for AppWriter {
             AppWriter::InfluxDB2(writer) => writer.write(weather_reading).await,
             AppWriter::InMemory(writer) => writer.write(weather_reading).await,
             AppWriter::Stdout(writer) => writer.write(weather_reading).await,
+            AppWriter::Webhook(writer) => writer.write(weather_reading).await,
             AppWriter::Noop(writer) => writer.write(weather_reading).await,
         }
     }
@@ -82,6 +84,24 @@ pub fn find_writer(value: &String) -> AppWriter {
             let stdout = StdoutWriter::new();
 
             AppWriter::Stdout(stdout)
+        }
+        "WEBHOOK" => {
+            let url = var("DEST_WEBHOOK_URL").expect("No url defined for webhook");
+            let raw_headers = var("DEST_WEBHOOK_HEADERS").unwrap_or("".to_string());
+
+            let mut headers: Vec<(String, String)> = vec![];
+
+            for header_key_value in raw_headers.split(",") {
+                let mut header = header_key_value.split(":");
+                let key = header.next().expect("No Key found for header");
+                let value = header.next().expect("No Value found for header");
+
+                headers.push((key.to_string(), value.to_string()));
+            }
+
+            let webhook = WebhookWriter::new(url, headers);
+
+            AppWriter::Webhook(webhook)
         }
         "NOOP" => {
             let noop = NoopWriter::new();
