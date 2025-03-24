@@ -1,12 +1,20 @@
+use std::{
+    fs::File,
+    io::{BufRead, BufReader},
+};
+
 use metrum::Temp;
 use yngvi::core::{InMemWriter, Station};
-use yngvi::rtl_433::{rtl_433_file_source, RTL433Reader};
+use yngvi::rtl_433::RTL433Reader;
 
 #[tokio::test]
 async fn shold_read_and_record_rtl433_readings() {
+    let path = "data/rtl_433.txt";
+    let file = File::open(path).expect(format!("could not find file at {}", path).as_str());
+    let source = BufReader::new(file).lines().take(5);
+
     let mut station = Station::new();
 
-    let source = rtl_433_file_source("data/rtl_433.txt").take(5);
     let reader = RTL433Reader::read_from(source);
     let mut writer = InMemWriter::new();
 

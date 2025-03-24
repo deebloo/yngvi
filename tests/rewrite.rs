@@ -1,14 +1,21 @@
+use std::fs::File;
+use std::io::{BufRead, BufReader};
+
 use yngvi::core::{InMemWriter, Station};
-use yngvi::rtl_433::{rtl_433_file_source, RTL433Reader};
+use yngvi::rtl_433::RTL433Reader;
 
 mod error_writer;
+
+const PATH: &str = "data/rtl_433.txt";
 
 #[tokio::test]
 async fn should_replay_failed_writes_rtl_433() {
     let mut station = Station::new();
 
-    let source = rtl_433_file_source("data/rtl_433.txt").take(5);
-    let reader = RTL433Reader::read_from(source);
+    let file = File::open(PATH).expect(format!("could not find file at {}", PATH).as_str());
+    let source = BufReader::new(file).lines();
+
+    let reader = RTL433Reader::read_from(source.take(5));
 
     let mut writer = error_writer::ErrorWriter {};
 
@@ -16,7 +23,9 @@ async fn should_replay_failed_writes_rtl_433() {
 
     assert_eq!(station.retry_manager.failed_writes.len(), 5);
 
-    let source = rtl_433_file_source("data/rtl_433.txt").take(5);
+    let file = File::open(PATH).expect(format!("could not find file at {}", PATH).as_str());
+    let source = BufReader::new(file).lines();
+
     let reader = RTL433Reader::read_from(source.take(1));
 
     let mut writer = InMemWriter::new();

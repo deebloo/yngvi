@@ -4,7 +4,6 @@ use crate::{
 };
 use metrum::Temp;
 use std::{
-    fs::File,
     io::{BufRead, BufReader, Result},
     process::{Command, Stdio},
 };
@@ -22,15 +21,15 @@ pub fn rtl_433_source() -> impl Iterator<Item = Result<String>> {
     BufReader::new(stdout).lines()
 }
 
-pub fn rtl_433_file_source(path: &str) -> impl Iterator<Item = Result<String>> {
-    let f = File::open(path).expect(format!("could not find file at {}", path).as_str());
-
-    BufReader::new(f).lines()
-}
-
 pub struct RTL433Reader {}
 
 impl RTL433Reader {
+    pub fn read() -> impl Iterator<Item = WeatherReadingSource> {
+        let source = rtl_433_source();
+
+        Self::read_from(source)
+    }
+
     pub fn read_from<T: Iterator<Item = Result<String>>>(
         source: T,
     ) -> impl Iterator<Item = WeatherReadingSource> {
