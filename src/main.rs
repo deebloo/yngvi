@@ -100,7 +100,7 @@ pub fn find_writer(value: &String) -> AppWriter {
 
             AppWriter::Noop(noop)
         }
-        _ => panic!("no writer defined. found {}", value),
+        _ => panic!("no writer found for {}", value),
     }
 }
 
@@ -126,6 +126,6 @@ pub fn find_reader(value: &String) -> Box<dyn Iterator<Item = WeatherReadingSour
 
             Box::new(reader)
         }
-        _ => panic!("no reader defined. found {}", value),
+        _ => panic!("no reader found for {}", value),
     }
 }
