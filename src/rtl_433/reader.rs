@@ -8,24 +8,20 @@ use std::{
     process::{Command, Stdio},
 };
 
-pub fn rtl_433_source() -> impl Iterator<Item = Result<String>> {
-    let stdout = Command::new("sh")
-        .arg("-c")
-        .arg("rtl_433 -C customary -F json -M time:iso:tz")
-        .stdout(Stdio::piped())
-        .spawn()
-        .expect("COuld not spawn rtl_433 process")
-        .stdout
-        .expect("Could not capture standard output.");
-
-    BufReader::new(stdout).lines()
-}
-
 pub struct RTL433Reader {}
 
 impl RTL433Reader {
     pub fn read() -> impl Iterator<Item = WeatherReadingSource> {
-        let source = rtl_433_source();
+        let stdout = Command::new("sh")
+            .arg("-c")
+            .arg("rtl_433 -C customary -F json -M time:iso:tz")
+            .stdout(Stdio::piped())
+            .spawn()
+            .expect("Could not spawn rtl_433 process")
+            .stdout
+            .expect("Could not capture standard output.");
+
+        let source = BufReader::new(stdout).lines();
 
         Self::read_from(source)
     }

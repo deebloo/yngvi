@@ -2,7 +2,7 @@
 name = "yngvi"
 version = "0.4.3"
 description = "Read, calculate and write weather data"
-authors = ["deebloo <dannybluedesign@gmail.com>"]
+authors = ["deebloo <deebloo@proton.me>"]
 edition = "2018"
 license = "MIT"
 repository = "https://github.com/deebloo/yngvi"

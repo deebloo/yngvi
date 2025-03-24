@@ -7,7 +7,7 @@ use yngvi::{
     },
     display::{DisplayReader, HidSource},
     influxdb::InfluxWriter,
-    rtl_433::{rtl_433_source, RTL433Reader},
+    rtl_433::RTL433Reader,
 };
 
 #[tokio::main]
@@ -112,9 +112,9 @@ pub fn find_reader(value: &String) -> Box<dyn Iterator<Item = WeatherReadingSour
             Box::new(DisplayReader::read_from(source))
         }
         "RTL_433" => {
-            let source = rtl_433_source();
+            let reader = RTL433Reader::read();
 
-            Box::new(RTL433Reader::read_from(source))
+            Box::new(reader)
         }
         "FILE" => {
             let path = env_var("SRC_FILE_PATH").expect("PATH not provided");
