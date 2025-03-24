@@ -12,23 +12,21 @@ cargo install yngvi --features standalone
 
 ### Config
 
-| Name                     | Description                                                                                   | Default               |
-| ------------------------ | --------------------------------------------------------------------------------------------- | --------------------- |
-| WS_SRC                   | determines where to pull data from. ACURITE_DISPLAY, RTL_433, or FILE                         | DISPLAY               |
-| WS_SRC_FILE_PATH         | path to file with source readings                                                             |                       |
-| WS_DEST                  | INFLUXDB, INFLUXDB2, STDOUT, WEBHOOK, or INMEMORY                                             | STDOUT                |
-| WS_DEST_INFLUXDB_URL     | influxdb url                                                                                  | http://localhost:8086 |
-| WS_DEST_INFLUXDB_DB      | influxdb database                                                                             | weather               |
-| WS_DEST_INFLUXDB2_URL    | influxdb url                                                                                  |                       |
-| WS_DEST_INFLUXDB2_ORG    | influxdb org                                                                                  |                       |
-| WS_DEST_INFLUXDB2_BUCKET | influxdb bucket                                                                               |                       |
-| WS_DEST_INFLUXDB2_TOKEN  | auth token for influxdb                                                                       |                       |
-| WS_DEST_WEBHOOK_URL      | url for the webhook                                                                           |                       |
-| WS_DEST_WEBHOOK_HEADERS  | headers to add to the webhook request. Ex: WS_DEST_WEBHOOK_HEADERS=Authorization:Bearer 12342 |                       |
+| Name                       | Description                                                                                      | Default |
+| -------------------------- | ------------------------------------------------------------------------------------------------ | ------- |
+| YNGVI_SRC                  | determines where to pull data from. ACURITE_DISPLAY, RTL_433, or FILE                            | DISPLAY |
+| YNGVI_SRC_FILE_PATH        | path to file with source readings                                                                |         |
+| YNGVI_DEST                 | INFLUXDB, STDOUT, WEBHOOK, or INMEMORY                                                           | STDOUT  |
+| YNGVI_DEST_INFLUXDB_URL    | influxdb url                                                                                     |         |
+| YNGVI_DEST_INFLUXDB_ORG    | influxdb org                                                                                     |         |
+| YNGVI_DEST_INFLUXDB_BUCKET | influxdb bucket                                                                                  |         |
+| YNGVI_DEST_INFLUXDB_TOKEN  | auth token for influxdb                                                                          |         |
+| YNGVI_DEST_WEBHOOK_URL     | url for the webhook                                                                              |         |
+| YNGVI_DEST_WEBHOOK_HEADERS | headers to add to the webhook request. Ex: YNGVI_DEST_WEBHOOK_HEADERS=Authorization:Bearer 12342 |         |
 
 ## Create your own
 
-Any data source can be defined as `Iterator<Item = WeatherReading>` and all destinations are defined with the `Writer` trait. WS comes with some prebuilt readers and writers but it should be straight forward to define new data sources and new destination without touching any of the core station logic. Give it a try!
+Any data source can be defined as `Iterator<Item = WeatherReading>` and all destinations are defined with the `Writer` trait. YNGVI comes with some prebuilt readers and writers but it should be straight forward to define new data sources and new destination without touching any of the core station logic. Give it a try!
 
 ```bash
 cargo add yngvi

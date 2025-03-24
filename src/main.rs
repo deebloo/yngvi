@@ -6,7 +6,7 @@ use yngvi::{
         WeatherReadingSource, WebhookWriter, Writer,
     },
     display::{DisplayReader, HidSource},
-    influxdb::{Influx2Writer, InfluxWriter},
+    influxdb::InfluxWriter,
     rtl_433::{rtl_433_source, RTL433Reader},
 };
 
@@ -14,8 +14,8 @@ use yngvi::{
 async fn main() {
     dotenv().ok();
 
-    let source = var("SRC").unwrap_or("ACURITE_DISPLAY".to_string());
-    let dest = var("DEST").unwrap_or("STDOUT".to_string());
+    let source = env_var("SRC").unwrap_or("ACURITE_DISPLAY".to_string());
+    let dest = env_var("DEST").unwrap_or("STDOUT".to_string());
 
     let mut station = Station::new();
     let reader = find_reader(&source);
@@ -34,8 +34,7 @@ async fn main() {
 }
 
 pub enum AppWriter {
-    InfluxDB(InfluxWriter),
-    InfluxDB2(Influx2Writer),
+    InfluxDB2(InfluxWriter),
     InMemory(InMemWriter),
     Stdout(StdoutWriter),
     Webhook(WebhookWriter),
@@ -45,7 +44,6 @@ pub enum AppWriter {
 impl Writer for AppWriter {
     async fn write(&mut self, weather_reading: &yngvi::core::WeatherReading) -> Result<(), ()> {
         match self {
-            AppWriter::InfluxDB(writer) => writer.write(weather_reading).await,
             AppWriter::InfluxDB2(writer) => writer.write(weather_reading).await,
             AppWriter::InMemory(writer) => writer.write(weather_reading).await,
             AppWriter::Stdout(writer) => writer.write(weather_reading).await,
@@ -55,25 +53,19 @@ impl Writer for AppWriter {
     }
 }
 
-fn var(key: &str) -> Result<String, std::env::VarError> {
-    std::env::var(format!("WS_{}", key))
+fn env_var(key: &str) -> Result<String, std::env::VarError> {
+    std::env::var(format!("YNGVI_{}", key))
 }
 
 pub fn find_writer(value: &String) -> AppWriter {
     match value.to_uppercase().as_str() {
         "INFLUXDB" => {
-            let url = var("DEST_INFLUXDB_URL").unwrap_or("http://localhost:8086".to_string());
-            let database = var("DEST_INFLUXDB_DB").unwrap_or("weather".to_string());
+            let url = env_var("DEST_INFLUXDB_URL").unwrap_or("http://localhost:8086".to_string());
+            let org = env_var("DEST_INFLUXDB_ORG").expect("ORG not provided");
+            let bucket = env_var("DEST_INFLUXDB_BUCKET").expect("BUCKET not provided");
+            let token = env_var("DEST_INFLUXDB_TOKEN").expect("TOKEN not provided");
 
-            AppWriter::InfluxDB(InfluxWriter::new(url, database))
-        }
-        "INFLUXDB2" => {
-            let url = var("DEST_INFLUXDB2_URL").unwrap_or("http://localhost:8086".to_string());
-            let org = var("DEST_INFLUXDB2_ORG").expect("ORG not provided");
-            let bucket = var("DEST_INFLUXDB2_BUCKET").expect("BUCKET not provided");
-            let token = var("DEST_INFLUXDB2_TOKEN").expect("TOKEN not provided");
-
-            AppWriter::InfluxDB2(Influx2Writer::new(url, org, bucket, token))
+            AppWriter::InfluxDB2(InfluxWriter::new(url, org, bucket, token))
         }
         "INMEMORY" => {
             let mem = InMemWriter::new();
@@ -86,8 +78,8 @@ pub fn find_writer(value: &String) -> AppWriter {
             AppWriter::Stdout(stdout)
         }
         "WEBHOOK" => {
-            let url = var("DEST_WEBHOOK_URL").expect("No url defined for webhook");
-            let raw_headers = var("DEST_WEBHOOK_HEADERS").unwrap_or("".to_string());
+            let url = env_var("DEST_WEBHOOK_URL").expect("No url defined for webhook");
+            let raw_headers = env_var("DEST_WEBHOOK_HEADERS").unwrap_or("".to_string());
 
             let mut headers: Vec<(String, String)> = vec![];
 
@@ -125,7 +117,7 @@ pub fn find_reader(value: &String) -> Box<dyn Iterator<Item = WeatherReadingSour
             Box::new(RTL433Reader::read_from(source))
         }
         "FILE" => {
-            let path = var("SRC_FILE_PATH").expect("PATH not provided");
+            let path = env_var("SRC_FILE_PATH").expect("PATH not provided");
 
             Box::new(FileReader::read_from(path.as_str()))
         }
