@@ -1,4 +1,5 @@
 use metrum::Temp;
+use serde::{Deserialize, Serialize};
 
 // Calculated based on formula from the National Weather Service
 // https://www.weather.gov/media/epz/wxcalc/windChill.pdf
@@ -64,17 +65,44 @@ pub fn calc_dew_point(temp: Temp, humid: u8) -> Temp {
     Temp::from_c(res)
 }
 
-pub fn wind_dir_to_cardinal<'a>(wind_dir: f64) -> &'a str {
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub enum WindDirection {
+    NW,
+    SW,
+    SE,
+    NE,
+    N,
+    E,
+    S,
+    W,
+}
+
+impl WindDirection {
+    pub fn as_str(&self) -> &str {
+        match self {
+            Self::NW => "NW",
+            Self::SW => "SW",
+            Self::SE => "SE",
+            Self::NE => "NE",
+            Self::N => "N",
+            Self::E => "E",
+            Self::S => "S",
+            Self::W => "W",
+        }
+    }
+}
+
+pub fn wind_dir_to_cardinal(wind_dir: f64) -> Option<WindDirection> {
     match wind_dir as u32 {
-        271..=359 => "NW",
-        181..=269 => "SW",
-        91..=179 => "SE",
-        1..=89 => "NE",
-        0 => "N",
-        90 => "E",
-        180 => "S",
-        270 => "W",
-        _ => "",
+        271..=359 => Some(WindDirection::NW),
+        181..=269 => Some(WindDirection::SW),
+        91..=179 => Some(WindDirection::SE),
+        1..=89 => Some(WindDirection::NE),
+        0 => Some(WindDirection::N),
+        90 => Some(WindDirection::E),
+        180 => Some(WindDirection::S),
+        270 => Some(WindDirection::W),
+        _ => None,
     }
 }
 
@@ -135,13 +163,13 @@ mod tests {
 
     #[test]
     fn map_correct_deg_to_direction() {
-        assert_eq!(wind_dir_to_cardinal(0.0), "N");
-        assert_eq!(wind_dir_to_cardinal(90.0), "E");
-        assert_eq!(wind_dir_to_cardinal(180.0), "S");
-        assert_eq!(wind_dir_to_cardinal(270.0), "W");
-        assert_eq!(wind_dir_to_cardinal(300.0), "NW");
-        assert_eq!(wind_dir_to_cardinal(200.0), "SW");
-        assert_eq!(wind_dir_to_cardinal(150.0), "SE");
-        assert_eq!(wind_dir_to_cardinal(50.0), "NE");
+        assert_eq!(wind_dir_to_cardinal(0.0), Some(WindDirection::N));
+        assert_eq!(wind_dir_to_cardinal(90.0), Some(WindDirection::E));
+        assert_eq!(wind_dir_to_cardinal(180.0), Some(WindDirection::S));
+        assert_eq!(wind_dir_to_cardinal(270.0), Some(WindDirection::W));
+        assert_eq!(wind_dir_to_cardinal(300.0), Some(WindDirection::NW));
+        assert_eq!(wind_dir_to_cardinal(200.0), Some(WindDirection::SW));
+        assert_eq!(wind_dir_to_cardinal(150.0), Some(WindDirection::SE));
+        assert_eq!(wind_dir_to_cardinal(50.0), Some(WindDirection::NE));
     }
 }

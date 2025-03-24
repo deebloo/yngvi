@@ -29,7 +29,7 @@ impl LineProtocol for WeatherReading {
         }
 
         if let Some(value) = &self.wind_dir_cardinal {
-            fields.push(format!("wind_dir_cardinal=\"{}\"", value));
+            fields.push(format!("wind_dir_cardinal=\"{}\"", value.as_str()));
         }
 
         if let Some(value) = self.out_temp {
@@ -83,7 +83,7 @@ mod tests {
             rain_delta: Some(0.5),
             wind_speed: Some(4.),
             wind_dir: Some(180.),
-            wind_dir_cardinal: Some("S".to_string()),
+            wind_dir_cardinal: Some(crate::core::WindDirection::S),
             out_temp: Some(Temp::from_f(60.5)),
             out_humid: Some(50),
             wind_chill: Some(Temp::from_f(50.)),

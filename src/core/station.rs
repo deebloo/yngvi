@@ -66,10 +66,8 @@ impl Station {
 
             // update wind direction
             if let Some(wind_direction) = reading.wind_dir {
-                self.weather_reading.wind_dir = Some(wind_direction);
-
-                let wind_dir_cardinal = wind_dir_to_cardinal(wind_direction);
-                self.weather_reading.wind_dir_cardinal = Some(wind_dir_cardinal.to_string())
+                self.weather_reading.wind_dir = reading.wind_dir;
+                self.weather_reading.wind_dir_cardinal = wind_dir_to_cardinal(wind_direction)
             }
 
             // write the result to the database

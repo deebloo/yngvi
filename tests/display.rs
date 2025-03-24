@@ -1,5 +1,5 @@
 use metrum::Temp;
-use yngvi::core::{InMemWriter, Station};
+use yngvi::core::{InMemWriter, Station, WindDirection};
 use yngvi::display::DisplayReader;
 
 #[tokio::test]
@@ -25,7 +25,7 @@ async fn shold_read_and_record_readings() {
     let rain_delta: Vec<Option<f64>> = data.clone().map(|r| r.rain_delta).collect();
     let wind_speed: Vec<Option<f64>> = data.clone().map(|r| r.wind_speed).collect();
     let wind_dir: Vec<Option<f64>> = data.clone().map(|r| r.wind_dir).collect();
-    let wind_dir_cardinal: Vec<Option<String>> =
+    let wind_dir_cardinal: Vec<Option<WindDirection>> =
         data.clone().map(|r| r.wind_dir_cardinal).collect();
     let out_temp: Vec<Option<Temp>> = data.clone().map(|r| r.out_temp).collect();
     let out_humid: Vec<Option<u8>> = data.clone().map(|r| r.out_humid).collect();

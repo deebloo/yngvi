@@ -2,6 +2,8 @@ use chrono::{DateTime, Utc};
 use metrum::Temp;
 use serde::{Deserialize, Serialize};
 
+use super::WindDirection;
+
 #[derive(Debug, Serialize, Deserialize)]
 pub struct WeatherReadingSource {
     pub time: DateTime<Utc>,
@@ -39,7 +41,7 @@ pub struct WeatherReading {
     pub rain_delta: Option<f64>,
     pub wind_speed: Option<f64>,
     pub wind_dir: Option<f64>,
-    pub wind_dir_cardinal: Option<String>,
+    pub wind_dir_cardinal: Option<WindDirection>,
     pub out_temp: Option<Temp>,
     pub out_humid: Option<u8>,
     pub wind_chill: Option<Temp>,
